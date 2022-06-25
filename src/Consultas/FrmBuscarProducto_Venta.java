@@ -26,17 +26,16 @@ import javax.swing.table.TableCellRenderer;
  */
 public class FrmBuscarProducto_Venta extends javax.swing.JInternalFrame {
 
-
     static ResultSet rs=null;
     DefaultTableModel dtm=new DefaultTableModel();
     public String Total;
     String criterio,busqueda;
     public FrmBuscarProducto_Venta() {
-
         initComponents();
         buttonGroup1.add(rbtnCodigo);
         buttonGroup1.add(rbtnNombre);
         buttonGroup1.add(rbtnDescripcion);
+        
 
 
         //--------------------PANEL - PRODUCTO----------------------------
@@ -46,6 +45,8 @@ public class FrmBuscarProducto_Venta extends javax.swing.JInternalFrame {
         //---------------------ANCHO Y ALTO DEL FORM----------------------
         this.setSize(836, 400);
         CantidadTotal();
+        
+        
 
     }
 
@@ -200,7 +201,7 @@ public class FrmBuscarProducto_Venta extends javax.swing.JInternalFrame {
             }
         });
         getContentPane().add(rbtnCodigo);
-        rbtnCodigo.setBounds(30, 31, 110, 23);
+        rbtnCodigo.setBounds(30, 25, 110, 23);
 
         txtBusqueda.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -208,7 +209,7 @@ public class FrmBuscarProducto_Venta extends javax.swing.JInternalFrame {
             }
         });
         getContentPane().add(txtBusqueda);
-        txtBusqueda.setBounds(30, 61, 300, 20);
+        txtBusqueda.setBounds(30, 55, 370, 30);
 
         rbtnNombre.setText("Nombre");
         rbtnNombre.setOpaque(false);
@@ -218,12 +219,12 @@ public class FrmBuscarProducto_Venta extends javax.swing.JInternalFrame {
             }
         });
         getContentPane().add(rbtnNombre);
-        rbtnNombre.setBounds(143, 31, 80, 23);
+        rbtnNombre.setBounds(143, 25, 80, 23);
 
         rbtnDescripcion.setText("Descripción");
         rbtnDescripcion.setOpaque(false);
         getContentPane().add(rbtnDescripcion);
-        rbtnDescripcion.setBounds(230, 31, 79, 23);
+        rbtnDescripcion.setBounds(230, 25, 82, 23);
 
         jLabel18.setBackground(new java.awt.Color(238, 240, 247));
         jLabel18.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N

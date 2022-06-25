@@ -15,65 +15,69 @@ import java.util.Date;
 import javax.swing.JOptionPane;
 
 public class ClsVenta {
-private Connection connection=new ClsConexion().getConection();
+
+    private Connection connection = new ClsConexion().getConection();
+
     //--------------------------------------------------------------------------------------------------
     //-----------------------------------------METODOS--------------------------------------------------
     //-------------------------------------------------------------------------------------------------- 
-    public void agregarVenta(ClsEntidadVenta venta){
-        try{
-            CallableStatement statement=connection.prepareCall("{call SP_I_Venta(?,?,?,?,?,?,?,?,?,?,?,?)}");
-            statement.setString("pidtipodocumento",venta.getStrIdTipoDocumento());
-            statement.setString("pidcliente",venta.getStrIdCliente());
-            statement.setString("pidempleado",venta.getStrIdEmpleado());
-            statement.setString("pserie",venta.getStrSerieVenta());
-            statement.setString("pnumero",venta.getStrNumeroVenta());
-            statement.setDate ("pfecha", new java.sql.Date(venta.getStrFechaVenta().getTime()));
-            statement.setString("ptotalventa",venta.getStrTotalVenta());
-            statement.setString("pdescuento",venta.getStrDescuentoVenta());
-            statement.setString("psubtotal",venta.getStrSubTotalVenta());
-            statement.setString("pigv",venta.getStrIgvVenta());
-            statement.setString("ptotalpagar",venta.getStrTotalPagarVenta());
-            statement.setString("pestado",venta.getStrEstadoVenta());
+    public void agregarVenta(ClsEntidadVenta venta) {
+        try {
+            CallableStatement statement = connection.prepareCall("{call SP_I_Venta(?,?,?,?,?,?,?,?,?,?,?,?)}");
+            statement.setString("pidtipodocumento", venta.getStrIdTipoDocumento());
+            statement.setString("pidcliente", venta.getStrIdCliente());
+            statement.setString("pidempleado", venta.getStrIdEmpleado());
+            statement.setString("pserie", venta.getStrSerieVenta());
+            statement.setString("pnumero", venta.getStrNumeroVenta());
+            statement.setDate("pfecha", new java.sql.Date(venta.getStrFechaVenta().getTime()));
+            statement.setString("ptotalventa", venta.getStrTotalVenta());
+            statement.setString("pdescuento", venta.getStrDescuentoVenta());
+            statement.setString("psubtotal", venta.getStrSubTotalVenta());
+            statement.setString("pigv", venta.getStrIgvVenta());
+            statement.setString("ptotalpagar", venta.getStrTotalPagarVenta());
+            statement.setString("pestado", venta.getStrEstadoVenta());
             statement.execute();
 
-            JOptionPane.showMessageDialog(null,"¡Venta Realizada con éxito!","Mensaje del Sistema",1);
+            JOptionPane.showMessageDialog(null, "¡Venta Realizada con éxito!", "Mensaje del Sistema", 1);
 
-        }catch(SQLException ex){
+        } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        
-    }    
-    public void modificarVenta(String codigo,ClsEntidadVenta venta){
-        try{
-            CallableStatement statement=connection.prepareCall("{call SP_U_Venta(?,?,?,?,?,?,?,?,?,?,?,?,?)}");
-            statement.setString("pidventa",codigo);
-            statement.setString("pidtipodocumento",venta.getStrIdTipoDocumento());
-            statement.setString("pidcliente",venta.getStrIdCliente());
-            statement.setString("pidempleado",venta.getStrIdEmpleado());
-            statement.setString("pserie",venta.getStrSerieVenta());
-            statement.setString("pnumero",venta.getStrNumeroVenta());
-            statement.setDate ("pfecha", new java.sql.Date(venta.getStrFechaVenta().getTime()));
-            statement.setString("ptotalventa",venta.getStrTotalVenta());
-            statement.setString("pdescuento",venta.getStrDescuentoVenta());
-            statement.setString("psubtotal",venta.getStrSubTotalVenta());
-            statement.setString("pigv",venta.getStrIgvVenta());
-            statement.setString("ptotalpagar",venta.getStrTotalPagarVenta());
-            statement.setString("pestado",venta.getStrEstadoVenta());
-            statement.executeUpdate();
-            
-        }catch(SQLException ex){
-            ex.printStackTrace();
-        }
-        JOptionPane.showMessageDialog(null,"¡Venta Actualizada!","Mensaje del Sistema",1);
+
     }
-    public ArrayList<ClsEntidadVenta> listarVenta(){
-        ArrayList<ClsEntidadVenta> ventas=new ArrayList<ClsEntidadVenta>();
-        try{
-            CallableStatement statement=connection.prepareCall("{call SP_S_Venta}");
-            ResultSet resultSet=statement.executeQuery();
-            
-            while (resultSet.next()){
-                ClsEntidadVenta venta=new ClsEntidadVenta();
+
+    public void modificarVenta(String codigo, ClsEntidadVenta venta) {
+        try {
+            CallableStatement statement = connection.prepareCall("{call SP_U_Venta(?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+            statement.setString("pidventa", codigo);
+            statement.setString("pidtipodocumento", venta.getStrIdTipoDocumento());
+            statement.setString("pidcliente", venta.getStrIdCliente());
+            statement.setString("pidempleado", venta.getStrIdEmpleado());
+            statement.setString("pserie", venta.getStrSerieVenta());
+            statement.setString("pnumero", venta.getStrNumeroVenta());
+            statement.setDate("pfecha", new java.sql.Date(venta.getStrFechaVenta().getTime()));
+            statement.setString("ptotalventa", venta.getStrTotalVenta());
+            statement.setString("pdescuento", venta.getStrDescuentoVenta());
+            statement.setString("psubtotal", venta.getStrSubTotalVenta());
+            statement.setString("pigv", venta.getStrIgvVenta());
+            statement.setString("ptotalpagar", venta.getStrTotalPagarVenta());
+            statement.setString("pestado", venta.getStrEstadoVenta());
+            statement.executeUpdate();
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        JOptionPane.showMessageDialog(null, "¡Venta Actualizada!", "Mensaje del Sistema", 1);
+    }
+
+    public ArrayList<ClsEntidadVenta> listarVenta() {
+        ArrayList<ClsEntidadVenta> ventas = new ArrayList<ClsEntidadVenta>();
+        try {
+            CallableStatement statement = connection.prepareCall("{call SP_S_Venta}");
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                ClsEntidadVenta venta = new ClsEntidadVenta();
                 venta.setStrIdVenta(resultSet.getString("IdVenta"));
                 venta.setStrTipoDocumento(resultSet.getString("TipoDocumento"));
                 venta.setStrCliente(resultSet.getString("Cliente"));
@@ -91,83 +95,89 @@ private Connection connection=new ClsConexion().getConection();
                 ventas.add(venta);
             }
             return ventas;
-         }catch(SQLException ex){
+        } catch (SQLException ex) {
             ex.printStackTrace();
             return null;
         }
     }
-    public ResultSet listarVentaPorParametro(String criterio, String busqueda) throws Exception{
+
+    public ResultSet listarVentaPorParametro(String criterio, String busqueda) throws Exception {
         ResultSet rs = null;
-        try{
+        try {
             CallableStatement statement = connection.prepareCall("{call SP_S_VentaPorParametro(?,?)}");
             statement.setString("pcriterio", criterio);
             statement.setString("pbusqueda", busqueda);
             rs = statement.executeQuery();
             return rs;
-        }catch(SQLException SQLex){
-            throw SQLex;            
-        }        
-    }    
-    public ResultSet obtenerUltimoIdVenta() throws Exception{
+        } catch (SQLException SQLex) {
+            throw SQLex;
+        }
+    }
+
+    public ResultSet obtenerUltimoIdVenta() throws Exception {
         ResultSet rs = null;
-        try{
+        try {
             CallableStatement statement = connection.prepareCall("{call SP_S_UltimoIdVenta()}");
             rs = statement.executeQuery();
             return rs;
-        }catch(SQLException SQLex){
-            throw SQLex;            
-        }        
+        } catch (SQLException SQLex) {
+            throw SQLex;
+        }
     }
-    public ResultSet listarVentaPorFecha(String criterio,Date fechaini, Date fechafin, String doc) throws Exception{
+
+    public ResultSet listarVentaPorFecha(String criterio, Date fechaini, Date fechafin, String doc) throws Exception {
         ResultSet rs = null;
-        try{
+        try {
             CallableStatement statement = connection.prepareCall("{call SP_S_VentaPorFecha(?,?,?,?)}");
-            statement.setString ("pcriterio", criterio);
-            statement.setDate ("pfechaini", new java.sql.Date(fechaini.getTime()));
-            statement.setDate ("pfechafin", new java.sql.Date(fechafin.getTime()));
+            statement.setString("pcriterio", criterio);
+            statement.setDate("pfechaini", new java.sql.Date(fechaini.getTime()));
+            statement.setDate("pfechafin", new java.sql.Date(fechafin.getTime()));
             statement.setString("pdocumento", doc);
             rs = statement.executeQuery();
             return rs;
-        }catch(SQLException SQLex){
-            throw SQLex;            
-        }        
-    } 
-    public void actualizarVentaEstado(String codigo,ClsEntidadVenta Venta){
-        try{
-            CallableStatement statement=connection.prepareCall("{call SP_U_ActualizarVentaEstado(?,?)}");
-            statement.setString("pidventa",codigo);
-            statement.setString("pestado",Venta.getStrEstadoVenta());        
+        } catch (SQLException SQLex) {
+            throw SQLex;
+        }
+    }
+
+    public void actualizarVentaEstado(String codigo, ClsEntidadVenta Venta) {
+        try {
+            CallableStatement statement = connection.prepareCall("{call SP_U_ActualizarVentaEstado(?,?)}");
+            statement.setString("pidventa", codigo);
+            statement.setString("pestado", Venta.getStrEstadoVenta());
             statement.executeUpdate();
-            
-        }catch(SQLException ex){
+
+        } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        JOptionPane.showMessageDialog(null,"¡Venta Anulada!","Mensaje del Sistema",1);
+        JOptionPane.showMessageDialog(null, "¡Venta Anulada!", "Mensaje del Sistema", 1);
     }
-    public ResultSet listarVentaPorDetalle(String criterio,Date fechaini, Date fechafin) throws Exception{
+
+    public ResultSet listarVentaPorDetalle(String criterio, Date fechaini, Date fechafin) throws Exception {
         ResultSet rs = null;
-        try{
+        try {
             CallableStatement statement = connection.prepareCall("{call SP_S_VentaPorDetalle(?,?,?)}");
-            statement.setString ("pcriterio", criterio);
-            statement.setDate ("pfechaini", new java.sql.Date(fechaini.getTime()));
-            statement.setDate ("pfechafin", new java.sql.Date(fechafin.getTime()));
+            statement.setString("pcriterio", criterio);
+            statement.setDate("pfechaini", new java.sql.Date(fechaini.getTime()));
+            statement.setDate("pfechafin", new java.sql.Date(fechafin.getTime()));
             rs = statement.executeQuery();
             return rs;
-        }catch(SQLException SQLex){
-            throw SQLex;            
-        }        
+        } catch (SQLException SQLex) {
+            throw SQLex;
+        }
     }
-    public ResultSet listarVentaMensual(String criterio,String fecha_ini,String fecha_fin) throws Exception{
+
+    public ResultSet listarVentaMensual(String criterio, String fecha_ini, String fecha_fin) throws Exception {
         ResultSet rs = null;
-        try{
+        try {
             CallableStatement statement = connection.prepareCall("{call SP_S_VentaMensual(?,?,?)}");
-            statement.setString ("pcriterio", criterio);
-            statement.setString ("pfecha_ini", fecha_ini);
-            statement.setString ("pfecha_fin", fecha_fin);
+            statement.setString("pcriterio", criterio);
+            statement.setString("pfecha_ini", fecha_ini);
+            statement.setString("pfecha_fin", fecha_fin);
             rs = statement.executeQuery();
             return rs;
-        }catch(SQLException SQLex){
-            throw SQLex;            
-        }        
+        } catch (SQLException SQLex) {
+            throw SQLex;
+        }
     }
 }

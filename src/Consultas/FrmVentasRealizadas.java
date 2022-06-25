@@ -487,7 +487,7 @@ public class FrmVentasRealizadas extends javax.swing.JInternalFrame {
         JasperReport report;
         JasperPrint print;
         try{
-            report=JasperCompileManager.compileReport(new File("").getAbsolutePath()+ "/src/Reportes/RptVentasRealizadas.jrxml");
+            report = JasperCompileManager.compileReport(new File("").getAbsolutePath()+ "/src/Reportes/RptVentasRealizadas.jrxml");
             print=JasperFillManager.fillReport(report, p,connection);
             JasperViewer view=new JasperViewer(print,false);
             view.setTitle("Reporte General de Ventas Realizadas");

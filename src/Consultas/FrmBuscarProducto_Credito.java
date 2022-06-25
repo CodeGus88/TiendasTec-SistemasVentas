@@ -199,7 +199,7 @@ public class FrmBuscarProducto_Credito extends javax.swing.JInternalFrame {
             }
         });
         getContentPane().add(rbtnCodigo);
-        rbtnCodigo.setBounds(30, 31, 110, 20);
+        rbtnCodigo.setBounds(30, 25, 110, 23);
 
         txtBusqueda.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -207,7 +207,7 @@ public class FrmBuscarProducto_Credito extends javax.swing.JInternalFrame {
             }
         });
         getContentPane().add(txtBusqueda);
-        txtBusqueda.setBounds(30, 61, 300, 22);
+        txtBusqueda.setBounds(30, 55, 370, 30);
 
         rbtnNombre.setText("Nombre");
         rbtnNombre.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -216,11 +216,11 @@ public class FrmBuscarProducto_Credito extends javax.swing.JInternalFrame {
             }
         });
         getContentPane().add(rbtnNombre);
-        rbtnNombre.setBounds(143, 31, 80, 20);
+        rbtnNombre.setBounds(143, 25, 80, 23);
 
         rbtnDescripcion.setText("Descripción");
         getContentPane().add(rbtnDescripcion);
-        rbtnDescripcion.setBounds(230, 31, 85, 20);
+        rbtnDescripcion.setBounds(230, 25, 82, 23);
 
         jLabel18.setBackground(new java.awt.Color(238, 240, 247));
         jLabel18.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
