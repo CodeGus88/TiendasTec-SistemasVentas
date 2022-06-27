@@ -22,7 +22,7 @@ public class ClsEntidadProducto {
     private String strIdCategoria;
     private String strDescripcionCategoria;
     private String strImagen;
-
+    
     public String getStrImagen() {
         return strImagen;
     }

@@ -154,6 +154,7 @@ void BuscarPermisos(){
         mnuOperaciones = new javax.swing.JMenu();
         mVenta = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem9 = new javax.swing.JMenuItem();
         mEstado = new javax.swing.JMenuItem();
         mCliente = new javax.swing.JMenuItem();
         mnuInformes = new javax.swing.JMenu();
@@ -429,6 +430,15 @@ void BuscarPermisos(){
             }
         });
         mnuOperaciones.add(jMenuItem4);
+
+        jMenuItem9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/nuevo1.png"))); // NOI18N
+        jMenuItem9.setText("Cotización");
+        jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem9ActionPerformed(evt);
+            }
+        });
+        mnuOperaciones.add(jMenuItem9);
 
         mEstado.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F7, 0));
         mEstado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/estado_m.png"))); // NOI18N
@@ -1153,6 +1163,14 @@ void BuscarPermisos(){
        ventasCreditoDetalladas.show(); 
     }//GEN-LAST:event_jMenuItem8ActionPerformed
 
+    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
+        Presentacion.FrmCotizacion cotizacion = new Presentacion.FrmCotizacion();
+        Escritorio.add(cotizacion);
+        cotizacion.show();
+        cotizacion.IdEmpleado = lblIdEmpleado.getText();
+        cotizacion.NombreEmpleado = lblNombreEmpleado.getText();
+    }//GEN-LAST:event_jMenuItem9ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1212,6 +1230,7 @@ void BuscarPermisos(){
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
+    private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JLabel lblEstado;
     private javax.swing.JLabel lblFecha;
     private javax.swing.JLabel lblIdEmpleado;

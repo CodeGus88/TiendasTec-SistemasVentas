@@ -182,14 +182,16 @@ public class FrmLogin extends javax.swing.JFrame {
         jLabel1.setBounds(160, 0, 194, 40);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setText("Usuario:");
         getContentPane().add(jLabel2);
-        jLabel2.setBounds(340, 60, 42, 15);
+        jLabel2.setBounds(303, 60, 80, 15);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setText("Constraseña:");
         getContentPane().add(jLabel3);
-        jLabel3.setBounds(310, 90, 69, 15);
+        jLabel3.setBounds(300, 90, 80, 15);
 
         txtUsuario.setBackground(new java.awt.Color(255, 255, 204));
         txtUsuario.setText("admin");
@@ -328,9 +330,10 @@ public class FrmLogin extends javax.swing.JFrame {
         btnD1.setBounds(160, 70, 40, 33);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel4.setText("Cargo:");
         getContentPane().add(jLabel4);
-        jLabel4.setBounds(350, 140, 34, 15);
+        jLabel4.setBounds(305, 140, 80, 15);
 
         cboCargo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         getContentPane().add(cboCargo);

@@ -265,7 +265,7 @@ public class FrmBuscarProducto_Venta extends javax.swing.JInternalFrame {
             }
         });
         getContentPane().add(btnSalir);
-        btnSalir.setBounds(740, 10, 80, 80);
+        btnSalir.setBounds(680, 10, 80, 80);
         getContentPane().add(lblEstado);
         lblEstado.setBounds(10, 250, 180, 20);
 

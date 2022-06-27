@@ -52,6 +52,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.view.JasperViewer;
 import net.sourceforge.barbecue.output.OutputException;
+import tools.Toast;
 
 public class FrmProducto extends javax.swing.JInternalFrame {
     private Connection connection=new ClsConexion().getConection();
@@ -79,13 +80,22 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         buttonGroup1.add(rbtnCategoria);
         buttonGroup2.add(rbtnActivo);
         buttonGroup2.add(rbtnInactivo);
-        
+
         mirar();
         actualizarTabla();
+        
+        
+        
         //---------------------ANCHO Y ALTO DEL FORM----------------------
         this.setSize(965, 558);
         CrearTabla();
         CantidadTotal();
+    }
+    
+    public void duplicateProduct(ClsEntidadProducto producto){
+    
+        // escribir en el formulario
+        
     }
 //-----------------------------------------------------------------------------------------------
 //--------------------------------------METODOS--------------------------------------------------
@@ -252,7 +262,13 @@ public class FrmProducto extends javax.swing.JInternalFrame {
        ClsProducto productos=new ClsProducto();
        ArrayList<ClsEntidadProducto> producto=productos.listarProducto();
        Iterator iterator=producto.iterator();
-       DefaultTableModel defaultTableModel=new DefaultTableModel(null,titulos);
+       
+        DefaultTableModel defaultTableModel = new DefaultTableModel(null, titulos) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
        
        String fila[]=new String[12];
        while(iterator.hasNext()){
@@ -377,6 +393,8 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         jTabbedPane2 = new javax.swing.JTabbedPane();
         buttonGroup1 = new javax.swing.ButtonGroup();
         buttonGroup2 = new javax.swing.ButtonGroup();
+        jPopupMenu = new javax.swing.JPopupMenu();
+        duplicateItem = new javax.swing.JMenuItem();
         btnModificar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
@@ -396,7 +414,6 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         pNuevo = new javax.swing.JPanel();
         txtCodigo = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         txtCodigoBar = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
@@ -432,10 +449,19 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         btnSeleccionarImagen = new javax.swing.JButton();
         btnActualizar = new javax.swing.JButton();
         jLabel16 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         lstCodigos = new javax.swing.JList();
         btnSalir1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+
+        duplicateItem.setText("Duplicar");
+        duplicateItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                duplicateItemActionPerformed(evt);
+            }
+        });
+        jPopupMenu.add(duplicateItem);
 
         setBackground(new java.awt.Color(255, 255, 255));
         setClosable(true);
@@ -559,6 +585,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tblProducto.setComponentPopupMenu(jPopupMenu);
         tblProducto.setRowHeight(22);
         tblProducto.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -575,16 +602,20 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         pNuevo.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         txtCodigo.setEnabled(false);
+        txtCodigo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCodigoActionPerformed(evt);
+            }
+        });
         pNuevo.add(txtCodigo, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 20, 70, 40));
 
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setText("ID Producto:");
-        pNuevo.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 70, 20));
+        pNuevo.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 90, 20));
 
-        jLabel14.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos del Producto", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
-        pNuevo.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 450, 200));
-
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setText("Código de Barras:");
-        pNuevo.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 30, 100, 20));
+        pNuevo.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 30, 120, 20));
 
         txtCodigoBar.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -594,10 +625,11 @@ public class FrmProducto extends javax.swing.JInternalFrame {
                 txtCodigoBarKeyTyped(evt);
             }
         });
-        pNuevo.add(txtCodigoBar, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 20, 160, 40));
+        pNuevo.add(txtCodigoBar, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 20, 160, 40));
 
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel5.setText("Nombre del producto:");
-        pNuevo.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, 120, 20));
+        pNuevo.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, 140, 20));
 
         txtNombre.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -607,10 +639,11 @@ public class FrmProducto extends javax.swing.JInternalFrame {
                 txtNombreKeyTyped(evt);
             }
         });
-        pNuevo.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 110, 310, -1));
+        pNuevo.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 110, 310, -1));
 
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel6.setText("Stock:");
-        pNuevo.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 240, 40, 30));
+        pNuevo.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 240, 90, 30));
 
         txtStockMin.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         txtStockMin.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -620,8 +653,9 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         });
         pNuevo.add(txtStockMin, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 240, 80, 30));
 
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel7.setText("Stock Mínimo:");
-        pNuevo.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 240, 80, 30));
+        pNuevo.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 240, 100, 30));
 
         txtPrecioVenta.setBackground(new java.awt.Color(254, 254, 241));
         txtPrecioVenta.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -635,11 +669,13 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         });
         pNuevo.add(txtPrecioVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 320, 80, 30));
 
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel8.setText("Descripción:");
-        pNuevo.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 160, 70, 20));
+        pNuevo.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 160, 140, 20));
 
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel10.setText("Precio Costo:");
-        pNuevo.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 320, 80, 30));
+        pNuevo.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 320, 90, 30));
 
         txtPrecioCosto.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         txtPrecioCosto.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -649,8 +685,9 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         });
         pNuevo.add(txtPrecioCosto, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 320, 80, 30));
 
+        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel12.setText("Precio Venta:");
-        pNuevo.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 320, 80, 30));
+        pNuevo.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 320, 100, 30));
 
         rbtnActivo.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         rbtnActivo.setText("ACTIVO");
@@ -677,8 +714,9 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         });
         pNuevo.add(txtStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 240, 80, 30));
 
+        jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel15.setText("Utilidad:");
-        pNuevo.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 400, 50, 30));
+        pNuevo.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 400, 90, 30));
 
         txtUtilidad.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         txtUtilidad.setEnabled(false);
@@ -688,13 +726,14 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         txtDescripcion.setRows(5);
         jScrollPane3.setViewportView(txtDescripcion);
 
-        pNuevo.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 160, 310, 30));
+        pNuevo.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 160, 310, 30));
 
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel4.setText("Categoría:");
-        pNuevo.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 130, 60, 30));
+        pNuevo.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 130, 140, 30));
 
         cboCategoria.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        pNuevo.add(cboCategoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 130, 310, 30));
+        pNuevo.add(cboCategoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 130, 310, 30));
 
         btnGenerar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Generar.png"))); // NOI18N
         btnGenerar.setText("Generar cod. barras");
@@ -717,7 +756,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
                 cboTipoCodificacionActionPerformed(evt);
             }
         });
-        pNuevo.add(cboTipoCodificacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 0, -1, -1));
+        pNuevo.add(cboTipoCodificacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 0, -1, -1));
 
         jLabel9.setText("Tipo de Codificación:");
         pNuevo.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 40, 10, 0));
@@ -729,13 +768,13 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         jLabel20.setForeground(new java.awt.Color(0, 51, 153));
         jLabel20.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel20.setText("*");
-        pNuevo.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 40, 20, 20));
+        pNuevo.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 40, 20, 20));
 
         jLabel21.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel21.setForeground(new java.awt.Color(0, 51, 153));
         jLabel21.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel21.setText("*");
-        pNuevo.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 110, 20, 20));
+        pNuevo.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 110, 20, 20));
 
         btnImprimir.setText("Imprimir codigo de barras");
         btnImprimir.addActionListener(new java.awt.event.ActionListener() {
@@ -743,7 +782,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
                 btnImprimirActionPerformed(evt);
             }
         });
-        pNuevo.add(btnImprimir, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 60, 160, 40));
+        pNuevo.add(btnImprimir, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 60, 160, 40));
 
         lblImagen.setBackground(new java.awt.Color(255, 255, 153));
         lblImagen.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -767,6 +806,9 @@ public class FrmProducto extends javax.swing.JInternalFrame {
 
         jLabel16.setText("Generar codigos aleatorios:");
         pNuevo.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 0, 150, 30));
+
+        jLabel14.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos del Producto", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
+        pNuevo.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 480, 200));
 
         lstCodigos.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         lstCodigos.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1137,7 +1179,6 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         imagen.getImage().flush();
         lblprueba.setIcon(imagen);
 
-        
     }//GEN-LAST:event_btnGenerarActionPerformed
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
@@ -1313,6 +1354,23 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     private void cboTipoCodificacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboTipoCodificacionActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cboTipoCodificacionActionPerformed
+
+    private void duplicateItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_duplicateItemActionPerformed
+
+        if (tblProducto.getSelectedRows().length > 0) {
+            accion = "Nuevo";
+            modificar();
+            txtCodigo.setText("");
+            txtCodigoBar.setText("");
+            tabProducto.setSelectedIndex(tabProducto.indexOfComponent(pNuevo));
+        } else {
+            JOptionPane.showMessageDialog(null, "¡Se debe seleccionar un registro!");
+        }
+    }//GEN-LAST:event_duplicateItemActionPerformed
+
+    private void txtCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCodigoActionPerformed
  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActualizar;
@@ -1328,6 +1386,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.JComboBox cboCategoria;
     private javax.swing.JComboBox cboTipoCodificacion;
+    private javax.swing.JMenuItem duplicateItem;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -1348,6 +1407,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JPopupMenu jPopupMenu;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;

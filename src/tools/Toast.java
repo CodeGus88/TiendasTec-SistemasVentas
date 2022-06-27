@@ -13,9 +13,9 @@ import javax.swing.SwingConstants;
 
 public class Toast extends Thread{
     
-    private JFrame frame;
-    private JLabel textMessage;
-    private int time;
+    private final JFrame frame;
+    private final JLabel textMessage;
+    private final int time;
     private final int LENGTH_LONG = 5;
     private final int LENGTH_SHORT = 3;
     
@@ -36,26 +36,19 @@ public class Toast extends Thread{
         this.time = sconds*1000;
         frame.add(textMessage );
        
-        Process process = new Process();
-        process.run();
+//        Process process = new Process();
+//        process.run();
+        run();
+                
     }
-    
 
-    class  Process extends Thread{
-        @Override
-        public void run(){
-            frame.setVisible(true);
-            try {
-                Thread.sleep(time);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Toast.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            frame.dispose();
+    public void run(){
+        frame.setVisible(true);
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Toast.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-    
-    public static void main(String [] arg){
-        Toast toast = new Toast("Esta es una prueba...", 5);
-        toast.run();
+        frame.dispose();
     }
 }
