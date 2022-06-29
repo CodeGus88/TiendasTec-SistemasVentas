@@ -431,7 +431,7 @@ void BuscarPermisos(){
         });
         mnuOperaciones.add(jMenuItem4);
 
-        jMenuItem9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/nuevo1.png"))); // NOI18N
+        jMenuItem9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/importe.png"))); // NOI18N
         jMenuItem9.setText("Cotización");
         jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -881,7 +881,7 @@ void BuscarPermisos(){
     }//GEN-LAST:event_formComponentShown
 
     private void mCambiarpassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mCambiarpassActionPerformed
-        Presentacion.FrmCambiarContraseña Cambiar=new Presentacion.FrmCambiarContraseña();
+        Presentacion.FrmCambiarContrasenia Cambiar=new Presentacion.FrmCambiarContrasenia();
         Escritorio.add(Cambiar);
         Cambiar.show();
         Cambiar.IdEmpleado=lblIdEmpleado.getText();

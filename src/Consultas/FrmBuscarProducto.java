@@ -6,7 +6,6 @@ package Consultas;
 
 import Entidad.ClsEntidadProducto;
 import Negocio.ClsProducto;
-import interfaces.CotizacionInterface;
 import java.awt.Color;
 import java.awt.Component;
 import java.sql.ResultSet;
@@ -19,6 +18,8 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import interfaces.ProductoVentaInterface;
+import java.awt.EventQueue;
 
 /**
  *
@@ -30,10 +31,10 @@ public class FrmBuscarProducto extends javax.swing.JInternalFrame {
     DefaultTableModel dtm=new DefaultTableModel();
     public String Total;
     String criterio,busqueda;
-    private CotizacionInterface cotizacionInterface;
-    public FrmBuscarProducto(CotizacionInterface cotizacionInterface) {
+    private ProductoVentaInterface productoVentaInterface;
+    public FrmBuscarProducto(ProductoVentaInterface productoVentaInterface) {
         
-        this.cotizacionInterface = cotizacionInterface;
+        this.productoVentaInterface = productoVentaInterface;
         
         initComponents();
         buttonGroup1.add(rbtnCodigo);
@@ -41,15 +42,13 @@ public class FrmBuscarProducto extends javax.swing.JInternalFrame {
         buttonGroup1.add(rbtnDescripcion);
         actualizarTablaProducto();
         CrearTablaProducto();
-        //---------------------ANCHO Y ALTO DEL FORM----------------------
         this.setSize(836, 400);
         CantidadTotal();
+        setVisible(true);
+        EventQueue.invokeLater(() -> txtBusqueda.requestFocusInWindow());
         
     }
 
-//-----------------------------------------------------------------------------------------------
-//----------------------------------PANEL - PRODUCTO---------------------------------------------
-//-----------------------------------------------------------------------------------------------
     void actualizarTablaProducto(){
        String titulos[]={"ID","Cód. de Barras","Nombre","Descripción","Stock","P. Costo","P. Venta"};
               
@@ -129,7 +128,12 @@ public class FrmBuscarProducto extends javax.swing.JInternalFrame {
    }
     void BuscarProductoPanel(){
         String titulos[]={"ID","Cód. de Barras","Nombre","Descripción","Stock","P. Costo","P. Venta"};
-        dtm.setColumnIdentifiers(titulos);
+        dtm = new DefaultTableModel(null, titulos){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         
         ClsProducto categoria=new ClsProducto();
         busqueda=txtBusqueda.getText();
@@ -193,7 +197,6 @@ public class FrmBuscarProducto extends javax.swing.JInternalFrame {
 
         setBackground(new java.awt.Color(255, 255, 255));
         setClosable(true);
-        setResizable(true);
         setTitle("Consultar Productos");
         getContentPane().setLayout(null);
 
@@ -292,28 +295,28 @@ public class FrmBuscarProducto extends javax.swing.JInternalFrame {
 
     private void tblProductoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProductoMouseClicked
 
-        int fila;
+        if(evt.getClickCount() == 2){
+            int fila;
+            DefaultTableModel defaultTableModel = new DefaultTableModel();
+            fila = tblProducto.getSelectedRow();
 
-        DefaultTableModel defaultTableModel = new DefaultTableModel();
-        fila = tblProducto.getSelectedRow();
+            if (fila == -1) {
+                JOptionPane.showMessageDialog(null, "Se debe seleccionar un registro");
+            } else {
+                defaultTableModel = (DefaultTableModel) tblProducto.getModel();
 
-        if (fila == -1){
-            JOptionPane.showMessageDialog(null, "Se debe seleccionar un registro");
-        }else{
-            defaultTableModel = (DefaultTableModel)tblProducto.getModel();
+                ClsEntidadProducto producto = new ClsEntidadProducto();
 
-            ClsEntidadProducto producto = new ClsEntidadProducto();
-
-            producto.setStrIdProducto((String) defaultTableModel.getValueAt(fila, 0));
-            producto.setStrCodigoProducto((String) defaultTableModel.getValueAt(fila, 1));
-            producto.setStrNombreProducto((String) defaultTableModel.getValueAt(fila, 2));
-            producto.setStrDescripcionProducto((String) defaultTableModel.getValueAt(fila, 3));
-            producto.setStrStockProducto((String) defaultTableModel.getValueAt(fila, 4));
-            producto.setStrPrecioCostoProducto((String) defaultTableModel.getValueAt(fila, 5));
-            producto.setStrPrecioVentaProducto((String) defaultTableModel.getValueAt(fila, 6));
-            cotizacionInterface.cargarProducto(producto);
+                producto.setStrIdProducto((String) defaultTableModel.getValueAt(fila, 0));
+                producto.setStrCodigoProducto((String) defaultTableModel.getValueAt(fila, 1));
+                producto.setStrNombreProducto((String) defaultTableModel.getValueAt(fila, 2));
+                producto.setStrDescripcionProducto((String) defaultTableModel.getValueAt(fila, 3));
+                producto.setStrStockProducto((String) defaultTableModel.getValueAt(fila, 4));
+                producto.setStrPrecioCostoProducto((String) defaultTableModel.getValueAt(fila, 5));
+                producto.setStrPrecioVentaProducto((String) defaultTableModel.getValueAt(fila, 6));
+                productoVentaInterface.cargarProducto(producto);
+            }
         }
-        
     }//GEN-LAST:event_tblProductoMouseClicked
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed

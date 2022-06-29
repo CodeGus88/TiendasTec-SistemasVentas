@@ -32,7 +32,7 @@ public class ClsEmpleado {
             statement.setString("psueldo", empleado.getStrSueldoEmpleado());
             statement.setString("pestado", empleado.getStrEstadoEmpleado());
             statement.setString("pusuario", empleado.getStrUsuarioEmpleado());
-            statement.setString("pcontraseña", empleado.getStrContraseñaEmpleado());
+            statement.setString("pcontrasenia", empleado.getStrContraseniaEmpleado());
             statement.setString("pidtipousuario", empleado.getStrIdTipoUsuario());
             statement.execute();
             JOptionPane.showMessageDialog(null,"¡Empleado Agregado con éxito!","Mensaje del Sistema",1);
@@ -57,7 +57,7 @@ public class ClsEmpleado {
             statement.setString("psueldo", empleado.getStrSueldoEmpleado());
             statement.setString("pestado", empleado.getStrEstadoEmpleado());
             statement.setString("pusuario", empleado.getStrUsuarioEmpleado());
-            statement.setString("pcontraseña", empleado.getStrContraseñaEmpleado());
+            statement.setString("pcontrasenia", empleado.getStrContraseniaEmpleado());
             statement.setString("pidtipousuario", empleado.getStrIdTipoUsuario());
             statement.setString("pidempleado",codigo);
             statement.execute();
@@ -73,7 +73,7 @@ public class ClsEmpleado {
         try{
             CallableStatement statement=connection.prepareCall("{call SP_S_Login(?,?,?)}");
             statement.setString("pusuario", usu);
-            statement.setString("pcontraseña", contra);
+            statement.setString("pcontrasenia", contra);
             statement.setString("pdescripcion", desc);
             rs=statement.executeQuery();
             return rs;
@@ -104,7 +104,7 @@ public class ClsEmpleado {
                 empleado.setStrSueldoEmpleado(resultSet.getString("Sueldo"));
                 empleado.setStrEstadoEmpleado(resultSet.getString("Estado"));
                 empleado.setStrUsuarioEmpleado(resultSet.getString("Usuario"));
-                empleado.setStrContraseñaEmpleado(resultSet.getString("Contraseña"));
+                empleado.setStrContraseniaEmpleado(resultSet.getString("Contrasenia"));
                 empleado.setStrTipoUsuario(resultSet.getString("TipoUsuario"));
                 
                 
@@ -128,11 +128,11 @@ public class ClsEmpleado {
             throw SQLex;            
         }        
     } 
-    public void cambiarContraseña(String codigo,ClsEntidadEmpleado Empleado){
+    public void cambiarContrasenia(String codigo,ClsEntidadEmpleado Empleado){
         try{
             CallableStatement statement=connection.prepareCall("{call SP_U_CambiarPass(?,?)}");
             statement.setString("pidempleado",codigo);
-            statement.setString("pcontraseña",Empleado.getStrContraseñaEmpleado());        
+            statement.setString("pcontrasenia",Empleado.getStrContraseniaEmpleado());        
             statement.executeUpdate();
             
         }catch(SQLException ex){

@@ -568,7 +568,7 @@ void CalcularTotal(){
         jScrollPane3.setViewportView(tblDetalleProducto);
 
         getContentPane().add(jScrollPane3);
-        jScrollPane3.setBounds(10, 310, 790, 180);
+        jScrollPane3.setBounds(10, 320, 790, 180);
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
@@ -688,7 +688,7 @@ void CalcularTotal(){
         });
         jPanel3.add(btnLimpiarTabla, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 70, 210, 20));
 
-        jPanel5.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, 600, 100));
+        jPanel5.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 200, 600, 100));
 
         txtNumero.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         txtNumero.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -704,7 +704,7 @@ void CalcularTotal(){
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel22.setText("CÓDIGO:");
-        jPanel2.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 70, -1));
+        jPanel2.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 13, 70, -1));
 
         txtCodigoProducto.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -714,7 +714,7 @@ void CalcularTotal(){
                 txtCodigoProductoKeyTyped(evt);
             }
         });
-        jPanel2.add(txtCodigoProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, 190, 20));
+        jPanel2.add(txtCodigoProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 28, 190, 30));
 
         btnBuscarProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Buscar_p.png"))); // NOI18N
         btnBuscarProducto.setText("Buscar");
@@ -723,13 +723,13 @@ void CalcularTotal(){
                 btnBuscarProductoActionPerformed(evt);
             }
         });
-        jPanel2.add(btnBuscarProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 20, 120, 35));
+        jPanel2.add(btnBuscarProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 28, 120, 30));
 
         jLabel17.setText("NOMBRE:");
-        jPanel2.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, 70, 20));
+        jPanel2.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 55, 70, 20));
 
         txtNombreProducto.setEnabled(false);
-        jPanel2.add(txtNombreProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 65, 320, 30));
+        jPanel2.add(txtNombreProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 72, 320, 30));
 
         jLabel19.setText("STOCK:");
         jPanel2.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 10, -1, -1));
@@ -749,7 +749,7 @@ void CalcularTotal(){
         jLabel23.setText("COSTO:");
         jPanel2.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 10, 50, -1));
 
-        jPanel5.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 85, 600, 100));
+        jPanel5.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 85, 600, 110));
 
         jPanel1.setBackground(new java.awt.Color(255, 153, 0));
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos de la Compra"));
@@ -766,20 +766,20 @@ void CalcularTotal(){
                 btnBuscarProveedorActionPerformed(evt);
             }
         });
-        jPanel1.add(btnBuscarProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 25, 90, 35));
+        jPanel1.add(btnBuscarProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 35, 120, 30));
 
         txtNombreProveedor.setEnabled(false);
-        jPanel1.add(txtNombreProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 35, 190, -1));
+        jPanel1.add(txtNombreProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 35, 190, 30));
 
         jLabel13.setText("DOCUMENTO:");
-        jPanel1.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 20, 100, -1));
+        jPanel1.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 15, 100, -1));
 
         cboTipoDocumento.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jPanel1.add(cboTipoDocumento, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 40, 130, 20));
+        jPanel1.add(cboTipoDocumento, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 35, 130, 30));
 
         jLabel2.setText("FECHA:");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 20, 80, 20));
-        jPanel1.add(txtFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 40, 100, -1));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 15, 80, 20));
+        jPanel1.add(txtFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 35, 100, 30));
         jPanel1.add(lblIdProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 10, 20, 20));
 
         jPanel5.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 600, 70));

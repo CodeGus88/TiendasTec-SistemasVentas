@@ -18,25 +18,26 @@ private Connection connection=new ClsConexion().getConection();
     //--------------------------------------------------------------------------------------------------
     //-----------------------------------------METODOS--------------------------------------------------
     //-------------------------------------------------------------------------------------------------- 
-    public void agregarProducto(ClsEntidadProducto Producto){
+    public void agregarProducto(ClsEntidadProducto producto){
         try{
             CallableStatement statement=connection.prepareCall("{call SP_I_Producto(?,?,?,?,?,?,?,?,?,?,?)}");
-            statement.setString("pcodigo",Producto.getStrCodigoProducto());
-            statement.setString("pnombre",Producto.getStrNombreProducto());
-            statement.setString("pdescripcion",Producto.getStrDescripcionProducto());
-            statement.setString("pstock",Producto.getStrStockProducto());
-            statement.setString("pstockmin",Producto.getStrStockMinProducto());
-            statement.setString("ppreciocosto",Producto.getStrPrecioCostoProducto());
-            statement.setString("pprecioventa",Producto.getStrPrecioVentaProducto());
-            statement.setString("putilidad",Producto.getStrUtilidadProducto());
-            statement.setString("pestado",Producto.getStrEstadoProducto());
-            statement.setString("pidcategoria",Producto.getStrIdCategoria());
-            statement.setString("pimagen",Producto.getStrImagen());
-            
+            statement.setString("pcodigo",producto.getStrCodigoProducto());
+            statement.setString("pnombre",producto.getStrNombreProducto());
+            statement.setString("pdescripcion",producto.getStrDescripcionProducto());
+            statement.setString("pstock",producto.getStrStockProducto());
+            statement.setString("pstockmin",producto.getStrStockMinProducto());
+            statement.setString("ppreciocosto",producto.getStrPrecioCostoProducto());
+            statement.setString("pprecioventa",producto.getStrPrecioVentaProducto());
+            statement.setString("putilidad",producto.getStrUtilidadProducto());
+            statement.setString("pestado",producto.getStrEstadoProducto());
+            statement.setString("pidcategoria",producto.getStrIdCategoria());
+            statement.setString("pimagen",producto.getStrImagen());
             statement.execute();
+            
+            System.out.println("Producto: " + producto.getStrNombreProducto());
 
             JOptionPane.showMessageDialog(null,"¡Producto Agregado con éxito!","Mensaje del Sistema",1);
-
+            
         }catch(SQLException ex){
             ex.printStackTrace();
         }

@@ -5,9 +5,18 @@
 package Presentacion;
 
 import Conexion.ClsConexion;
+import Consultas.FrmBuscarProducto;
 import Entidad.*;
 import Negocio.*;
+import static Presentacion.FrmCotizacion.lblIdProducto;
+import static Presentacion.FrmCotizacion.txtCodigoProducto;
+import static Presentacion.FrmCotizacion.txtCostoProducto;
+import static Presentacion.FrmCotizacion.txtDescripcionProducto;
+import static Presentacion.FrmCotizacion.txtNombreProducto;
+import static Presentacion.FrmCotizacion.txtPrecioProducto;
+import static Presentacion.FrmCotizacion.txtStockProducto;
 import interfaces.ClientInterface;
+import interfaces.ProductoVentaInterface;
 
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.view.*;
@@ -17,15 +26,12 @@ import java.util.Map;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.KeyEvent;
-//import java.awt.event.MouseEvent;
 import java.io.File;
 import java.sql.Connection;
-//import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-//import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,7 +42,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
-public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterface {
+public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterface, ProductoVentaInterface {
 
     private Connection connection = new ClsConexion().getConection();
     String Total;
@@ -616,8 +622,9 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos del Producto"));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel22.setText("Codigo de barras del producto");
-        jPanel2.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 200, 30));
+        jLabel22.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel22.setText("Codigo de barras del producto: ");
+        jPanel2.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 240, 30));
 
         txtCodigoProducto.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -627,20 +634,20 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
                 txtCodigoProductoKeyTyped(evt);
             }
         });
-        jPanel2.add(txtCodigoProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 20, 130, 30));
+        jPanel2.add(txtCodigoProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 20, 130, 30));
 
         btnBuscarProducto.setBackground(new java.awt.Color(51, 51, 255));
         btnBuscarProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Buscar_p.png"))); // NOI18N
-        btnBuscarProducto.setText("buscar");
         btnBuscarProducto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBuscarProductoActionPerformed(evt);
             }
         });
-        jPanel2.add(btnBuscarProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 20, 90, 30));
+        jPanel2.add(btnBuscarProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 20, 30, 30));
 
-        jLabel17.setText("Nombre del producto:");
-        jPanel2.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, 140, 30));
+        jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel17.setText("Nombre del producto: ");
+        jPanel2.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 60, 170, 30));
 
         txtNombreProducto.setEnabled(false);
         jPanel2.add(txtNombreProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 60, 230, 30));
@@ -858,17 +865,24 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
     }//GEN-LAST:event_formComponentShown
 
     private void btnBuscarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarProductoActionPerformed
-        Consultas.FrmBuscarProducto_Venta producto = new Consultas.FrmBuscarProducto_Venta();
+//        Consultas.FrmBuscarProducto_Venta producto = new Consultas.FrmBuscarProducto_Venta();
+//        Presentacion.FrmPrincipal.Escritorio.add(producto);
+//        producto.toFront();
+//        producto.setVisible(true);
+
+        Consultas.FrmBuscarProducto producto = new Consultas.FrmBuscarProducto(this);
         Presentacion.FrmPrincipal.Escritorio.add(producto);
         producto.toFront();
-        producto.setVisible(true);
     }//GEN-LAST:event_btnBuscarProductoActionPerformed
 
     private void btnBuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarClienteActionPerformed
-        Consultas.FrmBuscarCliente_Venta cliente = new Consultas.FrmBuscarCliente_Venta();
+//        Consultas.FrmBuscarCliente_Venta cliente = new Consultas.FrmBuscarCliente_Venta();
+//        Presentacion.FrmPrincipal.Escritorio.add(cliente);
+//        cliente.toFront();
+//        cliente.setVisible(true);
+        Consultas.FrmBuscarCliente cliente = new Consultas.FrmBuscarCliente(this);
         Presentacion.FrmPrincipal.Escritorio.add(cliente);
         cliente.toFront();
-        cliente.setVisible(true);
     }//GEN-LAST:event_btnBuscarClienteActionPerformed
 
     void CalcularTotal() {
@@ -1355,7 +1369,7 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public void  loadClient(ClsEntidadCliente client) {
+    public void  loadNewClient(ClsEntidadCliente client) {
         if(!client.getStrIdCliente().equals("0")){
             JOptionPane.showMessageDialog(null,"¡Cliente Agregado con éxito!\n"
                     + "Se asignará a esta transacción\n"
@@ -1368,9 +1382,25 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         lblIdCliente.setText(client.getStrIdCliente());
         txtNombreCliente.setText(client.getStrNombreCliente());
         }else{
-            JOptionPane.showMessageDialog(null, "Ocurrio un erroe al guardar el cliente, intente nuevamente", "ERROR", ERROR);
+            JOptionPane.showMessageDialog(null, "Ocurrio un error al guardar el cliente, intente nuevamente", "ERROR", ERROR);
         }
-        
+    }
+    
+    @Override
+    public void loadClient(ClsEntidadCliente client) {
+        Presentacion.FrmVenta.lblIdCliente.setText(client.getStrIdCliente());
+        Presentacion.FrmVenta.txtNombreCliente.setText(client.getStrNombreCliente());
+    }
+
+    @Override
+    public void cargarProducto(ClsEntidadProducto producto) {
+        lblIdProducto.setText(producto.getStrIdProducto());
+        txtCodigoProducto.setText(producto.getStrCodigoProducto());
+        txtNombreProducto.setText(producto.getStrNombreProducto());
+        txtDescripcionProducto.setText(producto.getStrDescripcionProducto());
+        txtStockProducto.setText(producto.getStrStockProducto());
+        txtCostoProducto.setText(producto.getStrPrecioCostoProducto());  // producto.preciocosto 
+        txtPrecioProducto.setText(producto.getStrPrecioVentaProducto()); // producto.precioVenta
     }
     
 }

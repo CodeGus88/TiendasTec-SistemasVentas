@@ -6,14 +6,12 @@ package Presentacion;
 
 import Entidad.ClsEntidadCliente;
 import Negocio.ClsCliente;
-import com.sun.org.apache.bcel.internal.generic.AALOAD;
 import interfaces.ClientInterface;
 import java.awt.Color;
 import javax.swing.JOptionPane;
 import tools.TextPrompt;
 
 /**
- *
  * @author Gustavo
  */
 public class FrmNewClient extends javax.swing.JDialog {
@@ -31,7 +29,7 @@ public class FrmNewClient extends javax.swing.JDialog {
         initComponents();
         this.setLocationRelativeTo(null);
         // Placeholders
-        new TextPrompt("Nombre o razón cocial (obligatorio)", txtName);
+        new TextPrompt("Nombre o razón social (obligatorio)", txtName);
         new TextPrompt("NIT", txtNit);
         new TextPrompt("Describa si el cliente tiene observaciones", txtObservation);
         new TextPrompt("Teléfono", txtPhone);
@@ -287,7 +285,7 @@ public class FrmNewClient extends javax.swing.JDialog {
         entity.setStrObsvCliente(txtObservation.getText());
         if(!entity.getStrNombreCliente().isEmpty()){
             //            gestorCliente.agregarCliente(entity);
-            clientInterface.loadClient(
+            clientInterface.loadNewClient(
                 gestorCliente.agregarClienteObtenerIdAsignado(entity)
             );
             this.dispose();

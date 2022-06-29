@@ -156,7 +156,7 @@ public class FrmEmpleado extends javax.swing.JInternalFrame {
        txtDni.setText("");
        txtSueldo.setText("");
        txtUsuario.setText("");
-       txtContraseña.setText("");
+       txtContrasenia.setText("");
        
        rbtnMasculino.setSelected(true);
        rbtnFemenino.setSelected(false);
@@ -190,7 +190,7 @@ public class FrmEmpleado extends javax.swing.JInternalFrame {
         rbtnActivo.setEnabled(false);
         rbtnInactivo.setEnabled(false);
         txtUsuario.setEnabled(false);
-        txtContraseña.setEnabled(false);
+        txtContrasenia.setEnabled(false);
         cboTipoUsuario.setEnabled(false);
     }
    
@@ -217,7 +217,7 @@ public class FrmEmpleado extends javax.swing.JInternalFrame {
         rbtnActivo.setEnabled(true);
         rbtnInactivo.setEnabled(true);
         txtUsuario.setEnabled(true);
-        txtContraseña.setEnabled(true);
+        txtContrasenia.setEnabled(true);
         cboTipoUsuario.setEnabled(true);
         txtNombre.requestFocus();
     }
@@ -249,7 +249,7 @@ public class FrmEmpleado extends javax.swing.JInternalFrame {
            fila[11]=Empleado.getStrSueldoEmpleado();
            fila[12]=Empleado.getStrEstadoEmpleado();
            fila[13]=Empleado.getStrUsuarioEmpleado();
-           fila[14]=Empleado.getStrContraseñaEmpleado();
+           fila[14]=Empleado.getStrContraseniaEmpleado();
            fila[15]=Empleado.getStrTipoUsuario();
            defaultTableModel.addRow(fila);
                 
@@ -342,7 +342,7 @@ public class FrmEmpleado extends javax.swing.JInternalFrame {
                rbtnInactivo.setSelected(true);
             }
             txtUsuario.setText((String)defaultTableModel.getValueAt(registros,13));
-            txtContraseña.setText((String)defaultTableModel.getValueAt(registros,14));
+            txtContrasenia.setText((String)defaultTableModel.getValueAt(registros,14));
             cboTipoUsuario.setSelectedItem((String)defaultTableModel.getValueAt(registros,15));
             tblEmpleado.setRowSelectionInterval(registros,registros);
         }
@@ -469,7 +469,7 @@ public class FrmEmpleado extends javax.swing.JInternalFrame {
         txtDireccion = new javax.swing.JTextArea();
         txtUsuario = new javax.swing.JTextField();
         cboTipoUsuario = new javax.swing.JComboBox();
-        txtContraseña = new javax.swing.JPasswordField();
+        txtContrasenia = new javax.swing.JPasswordField();
         jLabel21 = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
         jLabel23 = new javax.swing.JLabel();
@@ -737,12 +737,12 @@ public class FrmEmpleado extends javax.swing.JInternalFrame {
         cboTipoUsuario.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         pNuevo.add(cboTipoUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 290, 170, 30));
 
-        txtContraseña.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtContrasenia.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtContraseñaKeyTyped(evt);
+                txtContraseniaKeyTyped(evt);
             }
         });
-        pNuevo.add(txtContraseña, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 260, 170, -1));
+        pNuevo.add(txtContrasenia, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 260, 170, -1));
 
         jLabel21.setForeground(new java.awt.Color(0, 51, 153));
         jLabel21.setText("Los campos marcado con un asterísco (*) son obligatorios");
@@ -794,7 +794,7 @@ public class FrmEmpleado extends javax.swing.JInternalFrame {
         accion="Nuevo";
         modificar();
         limpiarCampos();
-        txtContraseña.setEnabled(true);
+        txtContrasenia.setEnabled(true);
         tabEmpleado.setSelectedIndex(tabEmpleado.indexOfComponent(pNuevo));
     }//GEN-LAST:event_btnNuevoActionPerformed
 
@@ -856,12 +856,12 @@ public class FrmEmpleado extends javax.swing.JInternalFrame {
                 empleado.setStrEstadoEmpleado("INACTIVO");
             }
             empleado.setStrUsuarioEmpleado(txtUsuario.getText());
-            if (txtContraseña.getText().length()==0){
-                empleado.setStrContraseñaEmpleado("");
+            if (txtContrasenia.getText().length()==0){
+                empleado.setStrContraseniaEmpleado("");
             }else{
-                contraseña=txtContraseña.getText();
+                contraseña=txtContrasenia.getText();
                 resultado1=getStringMessageDigest(contraseña,algorithm);   
-                empleado.setStrContraseñaEmpleado(resultado1);
+                empleado.setStrContraseniaEmpleado(resultado1);
             }
             
             empleado.setStrIdTipoUsuario(id[cboTipoUsuario.getSelectedIndex()]);
@@ -898,12 +898,12 @@ public class FrmEmpleado extends javax.swing.JInternalFrame {
             }
             empleado.setStrUsuarioEmpleado(txtUsuario.getText());
             //empleado.setStrContraseñaEmpleado(txtContraseña.getText());
-            if (txtContraseña.getText().length()==0){
-                empleado.setStrContraseñaEmpleado("");
+            if (txtContrasenia.getText().length()==0){
+                empleado.setStrContraseniaEmpleado("");
             }else{
-                contraseña=txtContraseña.getText();
+                contraseña=txtContrasenia.getText();
                 resultado1=getStringMessageDigest(contraseña,algorithm);   
-                empleado.setStrContraseñaEmpleado(resultado1);
+                empleado.setStrContraseniaEmpleado(resultado1);
             }
             empleado.setStrIdTipoUsuario(id[cboTipoUsuario.getSelectedIndex()]);
             empleados.modificarEmpleado(strCodigo, empleado);
@@ -973,7 +973,7 @@ public class FrmEmpleado extends javax.swing.JInternalFrame {
                rbtnInactivo.setSelected(true);
             }
             txtUsuario.setText((String) defaultTableModel.getValueAt(fila, 13));
-            txtContraseña.setText((String) defaultTableModel.getValueAt(fila, 14));
+            txtContrasenia.setText((String) defaultTableModel.getValueAt(fila, 14));
             cboTipoUsuario.setSelectedItem((String)defaultTableModel.getValueAt(fila,15));
         }
 
@@ -1054,10 +1054,10 @@ public class FrmEmpleado extends javax.swing.JInternalFrame {
         }        // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void txtContraseñaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtContraseñaKeyTyped
+    private void txtContraseniaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtContraseniaKeyTyped
         char car = evt.getKeyChar();
         if((car<'0' || car>'9')) evt.consume();
-    }//GEN-LAST:event_txtContraseñaKeyTyped
+    }//GEN-LAST:event_txtContraseniaKeyTyped
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
@@ -1111,7 +1111,7 @@ public class FrmEmpleado extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txtBusqueda;
     private javax.swing.JTextField txtCelular;
     private javax.swing.JTextField txtCodigo;
-    private javax.swing.JPasswordField txtContraseña;
+    private javax.swing.JPasswordField txtContrasenia;
     private javax.swing.JTextArea txtDireccion;
     private javax.swing.JTextField txtDni;
     private javax.swing.JTextField txtEmail;

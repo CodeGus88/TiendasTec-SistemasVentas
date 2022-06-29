@@ -9,6 +9,7 @@ import Entidad.ClsEntidadProducto;
 import Negocio.ClsProducto;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.EventQueue;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -21,7 +22,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
 /**
- *
  * @author DAYPER-PERU
  */
 public class FrmBuscarProducto_Compra extends javax.swing.JInternalFrame {
@@ -38,14 +38,15 @@ public class FrmBuscarProducto_Compra extends javax.swing.JInternalFrame {
         buttonGroup1.add(rbtnNombre);
         buttonGroup1.add(rbtnDescripcion);
 
-
+        
         //--------------------PANEL - PRODUCTO----------------------------
         
         actualizarTablaProducto();
         CrearTablaProducto();
         //---------------------ANCHO Y ALTO DEL FORM----------------------
-        this.setSize(536, 300);
         CantidadTotal();
+        this.setSize(836, 400);
+        EventQueue.invokeLater(() -> txtBusqueda.requestFocusInWindow());
 
     }
 
@@ -58,8 +59,14 @@ public class FrmBuscarProducto_Compra extends javax.swing.JInternalFrame {
        ClsProducto productos=new ClsProducto();
        ArrayList<ClsEntidadProducto> producto=productos.listarProductoActivo();
        Iterator iterator=producto.iterator();
-       DefaultTableModel defaultTableModel=new DefaultTableModel(null,titulos);
-       
+       DefaultTableModel defaultTableModel =  new DefaultTableModel(null, titulos) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+
+                return false;
+
+            }
+        };
        String fila[]=new String[6];
        while(iterator.hasNext()){
            ClsEntidadProducto Producto=new ClsEntidadProducto();
@@ -123,8 +130,14 @@ public class FrmBuscarProducto_Compra extends javax.swing.JInternalFrame {
    }
     void BuscarProductoPanel(){
         String titulos[]={"ID","Cód. de Barras","Nombre","Descripción","Stock","P. Costo"};
-        dtm.setColumnIdentifiers(titulos);
-        
+//        dtm.setColumnIdentifiers(titulos);
+        dtm = new DefaultTableModel(null, titulos){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
         ClsProducto categoria=new ClsProducto();
         busqueda=txtBusqueda.getText();
         if(rbtnCodigo.isSelected()){
@@ -197,7 +210,7 @@ public class FrmBuscarProducto_Compra extends javax.swing.JInternalFrame {
             }
         });
         getContentPane().add(rbtnCodigo);
-        rbtnCodigo.setBounds(30, 31, 110, 23);
+        rbtnCodigo.setBounds(30, 22, 110, 23);
 
         txtBusqueda.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -205,7 +218,7 @@ public class FrmBuscarProducto_Compra extends javax.swing.JInternalFrame {
             }
         });
         getContentPane().add(txtBusqueda);
-        txtBusqueda.setBounds(30, 61, 300, 20);
+        txtBusqueda.setBounds(30, 50, 370, 30);
 
         rbtnNombre.setText("Nombre");
         rbtnNombre.setOpaque(false);
@@ -215,12 +228,12 @@ public class FrmBuscarProducto_Compra extends javax.swing.JInternalFrame {
             }
         });
         getContentPane().add(rbtnNombre);
-        rbtnNombre.setBounds(143, 31, 80, 23);
+        rbtnNombre.setBounds(140, 22, 80, 23);
 
         rbtnDescripcion.setText("Descripción");
         rbtnDescripcion.setOpaque(false);
         getContentPane().add(rbtnDescripcion);
-        rbtnDescripcion.setBounds(230, 31, 79, 23);
+        rbtnDescripcion.setBounds(230, 22, 100, 23);
 
         jLabel18.setBackground(new java.awt.Color(238, 240, 247));
         jLabel18.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
@@ -249,7 +262,7 @@ public class FrmBuscarProducto_Compra extends javax.swing.JInternalFrame {
         jScrollPane2.setViewportView(tblProducto);
 
         getContentPane().add(jScrollPane2);
-        jScrollPane2.setBounds(10, 101, 500, 150);
+        jScrollPane2.setBounds(10, 101, 750, 260);
 
         btnSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/door_in.png"))); // NOI18N
         btnSalir.setText("Salir");
@@ -261,7 +274,7 @@ public class FrmBuscarProducto_Compra extends javax.swing.JInternalFrame {
             }
         });
         getContentPane().add(btnSalir);
-        btnSalir.setBounds(430, 10, 80, 80);
+        btnSalir.setBounds(680, 10, 80, 80);
         getContentPane().add(lblEstado);
         lblEstado.setBounds(10, 250, 180, 20);
 
@@ -284,23 +297,25 @@ public class FrmBuscarProducto_Compra extends javax.swing.JInternalFrame {
 
     private void tblProductoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProductoMouseClicked
 
-        int fila;
-
-        DefaultTableModel defaultTableModel = new DefaultTableModel();
-        fila = tblProducto.getSelectedRow();
-
-        if (fila == -1){
-            JOptionPane.showMessageDialog(null, "Se debe seleccionar un registro");
-        }else{
-            defaultTableModel = (DefaultTableModel)tblProducto.getModel();
-
-                Presentacion.FrmCompra.lblIdProducto.setText((String)defaultTableModel.getValueAt(fila,0));
-                Presentacion.FrmCompra.txtCodigoProducto.setText((String)defaultTableModel.getValueAt(fila,1));
-                Presentacion.FrmCompra.txtNombreProducto.setText((String)defaultTableModel.getValueAt(fila,2));
-                Presentacion.FrmCompra.txtDescripcionProducto.setText((String)defaultTableModel.getValueAt(fila,3));
-                Presentacion.FrmCompra.txtStockProducto.setText((String)defaultTableModel.getValueAt(fila,4));
-                Presentacion.FrmCompra.txtPrecioProducto.setText((String)defaultTableModel.getValueAt(fila,5));          
+        if(evt.getClickCount() == 2){
         
+            int fila;
+
+            DefaultTableModel defaultTableModel = new DefaultTableModel();
+
+            fila = tblProducto.getSelectedRow();
+
+            if (fila == -1) {
+                JOptionPane.showMessageDialog(null, "Se debe seleccionar un registro");
+            } else {
+                defaultTableModel = (DefaultTableModel) tblProducto.getModel();
+                Presentacion.FrmCompra.lblIdProducto.setText((String) defaultTableModel.getValueAt(fila, 0));
+                Presentacion.FrmCompra.txtCodigoProducto.setText((String) defaultTableModel.getValueAt(fila, 1));
+                Presentacion.FrmCompra.txtNombreProducto.setText((String) defaultTableModel.getValueAt(fila, 2));
+                Presentacion.FrmCompra.txtDescripcionProducto.setText((String) defaultTableModel.getValueAt(fila, 3));
+                Presentacion.FrmCompra.txtStockProducto.setText((String) defaultTableModel.getValueAt(fila, 4));
+                Presentacion.FrmCompra.txtPrecioProducto.setText((String) defaultTableModel.getValueAt(fila, 5));
+            }
         }
 
     }//GEN-LAST:event_tblProductoMouseClicked

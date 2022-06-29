@@ -7,7 +7,6 @@ package Presentacion;
 import Conexion.ClsConexion;
 import Entidad.*;
 import Negocio.*;
-import interfaces.CotizacionInterface;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.KeyEvent;
@@ -36,9 +35,9 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
-import sun.util.resources.LocaleData;
+import interfaces.ProductoVentaInterface;
 
-public class FrmCotizacion extends javax.swing.JInternalFrame implements CotizacionInterface{
+public class FrmCotizacion extends javax.swing.JInternalFrame implements ProductoVentaInterface{
 
     private Connection connection = new ClsConexion().getConection();
     String Total;
@@ -232,7 +231,7 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Cotizac
         btnNuevo.setEnabled(false);
 
         btnGuardar.setEnabled(true);
-        btnSalir.setEnabled(false);
+//        btnSalir.setEnabled(false);
 
         txtCodigoProducto.setEnabled(true);
         txtSerie.setEnabled(true);
@@ -527,8 +526,9 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Cotizac
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos del Producto"));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel22.setText("Codigo de barras del producto");
-        jPanel2.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 200, 30));
+        jLabel22.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel22.setText("Codigo de barras del producto: ");
+        jPanel2.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 230, 30));
 
         txtCodigoProducto.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -538,20 +538,20 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Cotizac
                 txtCodigoProductoKeyTyped(evt);
             }
         });
-        jPanel2.add(txtCodigoProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 20, 130, 30));
+        jPanel2.add(txtCodigoProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 20, 130, 30));
 
         btnBuscarProducto.setBackground(new java.awt.Color(51, 51, 255));
         btnBuscarProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Buscar_p.png"))); // NOI18N
-        btnBuscarProducto.setText("buscar");
         btnBuscarProducto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBuscarProductoActionPerformed(evt);
             }
         });
-        jPanel2.add(btnBuscarProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 20, 90, 30));
+        jPanel2.add(btnBuscarProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 20, 40, 30));
 
-        jLabel17.setText("Nombre del producto:");
-        jPanel2.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, 140, 30));
+        jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel17.setText("Nombre del producto: ");
+        jPanel2.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 60, 170, 30));
 
         txtNombreProducto.setEnabled(false);
         jPanel2.add(txtNombreProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 60, 230, 30));
@@ -719,7 +719,6 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Cotizac
         Consultas.FrmBuscarProducto producto = new Consultas.FrmBuscarProducto(this);
         Presentacion.FrmPrincipal.Escritorio.add(producto);
         producto.toFront();
-        producto.setVisible(true);
     }//GEN-LAST:event_btnBuscarProductoActionPerformed
 
     void CalcularTotal() {
@@ -949,7 +948,7 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Cotizac
     }//GEN-LAST:event_chkCambiarNumeroStateChanged
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
-        this.dispose();
+            this.dispose();
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed

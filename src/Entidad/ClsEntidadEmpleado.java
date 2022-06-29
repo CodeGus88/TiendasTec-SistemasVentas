@@ -27,7 +27,7 @@ public class ClsEntidadEmpleado {
     private String strSueldoEmpleado;
     private String strEstadoEmpleado;
     private String strUsuarioEmpleado;
-    private String strContraseñaEmpleado;
+    private String strContraseniaEmpleado;
     private String strIdTipoUsuario;
     private String strTipoUsuario;
     
@@ -143,12 +143,12 @@ public class ClsEntidadEmpleado {
         this.strUsuarioEmpleado = strUsuarioEmpleado;
     }
 
-    public String getStrContraseñaEmpleado() {
-        return strContraseñaEmpleado;
+    public String getStrContraseniaEmpleado() {
+        return strContraseniaEmpleado;
     }
 
-    public void setStrContraseñaEmpleado(String strContraseñaEmpleado) {
-        this.strContraseñaEmpleado = strContraseñaEmpleado;
+    public void setStrContraseniaEmpleado(String strContraseniaEmpleado) {
+        this.strContraseniaEmpleado = strContraseniaEmpleado;
     }
 
     public String getStrIdTipoUsuario() {

@@ -182,7 +182,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem9">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/Iconos/nuevo1.png"/>
+                  <Image iconType="3" name="/Iconos/importe.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Cotizaci&#xf3;n"/>
               </Properties>
