@@ -21,17 +21,20 @@ import javax.swing.table.TableCellRenderer;
 //--------------CODIGO DE BARRAS------------
 import java.awt.Image;
 import javax.swing.ImageIcon;
-import net.sourceforge.barbecue.BarcodeFactory;   
-import net.sourceforge.barbecue.Barcode;   
-import net.sourceforge.barbecue.BarcodeException;   
-import net.sourceforge.barbecue.BarcodeImageHandler;   
-import java.awt.event.*;   
+import net.sourceforge.barbecue.BarcodeFactory;
+import net.sourceforge.barbecue.Barcode;
+import net.sourceforge.barbecue.BarcodeException;
+import net.sourceforge.barbecue.BarcodeImageHandler;
+import java.awt.event.*;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;   
-import java.io.IOException;   
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -46,20 +49,22 @@ import net.sf.jasperreports.view.JasperViewer;
 import net.sourceforge.barbecue.output.OutputException;
 
 public class FrmProducto extends javax.swing.JInternalFrame {
-    private Connection connection=new ClsConexion().getConection();
+
+    private Connection connection = new ClsConexion().getConection();
     String Total;
     String strCodigo;
     String accion;
-    String imagen="";
+    String imagen = "";
     int registros;
-    String id[]=new String[50];
+    String id[] = new String[50];
     static int intContador;
     public String codigo;
-    static Connection conn=null;
-    static ResultSet rs=null;
-    DefaultTableModel dtm=new DefaultTableModel();
-    String criterio,busqueda;
-    
+    static Connection conn = null;
+    static ResultSet rs = null;
+    DefaultTableModel dtm = new DefaultTableModel();
+    String criterio, busqueda;
+    private final String[] titulos = {"ID", "Cód. de Barras", "Nombre", "Descripción", "Stock", "Stock Min.", "Costo", "Precio", "Utilidad", "Estado", "Categoría", "Imagen", "Vencimiento"};
+
     public FrmProducto() {
         initComponents();
         tabProducto.setIconAt(tabProducto.indexOfComponent(pBuscar), new ImageIcon("src/iconos/busca_p1.png"));
@@ -74,45 +79,44 @@ public class FrmProducto extends javax.swing.JInternalFrame {
 
         mirar();
         actualizarTabla();
-        
-        
-        
+
         //---------------------ANCHO Y ALTO DEL FORM----------------------
         this.setSize(965, 558);
         CrearTabla();
         CantidadTotal();
+
     }
-    
-    public void duplicateProduct(ClsEntidadProducto producto){
-    
+
+    public void duplicateProduct(ClsEntidadProducto producto) {
+
         // escribir en el formulario
-        
     }
 //-----------------------------------------------------------------------------------------------
 //--------------------------------------METODOS--------------------------------------------------
 //-----------------------------------------------------------------------------------------------
-  void CrearTabla(){
-   //--------------------PRESENTACION DE JTABLE----------------------
-      
-        TableCellRenderer render = new DefaultTableCellRenderer() { 
 
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) { 
+    void CrearTabla() {
+        //--------------------PRESENTACION DE JTABLE----------------------
+
+        TableCellRenderer render = new DefaultTableCellRenderer() {
+
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 //aqui obtengo el render de la calse superior 
-                JLabel l = (JLabel)super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column); 
+                JLabel l = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
                 //Determinar Alineaciones   
-        
-                    if(column==0 || column==1 || column==4 || column==5 || column==6 || column==7 || column==8 || column==9 || column==10){
-                        l.setHorizontalAlignment(SwingConstants.CENTER); 
-                    }else{
-                        l.setHorizontalAlignment(SwingConstants.LEFT);
-                    }
+
+                if (column == 0 || column == 1 || column == 4 || column == 5 || column == 6 || column == 7 || column == 8 || column == 9 || column == 10) {
+                    l.setHorizontalAlignment(SwingConstants.CENTER);
+                } else {
+                    l.setHorizontalAlignment(SwingConstants.LEFT);
+                }
 
                 //Colores en Jtable        
                 if (isSelected) {
                     l.setBackground(new Color(203, 159, 41));
                     //l.setBackground(new Color(168, 198, 238));
-                    l.setForeground(Color.WHITE); 
-                }else{
+                    l.setForeground(Color.WHITE);
+                } else {
                     l.setForeground(Color.BLACK);
                     if (row % 2 == 0) {
                         l.setBackground(Color.WHITE);
@@ -120,260 +124,268 @@ public class FrmProducto extends javax.swing.JInternalFrame {
                         //l.setBackground(new Color(232, 232, 232));
                         l.setBackground(new Color(254, 227, 152));
                     }
-                }     
-                return l; 
-            } 
-        }; 
-        
+                }
+                return l;
+            }
+        };
+
         //Agregar Render
-        for (int i=0;i<tblProducto.getColumnCount();i++){
+        for (int i = 0; i < tblProducto.getColumnCount(); i++) {
             tblProducto.getColumnModel().getColumn(i).setCellRenderer(render);
         }
-      
+
         //Activar ScrollBar
         tblProducto.setAutoResizeMode(tblProducto.AUTO_RESIZE_OFF);
 
         //Anchos de cada columna
-        int[] anchos = {40,100,150,200,60,60,60,60,60,80,100,80};
-        for(int i = 0; i < tblProducto.getColumnCount(); i++) {
+        int[] anchos = {40, 100, 150, 200, 60, 60, 60, 60, 60, 80, 100, 80, 80};
+        for (int i = 0; i < tblProducto.getColumnCount(); i++) {
             tblProducto.getColumnModel().getColumn(i).setPreferredWidth(anchos[i]);
         }
-   }
-   void CantidadTotal(){
-        Total= String.valueOf(tblProducto.getRowCount());   
-        lblEstado.setText("Se cargaron " + Total + " registros");      
-   }
-   void limpiarCampos(){
-       txtCodigo.setText("");
-       txtCodigoBar.setText("");
-       txtNombre.setText("");
-       txtDescripcion.setText("");
-       txtStock.setText("");
-       txtStockMin.setText("");
-       txtPrecioCosto.setText("");
-       txtPrecioVenta.setText("");
-       lblImagen.setIcon(null);
-       txtUtilidad.setText("");
-       txtCodigoBar.requestFocus();
-       rbtnActivo.setSelected(true);
-       rbtnInactivo.setSelected(false);
+    }
+
+    void CantidadTotal() {
+        Total = String.valueOf(tblProducto.getRowCount());
+        lblEstado.setText("Se cargaron " + Total + " registros");
+    }
+
+    void limpiarCampos() {
+        txtCodigo.setText("");
+        txtCodigoBar.setText("");
+        txtNombre.setText("");
+        txtDescripcion.setText("");
+        txtStock.setText("");
+        txtStockMin.setText("");
+        txtPrecioCosto.setText("");
+        txtPrecioVenta.setText("");
+        lblImagen.setIcon(null);
+        txtUtilidad.setText("");
+        txtCodigoBar.requestFocus();
+        rbtnActivo.setSelected(true);
+        rbtnInactivo.setSelected(false);
 //       txtStock.setText("0");
 //       txtStockMin.setText("0");
-       txtPrecioCosto.setText("0.0");
-       txtPrecioVenta.setText("0.0");
-       txtUtilidad.setText("0.0");
-       
-       rbtnCodigo.setSelected(false);
-       rbtnNombre.setSelected(false);
-       rbtnDescripcion.setSelected(false);
-       rbtnCategoria.setSelected(false);
-       txtBusqueda.setText("");
-       limpiarList();
-   }
-       
-   void mirar(){
-       tblProducto.setEnabled(true);
-       btnNuevo.setEnabled(true);
-       btnModificar.setEnabled(true);
-       btnGuardar.setEnabled(false);
-       btnCancelar.setEnabled(false);
-       btnSalir1.setEnabled(true);
-       btnSeleccionarImagen.setEnabled(false);
-        
-       txtCodigoBar.setEnabled(false);
-       txtNombre.setEnabled(false);
-       txtDescripcion.setEnabled(false);
-       txtStock.setEnabled(false);
-       txtStockMin.setEnabled(false);
-       txtPrecioCosto.setEnabled(false);
-       txtPrecioVenta.setEnabled(false);
-       cboCategoria.setEnabled(false);
-       rbtnActivo.setEnabled(false);
-       rbtnInactivo.setEnabled(false);
-       
-       btnActualizar.setEnabled(false);
-       lstCodigos.setEnabled(false);
-       cboTipoCodificacion.setEnabled(false);
-       btnGenerar.setEnabled(false);
-       imagen="";
-   
-   }
-   
-    void modificar(){
-       tblProducto.setEnabled(false);
-       btnNuevo.setEnabled(false);
-       btnModificar.setEnabled(false);
-       btnGuardar.setEnabled(true);
-       btnCancelar.setEnabled(true);
-       btnSeleccionarImagen.setEnabled(true);
-       btnSalir1.setEnabled(false);
-        
-       txtCodigoBar.setEnabled(true);
-       txtNombre.setEnabled(true);
-       txtDescripcion.setEnabled(true);
-       txtStock.setEnabled(true);
-       txtStockMin.setEnabled(true);
-       txtPrecioCosto.setEnabled(true);
-       txtPrecioVenta.setEnabled(true);
-       cboCategoria.setEnabled(true);
-       rbtnActivo.setEnabled(true);
-       rbtnInactivo.setEnabled(true);
-       
-       btnActualizar.setEnabled(true);
-       lstCodigos.setEnabled(true);
-       cboTipoCodificacion.setEnabled(true);
-       btnGenerar.setEnabled(true);
-       txtCodigoBar.requestFocus();
-   }
-  void cargarComboCategoria(){
-  ClsCategoria tipodocumento=new ClsCategoria();
-       ArrayList<ClsEntidadCategoria> categorias=tipodocumento.listarCategoria();
-       Iterator iterator=categorias.iterator();
-       DefaultComboBoxModel DefaultComboBoxModel=new DefaultComboBoxModel();
-       DefaultComboBoxModel.removeAllElements();
-       
-       cboCategoria.removeAll();
-       String fila[]=new String[2];
-       intContador=0;
-       
-       while(iterator.hasNext()){
-           ClsEntidadCategoria Categoria = new ClsEntidadCategoria();
-           Categoria=(ClsEntidadCategoria) iterator.next();
-           id[intContador]=Categoria.getStrIdCategoria();
-           fila[0]=Categoria.getStrIdCategoria();
-           fila[1]=Categoria.getStrDescripcionCategoria();
-           DefaultComboBoxModel.addElement(Categoria.getStrDescripcionCategoria());
-           intContador++;              
-       }
-       cboCategoria.setModel(DefaultComboBoxModel);
+        txtPrecioCosto.setText("0.0");
+        txtPrecioVenta.setText("0.0");
+        txtUtilidad.setText("0.0");
+
+        rbtnCodigo.setSelected(false);
+        rbtnNombre.setSelected(false);
+        rbtnDescripcion.setSelected(false);
+        rbtnCategoria.setSelected(false);
+        txtBusqueda.setText("");
+        limpiarList();
     }
-    void actualizarTabla(){
-       String titulos[]={"ID","Cód. de Barras","Nombre","Descripción","Stock","Stock Min.","Costo","Precio","Utilidad","Estado","Categoría","Imagen"};
-              
-       ClsProducto productos=new ClsProducto();
-       ArrayList<ClsEntidadProducto> producto=productos.listarProducto();
-       Iterator iterator=producto.iterator();
-       
+
+    void mirar() {
+        tblProducto.setEnabled(true);
+        btnNuevo.setEnabled(true);
+        btnModificar.setEnabled(true);
+        btnGuardar.setEnabled(false);
+        btnCancelar.setEnabled(false);
+        btnSalir1.setEnabled(true);
+        btnSeleccionarImagen.setEnabled(false);
+
+        txtCodigoBar.setEnabled(false);
+        txtNombre.setEnabled(false);
+        txtDescripcion.setEnabled(false);
+        txtStock.setEnabled(false);
+        txtStockMin.setEnabled(false);
+        txtPrecioCosto.setEnabled(false);
+        txtPrecioVenta.setEnabled(false);
+        cboCategoria.setEnabled(false);
+        rbtnActivo.setEnabled(false);
+        rbtnInactivo.setEnabled(false);
+
+        btnActualizar.setEnabled(false);
+        lstCodigos.setEnabled(false);
+        cboTipoCodificacion.setEnabled(false);
+        btnGenerar.setEnabled(false);
+        imagen = "";
+        dcFechaVencimiento.setEnabled(false);
+
+    }
+
+    void modificar() {
+        tblProducto.setEnabled(false);
+        btnNuevo.setEnabled(false);
+        btnModificar.setEnabled(false);
+        btnGuardar.setEnabled(true);
+        btnCancelar.setEnabled(true);
+        btnSeleccionarImagen.setEnabled(true);
+        btnSalir1.setEnabled(false);
+
+        txtCodigoBar.setEnabled(true);
+        txtNombre.setEnabled(true);
+        txtDescripcion.setEnabled(true);
+        txtStock.setEnabled(true);
+        txtStockMin.setEnabled(true);
+        txtPrecioCosto.setEnabled(true);
+        txtPrecioVenta.setEnabled(true);
+        cboCategoria.setEnabled(true);
+        rbtnActivo.setEnabled(true);
+        rbtnInactivo.setEnabled(true);
+
+        btnActualizar.setEnabled(true);
+        lstCodigos.setEnabled(true);
+        cboTipoCodificacion.setEnabled(true);
+        btnGenerar.setEnabled(true);
+        txtCodigoBar.requestFocus();
+        dcFechaVencimiento.setEnabled(true);
+
+    }
+
+    void cargarComboCategoria() {
+        ClsCategoria tipodocumento = new ClsCategoria();
+        ArrayList<ClsEntidadCategoria> categorias = tipodocumento.listarCategoria();
+        Iterator iterator = categorias.iterator();
+        DefaultComboBoxModel DefaultComboBoxModel = new DefaultComboBoxModel();
+        DefaultComboBoxModel.removeAllElements();
+
+        cboCategoria.removeAll();
+        String fila[] = new String[2];
+        intContador = 0;
+
+        while (iterator.hasNext()) {
+            ClsEntidadCategoria Categoria = new ClsEntidadCategoria();
+            Categoria = (ClsEntidadCategoria) iterator.next();
+            id[intContador] = Categoria.getStrIdCategoria();
+            fila[0] = Categoria.getStrIdCategoria();
+            fila[1] = Categoria.getStrDescripcionCategoria();
+            DefaultComboBoxModel.addElement(Categoria.getStrDescripcionCategoria());
+            intContador++;
+        }
+        cboCategoria.setModel(DefaultComboBoxModel);
+    }
+
+    void actualizarTabla() {
+        ClsProducto productos = new ClsProducto();
+        ArrayList<ClsEntidadProducto> producto = productos.listarProducto();
+        Iterator iterator = producto.iterator();
+
         DefaultTableModel defaultTableModel = new DefaultTableModel(null, titulos) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
-       
-       String fila[]=new String[12];
-       while(iterator.hasNext()){
-           ClsEntidadProducto Producto=new ClsEntidadProducto();
-           Producto=(ClsEntidadProducto) iterator.next();
-           fila[0]=Producto.getStrIdProducto();
-           fila[1]=Producto.getStrCodigoProducto();       
-           fila[2]=Producto.getStrNombreProducto();
-           fila[3]=Producto.getStrDescripcionProducto();
-           fila[4]=Producto.getStrStockProducto();
-           fila[5]=Producto.getStrStockMinProducto();
-           fila[6]=Producto.getStrPrecioCostoProducto();
-           fila[7]=Producto.getStrPrecioVentaProducto();
-           fila[8]=Producto.getStrUtilidadProducto();
-           fila[9]=Producto.getStrEstadoProducto();
-           fila[10]=Producto.getStrDescripcionCategoria();
-           fila[11]=Producto.getStrImagen();
-           defaultTableModel.addRow(fila);               
-       }
-       tblProducto.setModel(defaultTableModel);
-   }
-   void BuscarProducto(){
-        String titulos[]={"ID","Cód. de Barras","Nombre","Descripción","Stock","Stock Min.","Costo","Precio","Utilidad","Estado","Categoría","Imagen"};
-        dtm.setColumnIdentifiers(titulos);
-        
-        ClsProducto categoria=new ClsProducto();
-        busqueda=txtBusqueda.getText();
-        if(rbtnCodigo.isSelected()){
-            criterio="codigo";
-        }else if(rbtnNombre.isSelected()){
-            criterio="nombre";
-        }else if(rbtnDescripcion.isSelected()){
-            criterio="descripcion";
-        }else if(rbtnCategoria.isSelected()){
-            criterio="categoria";
+
+        String fila[] = new String[13];
+        while (iterator.hasNext()) {
+            ClsEntidadProducto Producto = new ClsEntidadProducto();
+            Producto = (ClsEntidadProducto) iterator.next();
+            fila[0] = Producto.getStrIdProducto();
+            fila[1] = Producto.getStrCodigoProducto();
+            fila[2] = Producto.getStrNombreProducto();
+            fila[3] = Producto.getStrDescripcionProducto();
+            fila[4] = Producto.getStrStockProducto();
+            fila[5] = Producto.getStrStockMinProducto();
+            fila[6] = Producto.getStrPrecioCostoProducto();
+            fila[7] = Producto.getStrPrecioVentaProducto();
+            fila[8] = Producto.getStrUtilidadProducto();
+            fila[9] = Producto.getStrEstadoProducto();
+            fila[10] = Producto.getStrDescripcionCategoria();
+            fila[11] = Producto.getStrImagen();
+            fila[12] = Producto.getFechaVencimiento() == null ? "" : Producto.getFechaVencimiento().toString();
+            defaultTableModel.addRow(fila);
         }
-        try{
-            rs=categoria.listarProductoPorParametro(criterio,busqueda);
-            boolean encuentra=false;
-            String Datos[]=new String[12];
-            int f,i;
-            f=dtm.getRowCount();
-            if(f>0){
-                for(i=0;i<f;i++){
+        tblProducto.setModel(defaultTableModel);
+    }
+
+    void BuscarProducto() {
+        dtm.setColumnIdentifiers(titulos);
+
+        ClsProducto categoria = new ClsProducto();
+        busqueda = txtBusqueda.getText();
+        if (rbtnCodigo.isSelected()) {
+            criterio = "codigo";
+        } else if (rbtnNombre.isSelected()) {
+            criterio = "nombre";
+        } else if (rbtnDescripcion.isSelected()) {
+            criterio = "descripcion";
+        } else if (rbtnCategoria.isSelected()) {
+            criterio = "categoria";
+        }
+        try {
+            rs = categoria.listarProductoPorParametro(criterio, busqueda);
+            boolean encuentra = false;
+            String Datos[] = new String[12];
+            int f, i;
+            f = dtm.getRowCount();
+            if (f > 0) {
+                for (i = 0; i < f; i++) {
                     dtm.removeRow(0);
                 }
             }
-            while(rs.next()){
-                Datos[0]=(String) rs.getString(1);
-                Datos[1]=(String) rs.getString(2);
-                Datos[2]=(String) rs.getString(3);
-                Datos[3]=(String) rs.getString(4);
-                Datos[4]=(String) rs.getString(5);
-                Datos[5]=(String) rs.getString(6);
-                Datos[6]=(String) rs.getString(7);
-                Datos[7]=(String) rs.getString(8);
-                Datos[8]=(String) rs.getString(9);
-                Datos[9]=(String) rs.getString(10);
-                Datos[10]=(String) rs.getString(11);
-                Datos[11]=(String) rs.getString(12);
+            while (rs.next()) {
+                Datos[0] = (String) rs.getString(1);
+                Datos[1] = (String) rs.getString(2);
+                Datos[2] = (String) rs.getString(3);
+                Datos[3] = (String) rs.getString(4);
+                Datos[4] = (String) rs.getString(5);
+                Datos[5] = (String) rs.getString(6);
+                Datos[6] = (String) rs.getString(7);
+                Datos[7] = (String) rs.getString(8);
+                Datos[8] = (String) rs.getString(9);
+                Datos[9] = (String) rs.getString(10);
+                Datos[10] = (String) rs.getString(11);
+                Datos[11] = (String) rs.getString(12);
+                Datos[12] = (String) rs.getString(13);
                 dtm.addRow(Datos);
-                encuentra=true;
+                encuentra = true;
 
             }
-            if(encuentra=false){
+            if (encuentra = false) {
                 JOptionPane.showMessageDialog(null, "¡No se encuentra!");
             }
 
-        }catch(Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         tblProducto.setModel(dtm);
     }
 
-    void listardatos(){
+    void listardatos() {
         String estado;
-        DefaultTableModel defaultTableModel=new DefaultTableModel();
-        if(registros==-1){
-            JOptionPane.showMessageDialog(null,"Se debe seleccionar un registro");
-        }else{
-            defaultTableModel=(DefaultTableModel) tblProducto.getModel();
-            strCodigo=((String) defaultTableModel.getValueAt(registros,0));
-            txtCodigo.setText((String)defaultTableModel.getValueAt(registros,0));
-            txtCodigoBar.setText((String)defaultTableModel.getValueAt(registros,1));
-            txtNombre.setText((String)defaultTableModel.getValueAt(registros,2));
-            txtDescripcion.setText((String)defaultTableModel.getValueAt(registros,3));
-            txtStock.setText((String)defaultTableModel.getValueAt(registros,4));
-            txtStockMin.setText((String)defaultTableModel.getValueAt(registros,5));
-            txtPrecioCosto.setText((String)defaultTableModel.getValueAt(registros,6));
-            txtPrecioVenta.setText((String)defaultTableModel.getValueAt(registros,7));
-            txtUtilidad.setText((String)defaultTableModel.getValueAt(registros,8));
-            if ("ACTIVO".equals((String) defaultTableModel.getValueAt(registros,9))){
-               rbtnActivo.setSelected(true);
-            }else if ("INACTIVO".equals((String) defaultTableModel.getValueAt(registros,9))){
-               rbtnInactivo.setSelected(true);
+        DefaultTableModel defaultTableModel = new DefaultTableModel();
+        if (registros == -1) {
+            JOptionPane.showMessageDialog(null, "Se debe seleccionar un registro");
+        } else {
+            defaultTableModel = (DefaultTableModel) tblProducto.getModel();
+            strCodigo = ((String) defaultTableModel.getValueAt(registros, 0));
+            txtCodigo.setText((String) defaultTableModel.getValueAt(registros, 0));
+            txtCodigoBar.setText((String) defaultTableModel.getValueAt(registros, 1));
+            txtNombre.setText((String) defaultTableModel.getValueAt(registros, 2));
+            txtDescripcion.setText((String) defaultTableModel.getValueAt(registros, 3));
+            txtStock.setText((String) defaultTableModel.getValueAt(registros, 4));
+            txtStockMin.setText((String) defaultTableModel.getValueAt(registros, 5));
+            txtPrecioCosto.setText((String) defaultTableModel.getValueAt(registros, 6));
+            txtPrecioVenta.setText((String) defaultTableModel.getValueAt(registros, 7));
+            txtUtilidad.setText((String) defaultTableModel.getValueAt(registros, 8));
+            if ("ACTIVO".equals((String) defaultTableModel.getValueAt(registros, 9))) {
+                rbtnActivo.setSelected(true);
+            } else if ("INACTIVO".equals((String) defaultTableModel.getValueAt(registros, 9))) {
+                rbtnInactivo.setSelected(true);
             }
-            cboCategoria.setSelectedItem((String)defaultTableModel.getValueAt(registros,10));
-            imagen=(String)defaultTableModel.getValueAt(registros,11);
-            String ruta="src/Images/"+imagen;
+            cboCategoria.setSelectedItem((String) defaultTableModel.getValueAt(registros, 10));
+            imagen = (String) defaultTableModel.getValueAt(registros, 11);
+            String ruta = "src/Images/" + imagen;
             ImageIcon fot = new ImageIcon(ruta);
             Icon icono = new ImageIcon(fot.getImage().getScaledInstance(lblImagen.getWidth(), lblImagen.getHeight(), Image.SCALE_DEFAULT));
             lblImagen.setIcon(icono);
             lblImagen.repaint();
-            
-            tblProducto.setRowSelectionInterval(registros,registros);
+
+            tblProducto.setRowSelectionInterval(registros, registros);
         }
-    
+
     }
-    void CalcularUtilidad(){
-        double pre_costo=0,pre_venta=0,utilidad=0,t_utilidad;
-        pre_costo=Double.parseDouble(txtPrecioCosto.getText());
-        pre_venta=Double.parseDouble(txtPrecioVenta.getText());
-        utilidad=pre_venta-pre_costo;
-        t_utilidad=Math.rint(utilidad*100)/100;
+
+    void CalcularUtilidad() {
+        double pre_costo = 0, pre_venta = 0, utilidad = 0, t_utilidad;
+        pre_costo = Double.parseDouble(txtPrecioCosto.getText());
+        pre_venta = Double.parseDouble(txtPrecioVenta.getText());
+        utilidad = pre_venta - pre_costo;
+        t_utilidad = Math.rint(utilidad * 100) / 100;
         txtUtilidad.setText(String.valueOf(t_utilidad));
     }
 
@@ -440,9 +452,12 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         btnSeleccionarImagen = new javax.swing.JButton();
         btnActualizar = new javax.swing.JButton();
         jLabel16 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         lstCodigos = new javax.swing.JList();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
+        dcFechaVencimiento = new com.toedter.calendar.JDateChooser();
+        jLabel14 = new javax.swing.JLabel();
         btnSalir1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
@@ -633,7 +648,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         pNuevo.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 110, 310, 30));
 
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel6.setText("Stock:");
+        jLabel6.setText("Stock: ");
         pNuevo.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 260, 90, 30));
 
         txtStockMin.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -642,11 +657,11 @@ public class FrmProducto extends javax.swing.JInternalFrame {
                 txtStockMinKeyReleased(evt);
             }
         });
-        pNuevo.add(txtStockMin, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 260, 80, 30));
+        pNuevo.add(txtStockMin, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 260, 80, 30));
 
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel7.setText("Stock Mínimo:");
-        pNuevo.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 260, 100, 30));
+        jLabel7.setText("Stock Mínimo: ");
+        pNuevo.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 260, 100, 30));
 
         txtPrecioVenta.setBackground(new java.awt.Color(254, 254, 241));
         txtPrecioVenta.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -658,15 +673,15 @@ public class FrmProducto extends javax.swing.JInternalFrame {
                 txtPrecioVentaKeyTyped(evt);
             }
         });
-        pNuevo.add(txtPrecioVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 340, 80, 30));
+        pNuevo.add(txtPrecioVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 310, 80, 30));
 
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel8.setText("Descripción:");
         pNuevo.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, 140, 20));
 
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel10.setText("Precio Costo:");
-        pNuevo.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 340, 90, 30));
+        jLabel10.setText("Precio Costo: ");
+        pNuevo.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 90, 30));
 
         txtPrecioCosto.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         txtPrecioCosto.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -674,11 +689,11 @@ public class FrmProducto extends javax.swing.JInternalFrame {
                 txtPrecioCostoKeyReleased(evt);
             }
         });
-        pNuevo.add(txtPrecioCosto, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 340, 80, 30));
+        pNuevo.add(txtPrecioCosto, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 310, 80, 30));
 
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel12.setText("Precio Venta:");
-        pNuevo.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 340, 100, 30));
+        jLabel12.setText("Precio Venta: ");
+        pNuevo.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 310, 100, 30));
 
         rbtnActivo.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         rbtnActivo.setText("ACTIVO");
@@ -706,12 +721,12 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         pNuevo.add(txtStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 260, 80, 30));
 
         jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel15.setText("Utilidad:");
-        pNuevo.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 420, 90, 30));
+        jLabel15.setText("Fecha de vencimiento: ");
+        pNuevo.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 410, 210, 30));
 
         txtUtilidad.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         txtUtilidad.setEnabled(false);
-        pNuevo.add(txtUtilidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 420, 270, 30));
+        pNuevo.add(txtUtilidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 360, 270, 30));
 
         txtDescripcion.setColumns(20);
         txtDescripcion.setRows(5);
@@ -798,9 +813,6 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         jLabel16.setText("Generar codigos aleatorios:");
         pNuevo.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 10, 150, 30));
 
-        jLabel14.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos del Producto", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
-        pNuevo.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 480, 240));
-
         lstCodigos.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         lstCodigos.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -810,6 +822,20 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         jScrollPane2.setViewportView(lstCodigos);
 
         pNuevo.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 40, 200, 70));
+
+        jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel17.setText("Utilidad: ");
+        pNuevo.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 360, 90, 30));
+
+        jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel19.setText("Utilidad: ");
+        pNuevo.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 360, 90, 30));
+
+        dcFechaVencimiento.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        pNuevo.add(dcFechaVencimiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 410, 120, 30));
+
+        jLabel14.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos del Producto", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
+        pNuevo.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 480, 240));
 
         tabProducto.addTab("Nuevo / Modificar", pNuevo);
 
@@ -837,11 +863,12 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-        if(tblProducto.getSelectedRows().length > 0 ) {
-            accion="Modificar";
+        if (tblProducto.getSelectedRows().length > 0) {
+            accion = "Modificar";
+            loadProduct();
             modificar();
             tabProducto.setSelectedIndex(tabProducto.indexOfComponent(pNuevo));
-        }else{
+        } else {
             JOptionPane.showMessageDialog(null, "¡Se debe seleccionar un registro!");
         }
     }//GEN-LAST:event_btnModificarActionPerformed
@@ -852,136 +879,148 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-        accion="Nuevo";
+        accion = "Nuevo";
         modificar();
         limpiarCampos();
         tblProducto.setEnabled(false);
         tabProducto.setSelectedIndex(tabProducto.indexOfComponent(pNuevo));
     }//GEN-LAST:event_btnNuevoActionPerformed
 //----------------------VALIDACIÓN DE DATOS-------------------------------------
-    public boolean validardatos(){
-        if(txtCodigoBar.getText().equals("")){
-            JOptionPane.showMessageDialog(null,"Especifique un código de barras para el Producto");
+
+    public boolean validardatos() {
+        if (txtCodigoBar.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Especifique un código de barras para el Producto");
             txtCodigoBar.requestFocus();
             txtCodigoBar.setBackground(Color.YELLOW);
             return false;
-        }else if(txtNombre.getText().equals("")){
-            JOptionPane.showMessageDialog(null,"Ingrese un nombre para el Producto");
+        } else if (txtNombre.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Ingrese un nombre para el Producto");
             txtNombre.requestFocus();
             txtNombre.setBackground(Color.YELLOW);
             return false;
-        }else{
+        } else {
             return true;
         }
 
     }
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-    if(validardatos()==true){       
-        if(accion.equals("Nuevo")){
-            ClsProducto productos=new ClsProducto();
-            ClsEntidadProducto producto=new ClsEntidadProducto();
-            producto.setStrCodigoProducto(txtCodigoBar.getText());
-            producto.setStrNombreProducto(txtNombre.getText());
-            producto.setStrDescripcionProducto(txtDescripcion.getText());
-            if(txtStock.getText().equals("")){
-                producto.setStrStockProducto("0");
-            }else{
-                producto.setStrStockProducto(txtStock.getText());
+        if (validardatos() == true) {
+            if (accion.equals("Nuevo")) {
+                ClsProducto productos = new ClsProducto();
+                ClsEntidadProducto producto = new ClsEntidadProducto();
+                producto.setStrCodigoProducto(txtCodigoBar.getText());
+                producto.setStrNombreProducto(txtNombre.getText());
+                producto.setStrDescripcionProducto(txtDescripcion.getText());
+                if (txtStock.getText().equals("")) {
+                    producto.setStrStockProducto("0");
+                } else {
+                    producto.setStrStockProducto(txtStock.getText());
+                }
+                if (txtStockMin.getText().equals("")) {
+                    producto.setStrStockMinProducto("0");
+                } else {
+                    producto.setStrStockMinProducto(txtStockMin.getText());
+                }
+                if (txtPrecioCosto.getText().equals("")) {
+                    producto.setStrPrecioCostoProducto("0");
+                } else {
+                    producto.setStrPrecioCostoProducto(txtPrecioCosto.getText());
+                }
+                if (txtPrecioVenta.getText().equals("")) {
+                    producto.setStrPrecioVentaProducto("0");
+                } else {
+                    producto.setStrPrecioVentaProducto(txtPrecioVenta.getText());
+                }
+                if (txtUtilidad.getText().equals("")) {
+                    producto.setStrUtilidadProducto("0");
+                } else {
+                    producto.setStrUtilidadProducto(txtUtilidad.getText());
+                }
+                if (rbtnActivo.isSelected()) {
+                    producto.setStrEstadoProducto("ACTIVO");
+                } else if (rbtnInactivo.isSelected()) {
+                    producto.setStrEstadoProducto("INACTIVO");
+                }
+                producto.setStrIdCategoria(id[cboCategoria.getSelectedIndex()]);
+                if (imagen.equals("")) {
+                    producto.setStrImagen("imagen.png");
+                } else {
+                    producto.setStrImagen(imagen);
+                }
+                if (dcFechaVencimiento != null) {
+                    try {
+                        producto.setFechaVencimiento(dcFechaVencimiento.getDate());
+                    } catch (Exception e) {
+                        e.getStackTrace();
+                        producto.setFechaVencimiento(null);
+                    }
+                }
+
+                productos.agregarProducto(producto);
+                actualizarTabla();
+                CantidadTotal();
             }
-            if(txtStockMin.getText().equals("")){
-                producto.setStrStockMinProducto("0");
-            }else{
-                producto.setStrStockMinProducto(txtStockMin.getText());
+            if (accion.equals("Modificar")) {
+                ClsProducto productos = new ClsProducto();
+                ClsEntidadProducto producto = new ClsEntidadProducto();
+                producto.setStrCodigoProducto(txtCodigoBar.getText());
+                producto.setStrNombreProducto(txtNombre.getText());
+                producto.setStrDescripcionProducto(txtDescripcion.getText());
+                if (txtStock.getText().equals("")) {
+                    producto.setStrStockProducto("0");
+                } else {
+                    producto.setStrStockProducto(txtStock.getText());
+                }
+                if (txtStockMin.getText().equals("")) {
+                    producto.setStrStockMinProducto("0");
+                } else {
+                    producto.setStrStockMinProducto(txtStockMin.getText());
+                }
+                if (txtPrecioCosto.getText().equals("")) {
+                    producto.setStrPrecioCostoProducto("0");
+                } else {
+                    producto.setStrPrecioCostoProducto(txtPrecioCosto.getText());
+                }
+                if (txtPrecioVenta.getText().equals("")) {
+                    producto.setStrPrecioVentaProducto("0");
+                } else {
+                    producto.setStrPrecioVentaProducto(txtPrecioVenta.getText());
+                }
+                if (txtUtilidad.getText().equals("")) {
+                    producto.setStrUtilidadProducto("0");
+                } else {
+                    producto.setStrUtilidadProducto(txtUtilidad.getText());
+                }
+                if (rbtnActivo.isSelected()) {
+                    producto.setStrEstadoProducto("ACTIVO");
+                } else if (rbtnInactivo.isSelected()) {
+                    producto.setStrEstadoProducto("INACTIVO");
+                }
+                producto.setStrIdCategoria(id[cboCategoria.getSelectedIndex()]);
+                if (imagen.equals("")) {
+                    producto.setStrImagen("imagen.png");
+                } else {
+                    producto.setStrImagen(imagen);
+                }
+                if (dcFechaVencimiento != null) {
+                    try {
+                        producto.setFechaVencimiento(dcFechaVencimiento.getDate());
+                    } catch (Exception e) {
+                        e.getStackTrace();
+                        producto.setFechaVencimiento(null);
+                    }
+                }
+                productos.modificarProducto(strCodigo, producto);
+                actualizarTabla();
+                modificar();
+                limpiarCampos();
+                CantidadTotal();
             }
-            if(txtPrecioCosto.getText().equals("")){
-                producto.setStrPrecioCostoProducto("0");
-            }else{
-                producto.setStrPrecioCostoProducto(txtPrecioCosto.getText());
-            }
-            if(txtPrecioVenta.getText().equals("")){
-                producto.setStrPrecioVentaProducto("0");
-            }else{
-                producto.setStrPrecioVentaProducto(txtPrecioVenta.getText());
-            }
-            if(txtUtilidad.getText().equals("")){
-                producto.setStrUtilidadProducto("0");
-            }else{
-                producto.setStrUtilidadProducto(txtUtilidad.getText());
-            }           
-            if (rbtnActivo.isSelected()){
-                producto.setStrEstadoProducto("ACTIVO");
-            }else if (rbtnInactivo.isSelected()){
-                producto.setStrEstadoProducto("INACTIVO");
-            }
-            producto.setStrIdCategoria(id[cboCategoria.getSelectedIndex()]);
-            if (imagen.equals(""))
-            {
-                producto.setStrImagen("imagen.png");
-            }
-            else
-            {
-               producto.setStrImagen(imagen); 
-            }
-            productos.agregarProducto(producto);
-            actualizarTabla();
-            CantidadTotal();
+            CrearTabla();
+            mirar();
+            tabProducto.setSelectedIndex(tabProducto.indexOfComponent(pBuscar));
+
         }
-        if(accion.equals("Modificar")){
-            ClsProducto productos=new ClsProducto();
-            ClsEntidadProducto producto=new ClsEntidadProducto();
-            producto.setStrCodigoProducto(txtCodigoBar.getText());
-            producto.setStrNombreProducto(txtNombre.getText());
-            producto.setStrDescripcionProducto(txtDescripcion.getText());
-            if(txtStock.getText().equals("")){
-                producto.setStrStockProducto("0");
-            }else{
-                producto.setStrStockProducto(txtStock.getText());
-            }
-            if(txtStockMin.getText().equals("")){
-                producto.setStrStockMinProducto("0");
-            }else{
-                producto.setStrStockMinProducto(txtStockMin.getText());
-            }
-            if(txtPrecioCosto.getText().equals("")){
-                producto.setStrPrecioCostoProducto("0");
-            }else{
-                producto.setStrPrecioCostoProducto(txtPrecioCosto.getText());
-            }
-            if(txtPrecioVenta.getText().equals("")){
-                producto.setStrPrecioVentaProducto("0");
-            }else{
-                producto.setStrPrecioVentaProducto(txtPrecioVenta.getText());
-            }
-            if(txtUtilidad.getText().equals("")){
-                producto.setStrUtilidadProducto("0");
-            }else{
-                producto.setStrUtilidadProducto(txtUtilidad.getText());
-            } 
-            if (rbtnActivo.isSelected()){
-                producto.setStrEstadoProducto("ACTIVO");
-            }else if (rbtnInactivo.isSelected()){
-                producto.setStrEstadoProducto("INACTIVO");
-            }
-            producto.setStrIdCategoria(id[cboCategoria.getSelectedIndex()]);
-            if (imagen.equals(""))
-            {
-                producto.setStrImagen("imagen.png");
-            }
-            else
-            {
-               producto.setStrImagen(imagen); 
-            }
-            productos.modificarProducto(strCodigo, producto);
-            actualizarTabla();
-            modificar();
-            limpiarCampos();
-            CantidadTotal();
-        }
-        CrearTabla();
-        mirar();
-        tabProducto.setSelectedIndex(tabProducto.indexOfComponent(pBuscar));
-    
-    }  
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void txtBusquedaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBusquedaKeyReleased
@@ -999,41 +1038,55 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_rbtnNombreStateChanged
 
     private void tblProductoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProductoMouseClicked
+//        loadProduct();
+    }//GEN-LAST:event_tblProductoMouseClicked
+
+    private void loadProduct() {
+
         int fila;
         DefaultTableModel defaultTableModel = new DefaultTableModel();
         fila = tblProducto.getSelectedRow();
 
-        if (fila == -1){
+        if (fila == -1) {
             JOptionPane.showMessageDialog(null, "Se debe seleccionar un registro");
-        }else{
-            defaultTableModel = (DefaultTableModel)tblProducto.getModel();
-            strCodigo =  ((String) defaultTableModel.getValueAt(fila, 0));
-            txtCodigo.setText((String)defaultTableModel.getValueAt(fila,0));
-            txtCodigoBar.setText((String)defaultTableModel.getValueAt(fila,1));
-            txtNombre.setText((String)defaultTableModel.getValueAt(fila,2));
-            txtDescripcion.setText((String)defaultTableModel.getValueAt(fila,3));
-            txtStock.setText((String)defaultTableModel.getValueAt(fila,4));
-            txtStockMin.setText((String)defaultTableModel.getValueAt(fila,5));
-            txtPrecioCosto.setText((String)defaultTableModel.getValueAt(fila,6));
-            txtPrecioVenta.setText((String)defaultTableModel.getValueAt(fila,7));
-            txtUtilidad.setText((String)defaultTableModel.getValueAt(fila,8));
-            if ("ACTIVO".equals((String) defaultTableModel.getValueAt(fila,9))){
-               rbtnActivo.setSelected(true);
-            }else if ("INACTIVO".equals((String) defaultTableModel.getValueAt(fila,9))){
-               rbtnInactivo.setSelected(true);
+        } else {
+            defaultTableModel = (DefaultTableModel) tblProducto.getModel();
+            strCodigo = ((String) defaultTableModel.getValueAt(fila, 0));
+            txtCodigo.setText((String) defaultTableModel.getValueAt(fila, 0));
+            txtCodigoBar.setText((String) defaultTableModel.getValueAt(fila, 1));
+            txtNombre.setText((String) defaultTableModel.getValueAt(fila, 2));
+            txtDescripcion.setText((String) defaultTableModel.getValueAt(fila, 3));
+            txtStock.setText((String) defaultTableModel.getValueAt(fila, 4));
+            txtStockMin.setText((String) defaultTableModel.getValueAt(fila, 5));
+            txtPrecioCosto.setText((String) defaultTableModel.getValueAt(fila, 6));
+            txtPrecioVenta.setText((String) defaultTableModel.getValueAt(fila, 7));
+            txtUtilidad.setText((String) defaultTableModel.getValueAt(fila, 8));
+            if ("ACTIVO".equals((String) defaultTableModel.getValueAt(fila, 9))) {
+                rbtnActivo.setSelected(true);
+            } else if ("INACTIVO".equals((String) defaultTableModel.getValueAt(fila, 9))) {
+                rbtnInactivo.setSelected(true);
             }
-            cboCategoria.setSelectedItem((String)defaultTableModel.getValueAt(fila,10));
-            imagen=(String)defaultTableModel.getValueAt(fila,11);
-            String ruta="src/Images/"+imagen;
+            cboCategoria.setSelectedItem((String) defaultTableModel.getValueAt(fila, 10));
+            imagen = (String) defaultTableModel.getValueAt(fila, 11);
+            String ruta = "src/Images/" + imagen;
             ImageIcon fot = new ImageIcon(ruta);
             Icon icono = new ImageIcon(fot.getImage().getScaledInstance(lblImagen.getWidth(), lblImagen.getHeight(), Image.SCALE_DEFAULT));
             lblImagen.setIcon(icono);
             lblImagen.repaint();
+            try {
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+                dcFechaVencimiento.setDate(
+                        formatter.parse(defaultTableModel.getValueAt(fila, 12).toString().replace("-", "/"))
+                );
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
         }
 
         mirar();
-    }//GEN-LAST:event_tblProductoMouseClicked
+
+    }
 
     private void txtCodigoBarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodigoBarKeyTyped
         txtCodigoBar.setBackground(Color.WHITE);
@@ -1044,126 +1097,127 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     private void txtPrecioCostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPrecioCostoKeyReleased
         CalcularUtilidad();
         int keyCode = evt.getKeyCode();
-        if (keyCode==KeyEvent.VK_ENTER) txtPrecioVenta.requestFocus();  
+        if (keyCode == KeyEvent.VK_ENTER)
+            txtPrecioVenta.requestFocus();
     }//GEN-LAST:event_txtPrecioCostoKeyReleased
 
     private void txtPrecioVentaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPrecioVentaKeyReleased
         CalcularUtilidad();
         int keyCode = evt.getKeyCode();
-        if (keyCode==KeyEvent.VK_ENTER) btnGuardar.requestFocus();  
+        if (keyCode == KeyEvent.VK_ENTER)
+            btnGuardar.requestFocus();
     }//GEN-LAST:event_txtPrecioVentaKeyReleased
-       void verificarCodigoBar(){
-        String busqueda=null;
+    void verificarCodigoBar() {
+        String busqueda = null;
         int sen = 2;
-        busqueda=txtCodigoBar.getText(); 
-        
-            try{
-                ClsProducto oProducto=new ClsProducto();
-                
-                rs= oProducto.verificarCodigoBar(busqueda);
-                while (rs.next()) {
-                    if(!rs.getString(2).equals("")) {
-                               
-                       sen=1;
-                    }else{
+        busqueda = txtCodigoBar.getText();
 
-                       sen=2;
-                    }
-                   break;
+        try {
+            ClsProducto oProducto = new ClsProducto();
+
+            rs = oProducto.verificarCodigoBar(busqueda);
+            while (rs.next()) {
+                if (!rs.getString(2).equals("")) {
+
+                    sen = 1;
+                } else {
+
+                    sen = 2;
                 }
- 
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this,ex.getMessage());
-                System.out.println(ex.getMessage());
+                break;
             }
-            
-            if(sen==1){
-                JOptionPane.showMessageDialog(null, "Codigo No Disponible");
-            }else if (sen==2){
-                JOptionPane.showMessageDialog(null, "Codigo Disponible");
-            }else if(rs==null){
-                JOptionPane.showMessageDialog(null, "no hay");
-            }
-    
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+            System.out.println(ex.getMessage());
+        }
+
+        if (sen == 1) {
+            JOptionPane.showMessageDialog(null, "Codigo No Disponible");
+        } else if (sen == 2) {
+            JOptionPane.showMessageDialog(null, "Codigo Disponible");
+        } else if (rs == null) {
+            JOptionPane.showMessageDialog(null, "no hay");
+        }
+
     }
-    void GeneraAleatorio(){
+
+    void GeneraAleatorio() {
 
         String codbar;
         int sen = 2;
         DefaultListModel modelo = new DefaultListModel();
-      
-        for(int i = 1; i<=4; i++){
-            codbar=String.valueOf((int)(Math.random()*(500000-100000+1)+100000));
-            //codbar=String.valueOf((int)(Math.random()*(9-1+1)+1));    
-            try{
-                ClsProducto oProducto=new ClsProducto();
-                
-                rs= oProducto.verificarCodigoBar(codbar);
-                while (rs.next()) {
-                    if(!rs.getString(2).equals("")) {
-                               
-                       sen=1;
-                    }else{
 
-                       sen=2;
+        for (int i = 1; i <= 4; i++) {
+            codbar = String.valueOf((int) (Math.random() * (500000 - 100000 + 1) + 100000));
+            //codbar=String.valueOf((int)(Math.random()*(9-1+1)+1));    
+            try {
+                ClsProducto oProducto = new ClsProducto();
+
+                rs = oProducto.verificarCodigoBar(codbar);
+                while (rs.next()) {
+                    if (!rs.getString(2).equals("")) {
+
+                        sen = 1;
+                    } else {
+
+                        sen = 2;
                     }
-                   break;
+                    break;
                 }
- 
+
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this,ex.getMessage());
+                JOptionPane.showMessageDialog(this, ex.getMessage());
                 System.out.println(ex.getMessage());
             }
-            
-            if(sen==1){
+
+            if (sen == 1) {
                 //JOptionPane.showMessageDialog(null, "Codigo No Disponible");
-                i=i-1;
-                sen=2;
-            }else if (sen==2){
+                i = i - 1;
+                sen = 2;
+            } else if (sen == 2) {
                 //JOptionPane.showMessageDialog(null, "Codigo Disponible");
                 modelo.addElement(codbar);
                 //sen=2;
-                
+
             }
-        
-            
 
         }
-      
+
         lstCodigos.setModel(modelo);
     }
-    void limpiarList(){
+
+    void limpiarList() {
         DefaultListModel model = new DefaultListModel();
         lstCodigos.setModel(model);
     }
 
-    
+
     private void btnGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarActionPerformed
-    String codigobar;
-    ImageIcon imagen=null;
-    codigobar=txtCodigoBar.getText();
-        File file=new File("C:\\001.jpg");
-        
-        Barcode barcode = null;   
-        try {   
-            if(cboTipoCodificacion.getSelectedItem().equals("Code 128")){
-                barcode = BarcodeFactory.createCode128(codigobar);  
-            }else if(cboTipoCodificacion.getSelectedItem().equals("Code 128A")){
+        String codigobar;
+        ImageIcon imagen = null;
+        codigobar = txtCodigoBar.getText();
+        File file = new File("C:\\001.jpg");
+
+        Barcode barcode = null;
+        try {
+            if (cboTipoCodificacion.getSelectedItem().equals("Code 128")) {
+                barcode = BarcodeFactory.createCode128(codigobar);
+            } else if (cboTipoCodificacion.getSelectedItem().equals("Code 128A")) {
                 barcode = BarcodeFactory.createCode128A(codigobar);
-            }else if(cboTipoCodificacion.getSelectedItem().equals("Code 128B")){
-                barcode = BarcodeFactory.createCode128B(codigobar); 
+            } else if (cboTipoCodificacion.getSelectedItem().equals("Code 128B")) {
+                barcode = BarcodeFactory.createCode128B(codigobar);
             }
-             
-            barcode.setBarHeight(60);   
+
+            barcode.setBarHeight(60);
             barcode.setBarWidth(1);
             barcode.setDrawingText(false);
 
+            BarcodeImageHandler.saveJPEG(barcode, file);
 
-            BarcodeImageHandler.saveJPEG(barcode,file);
-
-        } catch(BarcodeException e) {  
+        } catch (BarcodeException e) {
             e.printStackTrace();
-        } catch(OutputException e) {  
+        } catch (OutputException e) {
             e.printStackTrace();
         }
         imagen = new ImageIcon("C:\\001.jpg");
@@ -1173,7 +1227,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnGenerarActionPerformed
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
-      GeneraAleatorio();
+        GeneraAleatorio();
 
 
     }//GEN-LAST:event_btnActualizarActionPerformed
@@ -1182,33 +1236,32 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         //int seleccion = lstCodigos.getSelectedIndex();
         //txtCodigoBar.setText(String.valueOf(seleccion));
         txtCodigoBar.setText(lstCodigos.getSelectedValue().toString());
-        
+
     }//GEN-LAST:event_lstCodigosMouseClicked
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        Map p=new HashMap();
-        p.put("busqueda",txtBusqueda.getText());
-        if(rbtnCodigo.isSelected()){
+        Map p = new HashMap();
+        p.put("busqueda", txtBusqueda.getText());
+        if (rbtnCodigo.isSelected()) {
             p.put("criterio", "codigo");
-        }
-        else if(rbtnNombre.isSelected()){
+        } else if (rbtnNombre.isSelected()) {
             p.put("criterio", "nombre");
-        }else if(rbtnDescripcion.isSelected()){
+        } else if (rbtnDescripcion.isSelected()) {
             p.put("criterio", "descripcion");
-        }else if(rbtnCategoria.isSelected()){
+        } else if (rbtnCategoria.isSelected()) {
             p.put("criterio", "categoria");
-        }else{
+        } else {
             p.put("criterio", "");
         }
         JasperReport report;
         JasperPrint print;
-        try{
-            report=JasperCompileManager.compileReport(new File("").getAbsolutePath()+ "/src/Reportes/RptProducto.jrxml");
-            print=JasperFillManager.fillReport(report, p,connection);
-            JasperViewer view=new JasperViewer(print,false);
+        try {
+            report = JasperCompileManager.compileReport(new File("").getAbsolutePath() + "/src/Reportes/RptProducto.jrxml");
+            print = JasperFillManager.fillReport(report, p, connection);
+            JasperViewer view = new JasperViewer(print, false);
             view.setTitle("Reporte General de Productos");
             view.setVisible(true);
-        }catch(JRException e){
+        } catch (JRException e) {
             e.printStackTrace();
         }
     }//GEN-LAST:event_jButton3ActionPerformed
@@ -1218,7 +1271,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtNombreKeyTyped
 
     private void txtStockKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtStockKeyTyped
-        txtStock.setBackground(Color.WHITE);        
+        txtStock.setBackground(Color.WHITE);
     }//GEN-LAST:event_txtStockKeyTyped
 
     private void txtPrecioVentaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPrecioVentaKeyTyped
@@ -1227,62 +1280,66 @@ public class FrmProducto extends javax.swing.JInternalFrame {
 
     private void txtCodigoBarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodigoBarKeyReleased
         int keyCode = evt.getKeyCode();
-        if (keyCode==KeyEvent.VK_ENTER) txtNombre.requestFocus();        
+        if (keyCode == KeyEvent.VK_ENTER)
+            txtNombre.requestFocus();
     }//GEN-LAST:event_txtCodigoBarKeyReleased
 
     private void txtNombreKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyReleased
         int keyCode = evt.getKeyCode();
-        if (keyCode==KeyEvent.VK_ENTER) txtDescripcion.requestFocus();         
+        if (keyCode == KeyEvent.VK_ENTER)
+            txtDescripcion.requestFocus();
     }//GEN-LAST:event_txtNombreKeyReleased
 
     private void txtStockKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtStockKeyReleased
         int keyCode = evt.getKeyCode();
-        if (keyCode==KeyEvent.VK_ENTER) txtStockMin.requestFocus();        
+        if (keyCode == KeyEvent.VK_ENTER)
+            txtStockMin.requestFocus();
     }//GEN-LAST:event_txtStockKeyReleased
 
     private void txtStockMinKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtStockMinKeyReleased
         int keyCode = evt.getKeyCode();
-        if (keyCode==KeyEvent.VK_ENTER) txtPrecioCosto.requestFocus();     
+        if (keyCode == KeyEvent.VK_ENTER)
+            txtPrecioCosto.requestFocus();
     }//GEN-LAST:event_txtStockMinKeyReleased
 
     private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
-        Map p=new HashMap();
-        String cod=txtCodigoBar.getText();
-        p.put("codigo",cod);
+        Map p = new HashMap();
+        String cod = txtCodigoBar.getText();
+        p.put("codigo", cod);
 
         JasperReport report;
         JasperPrint print;
-        if(cboTipoCodificacion.getSelectedItem().equals("Code 128")){
-            try{
-                report=JasperCompileManager.compileReport(new File("").getAbsolutePath()+ "/src/Reportes/RptProducto_Code128.jrxml");
-                print=JasperFillManager.fillReport(report, p,new JREmptyDataSource());
-                JasperViewer view=new JasperViewer(print,false);
+        if (cboTipoCodificacion.getSelectedItem().equals("Code 128")) {
+            try {
+                report = JasperCompileManager.compileReport(new File("").getAbsolutePath() + "/src/Reportes/RptProducto_Code128.jrxml");
+                print = JasperFillManager.fillReport(report, p, new JREmptyDataSource());
+                JasperViewer view = new JasperViewer(print, false);
                 view.setTitle("Código de Barras - CODE128");
                 view.setVisible(true);
-            }catch(JRException e){
+            } catch (JRException e) {
                 e.printStackTrace();
             }
-         }else if(cboTipoCodificacion.getSelectedItem().equals("Code 128A")){
-            try{
-                report=JasperCompileManager.compileReport(new File("").getAbsolutePath()+ "/src/Reportes/RptProducto_Code128A.jrxml");
-                print=JasperFillManager.fillReport(report, p,new JREmptyDataSource());
-                JasperViewer view=new JasperViewer(print,false);
+        } else if (cboTipoCodificacion.getSelectedItem().equals("Code 128A")) {
+            try {
+                report = JasperCompileManager.compileReport(new File("").getAbsolutePath() + "/src/Reportes/RptProducto_Code128A.jrxml");
+                print = JasperFillManager.fillReport(report, p, new JREmptyDataSource());
+                JasperViewer view = new JasperViewer(print, false);
                 view.setTitle("Código de Barras - CODE128A");
                 view.setVisible(true);
-            }catch(JRException e){
+            } catch (JRException e) {
                 e.printStackTrace();
             }
-         }else if(cboTipoCodificacion.getSelectedItem().equals("Code 128B")){
-            try{
-                report=JasperCompileManager.compileReport(new File("").getAbsolutePath()+ "/src/Reportes/RptProducto_Code128B.jrxml");
-                print=JasperFillManager.fillReport(report, p,new JREmptyDataSource());
-                JasperViewer view=new JasperViewer(print,false);
+        } else if (cboTipoCodificacion.getSelectedItem().equals("Code 128B")) {
+            try {
+                report = JasperCompileManager.compileReport(new File("").getAbsolutePath() + "/src/Reportes/RptProducto_Code128B.jrxml");
+                print = JasperFillManager.fillReport(report, p, new JREmptyDataSource());
+                JasperViewer view = new JasperViewer(print, false);
                 view.setTitle("Código de Barras - CODE128B");
                 view.setVisible(true);
-            }catch(JRException e){
+            } catch (JRException e) {
                 e.printStackTrace();
             }
-         }
+        }
     }//GEN-LAST:event_btnImprimirActionPerformed
 
     private void btnSeleccionarImagenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccionarImagenActionPerformed
@@ -1290,16 +1347,16 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         String ruta = "";
         String pathOrigen;
         String pathDestino;
-        
+
         JFileChooser file = new JFileChooser();
-        int estado=file.showOpenDialog(this);
-        if(estado==JFileChooser.APPROVE_OPTION);
+        int estado = file.showOpenDialog(this);
+        if (estado == JFileChooser.APPROVE_OPTION);
         {
-            imagen=file.getSelectedFile().getName();
+            imagen = file.getSelectedFile().getName();
             //-----------------------------------------------
-            pathOrigen=file.getSelectedFile().getAbsolutePath();
-            pathDestino="src/Images/"+imagen;
-            
+            pathOrigen = file.getSelectedFile().getAbsolutePath();
+            pathDestino = "src/Images/" + imagen;
+
             File origen = new File(pathOrigen);
             File destino = new File(pathDestino);
             try {
@@ -1308,22 +1365,17 @@ public class FrmProducto extends javax.swing.JInternalFrame {
                 byte[] buf = new byte[1024];
                 int len;
 
-                    while ((len = in.read(buf)) > 0) {
-                        out.write(buf, 0, len);
-                    }
-                    in.close();
-                    out.close();    
-                } catch (IOException ex) {
-                    Logger.getLogger(FrmProducto.class.getName()).log(Level.SEVERE, null, ex);
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
                 }
-            
-                 
-            
-            
+                in.close();
+                out.close();
+            } catch (IOException ex) {
+                Logger.getLogger(FrmProducto.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
             //-----------------------------------------------
-            
-            
-            ruta="src/Images/"+imagen;
+            ruta = "src/Images/" + imagen;
             ImageIcon fot = new ImageIcon(ruta);
             Icon icono = new ImageIcon(fot.getImage().getScaledInstance(lblImagen.getWidth(), lblImagen.getHeight(), Image.SCALE_DEFAULT));
             lblImagen.setIcon(icono);
@@ -1332,9 +1384,9 @@ public class FrmProducto extends javax.swing.JInternalFrame {
 //            lblImagen.setIcon(img);
 //            lblImagen.repaint();
             //System.out.println(ruta);
-            
+
         }
-        
+
     }//GEN-LAST:event_btnSeleccionarImagenActionPerformed
 
     private void btnSalir1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalir1ActionPerformed
@@ -1350,6 +1402,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
 
         if (tblProducto.getSelectedRows().length > 0) {
             accion = "Nuevo";
+            loadProduct();
             modificar();
             txtCodigo.setText("");
             txtCodigoBar.setText("");
@@ -1362,7 +1415,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     private void txtCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCodigoActionPerformed
- 
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActualizar;
     private javax.swing.JButton btnCancelar;
@@ -1377,6 +1430,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.JComboBox cboCategoria;
     private javax.swing.JComboBox cboTipoCodificacion;
+    private com.toedter.calendar.JDateChooser dcFechaVencimiento;
     private javax.swing.JMenuItem duplicateItem;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
@@ -1387,7 +1441,9 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;

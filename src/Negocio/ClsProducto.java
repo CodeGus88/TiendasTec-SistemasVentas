@@ -20,7 +20,7 @@ private Connection connection=new ClsConexion().getConection();
     //-------------------------------------------------------------------------------------------------- 
     public void agregarProducto(ClsEntidadProducto producto){
         try{
-            CallableStatement statement=connection.prepareCall("{call SP_I_Producto(?,?,?,?,?,?,?,?,?,?,?)}");
+            CallableStatement statement=connection.prepareCall("{call SP_I_Producto(?,?,?,?,?,?,?,?,?,?,?,?)}");
             statement.setString("pcodigo",producto.getStrCodigoProducto());
             statement.setString("pnombre",producto.getStrNombreProducto());
             statement.setString("pdescripcion",producto.getStrDescripcionProducto());
@@ -32,6 +32,10 @@ private Connection connection=new ClsConexion().getConection();
             statement.setString("pestado",producto.getStrEstadoProducto());
             statement.setString("pidcategoria",producto.getStrIdCategoria());
             statement.setString("pimagen",producto.getStrImagen());
+            if(producto.getFechaVencimiento() != null)
+                statement.setDate("pfechavencimiento",new java.sql.Date(producto.getFechaVencimiento().getTime()));
+            else
+                statement.setDate("pfechavencimiento", null);
             statement.execute();
             
             System.out.println("Producto: " + producto.getStrNombreProducto());
@@ -43,21 +47,25 @@ private Connection connection=new ClsConexion().getConection();
         }
         
     }    
-    public void modificarProducto(String codigo,ClsEntidadProducto Producto){
+    public void modificarProducto(String codigo,ClsEntidadProducto producto){
         try{
-            CallableStatement statement=connection.prepareCall("{call SP_U_Producto(?,?,?,?,?,?,?,?,?,?,?,?)}");
+            CallableStatement statement=connection.prepareCall("{call SP_U_Producto(?,?,?,?,?,?,?,?,?,?,?,?,?)}");
             statement.setString("pidproducto",codigo);
-            statement.setString("pcodigo",Producto.getStrCodigoProducto());
-            statement.setString("pnombre",Producto.getStrNombreProducto());
-            statement.setString("pdescripcion",Producto.getStrDescripcionProducto());
-            statement.setString("pstock",Producto.getStrStockProducto());
-            statement.setString("pstockmin",Producto.getStrStockMinProducto());
-            statement.setString("ppreciocosto",Producto.getStrPrecioCostoProducto());
-            statement.setString("pprecioventa",Producto.getStrPrecioVentaProducto());
-            statement.setString("putilidad",Producto.getStrUtilidadProducto());
-            statement.setString("pestado",Producto.getStrEstadoProducto());
-            statement.setString("pidcategoria",Producto.getStrIdCategoria());           
-            statement.setString("pimagen",Producto.getStrImagen());
+            statement.setString("pcodigo",producto.getStrCodigoProducto());
+            statement.setString("pnombre",producto.getStrNombreProducto());
+            statement.setString("pdescripcion",producto.getStrDescripcionProducto());
+            statement.setString("pstock",producto.getStrStockProducto());
+            statement.setString("pstockmin",producto.getStrStockMinProducto());
+            statement.setString("ppreciocosto",producto.getStrPrecioCostoProducto());
+            statement.setString("pprecioventa",producto.getStrPrecioVentaProducto());
+            statement.setString("putilidad",producto.getStrUtilidadProducto());
+            statement.setString("pestado",producto.getStrEstadoProducto());
+            statement.setString("pidcategoria",producto.getStrIdCategoria());           
+            statement.setString("pimagen",producto.getStrImagen());
+            if (producto.getFechaVencimiento() != null)
+                statement.setDate("pfechavencimiento", new java.sql.Date(producto.getFechaVencimiento().getTime()));
+            else
+                statement.setDate("pfechavencimiento", null);
             statement.executeUpdate();
             
         }catch(SQLException ex){
@@ -97,6 +105,7 @@ private Connection connection=new ClsConexion().getConection();
                 producto.setStrEstadoProducto(resultSet.getString("Estado"));
                 producto.setStrDescripcionCategoria(resultSet.getString("categoria"));
                 producto.setStrImagen(resultSet.getString("imagen"));
+                producto.setFechaVencimiento(resultSet.getDate("FechaVencimiento"));
                 productos.add(producto);
             }
             return productos;
@@ -125,7 +134,7 @@ private Connection connection=new ClsConexion().getConection();
                 producto.setStrEstadoProducto(resultSet.getString("Estado"));
                 producto.setStrDescripcionCategoria(resultSet.getString("categoria"));
                 producto.setStrImagen(resultSet.getString("imagen"));
-
+                producto.setFechaVencimiento(resultSet.getDate("FechaVencimiento"));
                 productos.add(producto);
             }
             return productos;

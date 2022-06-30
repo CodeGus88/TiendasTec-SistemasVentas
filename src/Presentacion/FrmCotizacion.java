@@ -97,7 +97,6 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
                 if (rs.getString(1) != null) {
                     Scanner s = new Scanner(rs.getString(1));
                     int c = s.useDelimiter("C").nextInt() + 1;
-
                     if (c < 10) {
                         return "C0000" + c;
                     }

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 27-06-2022 a las 22:32:43
+-- Tiempo de generación: 30-06-2022 a las 15:43:10
 -- Versión del servidor: 10.4.11-MariaDB
 -- Versión de PHP: 7.4.5
 
@@ -195,9 +195,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_I_Empleado` (IN `pnombre` VARCHA
 		VALUES(pnombre,papellido,psexo,pfechanac,pdireccion,ptelefono,pcelular,pemail,pdni,pfechaing,psueldo,pestado,pusuario,pcontrasenia,pidtipousuario);
 	END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_I_Producto` (IN `pcodigo` VARCHAR(50) CHARSET utf8, IN `pnombre` VARCHAR(100) CHARSET utf8, IN `pdescripcion` TEXT CHARSET utf8, IN `pstock` DECIMAL(8,2), IN `pstockmin` DECIMAL(8,2), IN `ppreciocosto` DECIMAL(8,2), IN `pprecioventa` DECIMAL(8,2), IN `putilidad` DECIMAL(8,2), IN `pestado` VARCHAR(30) CHARSET utf8, IN `pidcategoria` INT, IN `pimagen` VARCHAR(50) CHARSET utf8)  BEGIN		
-		INSERT INTO producto(codigo,nombre,descripcion,stock,stockmin,preciocosto,precioventa,utilidad,estado,idcategoria,imagen)
-		VALUES(pcodigo,pnombre,pdescripcion,pstock,pstockmin,ppreciocosto,pprecioventa,putilidad,pestado,pidcategoria,pimagen);
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_I_Producto` (IN `pcodigo` VARCHAR(50) CHARSET utf8, IN `pnombre` VARCHAR(100) CHARSET utf8, IN `pdescripcion` TEXT CHARSET utf8, IN `pstock` DECIMAL(8,2), IN `pstockmin` DECIMAL(8,2), IN `ppreciocosto` DECIMAL(8,2), IN `pprecioventa` DECIMAL(8,2), IN `putilidad` DECIMAL(8,2), IN `pestado` VARCHAR(30) CHARSET utf8, IN `pidcategoria` INT, IN `pimagen` VARCHAR(50) CHARSET utf8, IN `pfechavencimiento` DATE)  BEGIN		
+		INSERT INTO producto(codigo,nombre,descripcion,stock,stockmin,preciocosto,precioventa,utilidad,estado,idcategoria,imagen, fechavencimiento)
+		VALUES(pcodigo,pnombre,pdescripcion,pstock,pstockmin,ppreciocosto,pprecioventa,putilidad,pestado,pidcategoria,pimagen, pfechavencimiento);
 	END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_I_Proveedor` (IN `pnombre` VARCHAR(100) CHARSET utf8, IN `pruc` VARCHAR(11) CHARSET utf8, IN `pdni` VARCHAR(8) CHARSET utf8, IN `pdireccion` VARCHAR(100) CHARSET utf8, IN `ptelefono` VARCHAR(10) CHARSET utf8, IN `pcelular` VARCHAR(15) CHARSET utf8, IN `pemail` VARCHAR(80) CHARSET utf8, IN `pcuenta1` VARCHAR(50) CHARSET utf8, IN `pcuenta2` VARCHAR(50) CHARSET utf8, IN `pestado` VARCHAR(30) CHARSET utf8, IN `pobsv` TEXT CHARSET utf8)  BEGIN		
@@ -402,20 +402,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_S_LoginPermisos` (IN `pnombre_us
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_S_Producto` ()  BEGIN
 		SELECT p.IdProducto,p.Codigo,p.Nombre,p.Descripcion,p.Stock,p.StockMin,p.PrecioCosto,p.PrecioVenta,p.Utilidad,p.Estado,
-		c.Descripcion AS categoria,p.imagen
+		c.Descripcion AS categoria,p.imagen, p.FechaVencimiento
 		FROM producto AS p INNER JOIN categoria AS c ON p.IdCategoria=c.IdCategoria
 		ORDER BY p.IdProducto;
 	END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_S_ProductoActivo` ()  BEGIN
-		SELECT p.IdProducto,p.Codigo,p.Nombre,p.Descripcion,p.Stock,p.StockMin,p.PrecioCosto,p.PrecioVenta,p.Utilidad,p.Estado,c.Descripcion AS categoria,p.imagen
+		SELECT p.IdProducto,p.Codigo,p.Nombre,p.Descripcion,p.Stock,p.StockMin,p.PrecioCosto,p.PrecioVenta,p.Utilidad,p.Estado,c.Descripcion AS categoria,p.imagen, p.FechaVencimiento
 		FROM producto AS p INNER JOIN categoria AS c ON p.IdCategoria=c.IdCategoria WHERE p.Estado="Activo"
 		ORDER BY p.IdProducto;
 	END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_S_ProductoActivoPorParametro` (IN `pcriterio` VARCHAR(20) CHARSET utf8, IN `pbusqueda` VARCHAR(50) CHARSET utf8)  BEGIN
 	IF pcriterio = "id" THEN
-		SELECT p.IdProducto,p.Codigo,p.Nombre,p.Descripcion,p.Stock,p.StockMin,p.PrecioCosto,p.PrecioVenta,p.Utilidad,p.Estado,c.Descripcion AS Categoria,p.imagen
+		SELECT p.IdProducto,p.Codigo,p.Nombre,p.Descripcion,p.Stock,p.StockMin,p.PrecioCosto,p.PrecioVenta,p.Utilidad,p.Estado,c.Descripcion AS Categoria,p.imagen, p.FechaVencimiento
 		FROM producto AS p INNER JOIN categoria AS c ON p.IdCategoria = c.IdCategoria
 		WHERE p.IdProducto=pbusqueda AND p.Estado="Activo";
  	ELSEIF pcriterio = "codigo" THEN
@@ -442,34 +442,34 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_S_ProductoActivoPorParametro` (I
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_S_ProductoPorParametro` (IN `pcriterio` VARCHAR(20) CHARSET utf8, IN `pbusqueda` VARCHAR(50) CHARSET utf8)  BEGIN
 	IF pcriterio = "id" THEN
-		SELECT p.IdProducto,p.Codigo,p.Nombre,p.Descripcion,p.Stock,p.StockMin,p.PrecioCosto,p.PrecioVenta,p.Utilidad,p.Estado,c.Descripcion AS Categoria,p.imagen
+		SELECT p.IdProducto,p.Codigo,p.Nombre,p.Descripcion,p.Stock,p.StockMin,p.PrecioCosto,p.PrecioVenta,p.Utilidad,p.Estado,c.Descripcion AS Categoria,p.imagen, p.FechaVencimiento
 		FROM producto AS p INNER JOIN categoria AS c ON p.IdCategoria = c.IdCategoria
 		WHERE p.IdProducto=pbusqueda;
 	ELSEIF pcriterio = "codigo" THEN
-		SELECT p.IdProducto,p.Codigo,p.Nombre,p.Descripcion,p.Stock,p.StockMin,p.PrecioCosto,p.PrecioVenta,p.Utilidad,p.Estado,c.Descripcion AS Categoria,p.imagen
+		SELECT p.IdProducto,p.Codigo,p.Nombre,p.Descripcion,p.Stock,p.StockMin,p.PrecioCosto,p.PrecioVenta,p.Utilidad,p.Estado,c.Descripcion AS Categoria,p.imagen, p.FechaVencimiento
 		FROM producto AS p INNER JOIN categoria AS c ON p.IdCategoria = c.IdCategoria
 		WHERE p.Codigo=pbusqueda;
 	ELSEIF pcriterio = "nombre" THEN
-		SELECT p.IdProducto,p.Codigo,p.Nombre,p.Descripcion,p.Stock,p.StockMin,p.PrecioCosto,p.PrecioVenta,p.Utilidad,p.Estado,c.Descripcion AS Categoria,p.imagen
+		SELECT p.IdProducto,p.Codigo,p.Nombre,p.Descripcion,p.Stock,p.StockMin,p.PrecioCosto,p.PrecioVenta,p.Utilidad,p.Estado,c.Descripcion AS Categoria,p.imagen, p.FechaVencimiento
 		FROM producto AS p INNER JOIN categoria AS c ON p.IdCategoria = c.IdCategoria
 		WHERE p.Nombre LIKE CONCAT("%",pbusqueda,"%");
 	ELSEIF pcriterio = "descripcion" THEN
-		SELECT p.IdProducto,p.Codigo,p.Nombre,p.Descripcion,p.Stock,p.StockMin,p.PrecioCosto,p.PrecioVenta,p.Utilidad,p.Estado,c.Descripcion AS Categoria,p.imagen
+		SELECT p.IdProducto,p.Codigo,p.Nombre,p.Descripcion,p.Stock,p.StockMin,p.PrecioCosto,p.PrecioVenta,p.Utilidad,p.Estado,c.Descripcion AS Categoria,p.imagen, p.FechaVencimiento
 		FROM producto AS p INNER JOIN categoria AS c ON p.IdCategoria = c.IdCategoria
 		WHERE p.Descripcion LIKE CONCAT("%",pbusqueda,"%");
 	ELSEIF pcriterio = "categoria" THEN
-		SELECT p.IdProducto,p.Codigo,p.Nombre,p.Descripcion,p.Stock,p.StockMin,p.PrecioCosto,p.PrecioVenta,p.Utilidad,p.Estado,c.Descripcion AS Categoria,p.imagen
+		SELECT p.IdProducto,p.Codigo,p.Nombre,p.Descripcion,p.Stock,p.StockMin,p.PrecioCosto,p.PrecioVenta,p.Utilidad,p.Estado,c.Descripcion AS Categoria,p.imagen, p.FechaVencimiento
 		FROM producto AS p INNER JOIN categoria AS c ON p.IdCategoria = c.IdCategoria
 		WHERE c.Descripcion LIKE CONCAT("%",pbusqueda,"%");
 	ELSE
-		SELECT p.IdProducto,p.Codigo,p.Nombre,p.Descripcion,p.Stock,p.StockMin,p.PrecioCosto,p.PrecioVenta,p.Utilidad,p.Estado,c.Descripcion AS Categoria,p.imagen
+		SELECT p.IdProducto,p.Codigo,p.Nombre,p.Descripcion,p.Stock,p.StockMin,p.PrecioCosto,p.PrecioVenta,p.Utilidad,p.Estado,c.Descripcion AS Categoria,p.imagen, p.FechaVencimiento
 		FROM producto AS p INNER JOIN categoria AS c ON p.IdCategoria = c.IdCategoria;
 	END IF; 
 	END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_S_ProductoVerificarCodigoBar` (IN `pbusqueda` VARCHAR(50) CHARSET utf8)  BEGIN
 	
-		SELECT p.IdProducto,p.Codigo,p.Nombre,p.Descripcion,p.Stock,p.StockMin,p.PrecioCosto,p.PrecioVenta,p.Utilidad,p.Estado,c.Descripcion AS Categoria,p.imagen
+		SELECT p.IdProducto,p.Codigo,p.Nombre,p.Descripcion,p.Stock,p.StockMin,p.PrecioCosto,p.PrecioVenta,p.Utilidad,p.Estado,c.Descripcion AS Categoria,p.imagen, p.FechaVencimiento
 		FROM producto AS p INNER JOIN categoria AS c ON p.IdCategoria = c.IdCategoria
 		WHERE p.Codigo=pbusqueda;
 
@@ -724,7 +724,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_U_Empleado` (IN `pidempleado` IN
 		WHERE idempleado = pidempleado;
 	END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_U_Producto` (IN `pidproducto` INT, IN `pcodigo` VARCHAR(50) CHARSET utf8, IN `pnombre` VARCHAR(100) CHARSET utf8, IN `pdescripcion` TEXT CHARSET utf8, IN `pstock` DECIMAL(8,2), IN `pstockmin` DECIMAL(8,2), IN `ppreciocosto` DECIMAL(8,2), IN `pprecioventa` DECIMAL(8,2), IN `putilidad` DECIMAL(8,2), IN `pestado` VARCHAR(30) CHARSET utf8, IN `pidcategoria` INT, IN `pimagen` VARCHAR(50) CHARSET utf8)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_U_Producto` (IN `pidproducto` INT, IN `pcodigo` VARCHAR(50) CHARSET utf8, IN `pnombre` VARCHAR(100) CHARSET utf8, IN `pdescripcion` TEXT CHARSET utf8, IN `pstock` DECIMAL(8,2), IN `pstockmin` DECIMAL(8,2), IN `ppreciocosto` DECIMAL(8,2), IN `pprecioventa` DECIMAL(8,2), IN `putilidad` DECIMAL(8,2), IN `pestado` VARCHAR(30) CHARSET utf8, IN `pidcategoria` INT, IN `pimagen` VARCHAR(50) CHARSET utf8, IN `pfechavencimiento` DATE)  BEGIN
 		UPDATE producto SET
 			codigo=pcodigo,
 			nombre=pnombre,
@@ -736,7 +736,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_U_Producto` (IN `pidproducto` IN
 			utilidad=putilidad,
 			estado=pestado,
 			idcategoria=pidcategoria,
-			imagen=pimagen
+			imagen=pimagen,
+            fechavencimiento = pfechavencimiento
 			
 		WHERE idproducto = pidproducto;
 	END$$
@@ -817,7 +818,7 @@ DELIMITER ;
 
 CREATE TABLE `categoria` (
   `IdCategoria` int(11) NOT NULL,
-  `Descripcion` varchar(100) COLLATE utf8_bin NOT NULL
+  `Descripcion` varchar(100) CHARACTER SET utf8 NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
@@ -839,12 +840,12 @@ INSERT INTO `categoria` (`IdCategoria`, `Descripcion`) VALUES
 
 CREATE TABLE `cliente` (
   `IdCliente` int(11) NOT NULL,
-  `Nombre` varchar(100) COLLATE utf8_bin NOT NULL,
-  `Ruc` varchar(11) COLLATE utf8_bin DEFAULT NULL,
-  `Dni` varchar(8) COLLATE utf8_bin DEFAULT NULL,
-  `Direccion` varchar(50) COLLATE utf8_bin DEFAULT NULL,
-  `Telefono` varchar(15) COLLATE utf8_bin DEFAULT NULL,
-  `Obsv` mediumtext COLLATE utf8_bin DEFAULT NULL
+  `Nombre` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `Ruc` varchar(11) CHARACTER SET utf8 DEFAULT NULL,
+  `Dni` varchar(8) CHARACTER SET utf8 DEFAULT NULL,
+  `Direccion` varchar(50) CHARACTER SET utf8 DEFAULT NULL,
+  `Telefono` varchar(15) CHARACTER SET utf8 DEFAULT NULL,
+  `Obsv` mediumtext CHARACTER SET utf8 DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
@@ -867,7 +868,10 @@ INSERT INTO `cliente` (`IdCliente`, `Nombre`, `Ruc`, `Dni`, `Direccion`, `Telefo
 (32, 'Thalia', '45266224', '', 'Calle los llantos', '45632565', 'Estas son las observaciones'),
 (33, 'Sandra', '454545', '4554545', 'dirección', '4556981', 'Descripción'),
 (34, 'Este es el nombre o razón social', '565613384', '', 'Calle x en y y z', '4587659', 'Ningúna observación'),
-(35, 'Fulano Fulanes', '565664646', '', 'Calle las calles', '4565898', 'Esta es la observación');
+(35, 'Fulano Fulanes', '565664646', '', 'Calle las calles', '4565898', 'Esta es la observación'),
+(36, 'Gonzalo Fuentes', '', '65478754', 'Calle las calles', '4563265', 'Estas son las observaciones'),
+(37, 'Sergio', '45656565', '', 'Calle las calles', '4569856', 'ninguna'),
+(38, 'Rolando Rojas Jaramillo', '', '6548798', 'Calle clas calles', '7859654', 'onbs');
 
 -- --------------------------------------------------------
 
@@ -880,12 +884,12 @@ CREATE TABLE `compra` (
   `IdTipoDocumento` int(11) NOT NULL,
   `IdProveedor` int(11) NOT NULL,
   `IdEmpleado` int(11) NOT NULL,
-  `Numero` varchar(20) COLLATE utf8_bin DEFAULT NULL,
+  `Numero` varchar(20) CHARACTER SET utf8 DEFAULT NULL,
   `Fecha` date DEFAULT NULL,
   `SubTotal` decimal(8,2) DEFAULT NULL,
   `Igv` decimal(8,2) DEFAULT NULL,
   `Total` decimal(8,2) DEFAULT NULL,
-  `Estado` varchar(30) COLLATE utf8_bin DEFAULT NULL
+  `Estado` varchar(30) CHARACTER SET utf8 DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
@@ -908,15 +912,15 @@ CREATE TABLE `credito` (
   `IdTipoDocumento` int(11) NOT NULL,
   `IdCliente` int(11) NOT NULL,
   `IdEmpleado` int(11) NOT NULL,
-  `Serie` varchar(5) COLLATE utf8_bin DEFAULT NULL,
-  `Numero` varchar(20) COLLATE utf8_bin DEFAULT NULL,
+  `Serie` varchar(5) CHARACTER SET utf8 DEFAULT NULL,
+  `Numero` varchar(20) CHARACTER SET utf8 DEFAULT NULL,
   `Fecha` date NOT NULL,
   `TotalCredito` decimal(8,2) NOT NULL,
   `Descuento` decimal(8,2) NOT NULL,
   `SubTotal` decimal(8,2) NOT NULL,
   `Igv` decimal(8,2) NOT NULL,
   `TotalPagar` decimal(8,2) NOT NULL,
-  `Estado` varchar(30) COLLATE utf8_bin NOT NULL
+  `Estado` varchar(30) CHARACTER SET utf8 NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
@@ -1055,7 +1059,11 @@ INSERT INTO `detalleventa` (`IdVenta`, `IdProducto`, `Cantidad`, `Costo`, `Preci
 (23, 1, '2.00', '6.00', '10.00', '12.00'),
 (23, 4, '1.00', '5.00', '8.00', '8.00'),
 (24, 2, '2.00', '6.00', '10.00', '20.00'),
-(25, 3, '7.00', '6.00', '10.00', '70.00');
+(25, 3, '7.00', '6.00', '10.00', '70.00'),
+(26, 1, '7.00', '6.00', '10.00', '70.00'),
+(27, 4, '4.00', '5.00', '8.00', '32.00'),
+(27, 3, '7.00', '6.00', '10.00', '70.00'),
+(27, 1, '7.00', '6.00', '10.00', '70.00');
 
 -- --------------------------------------------------------
 
@@ -1065,20 +1073,20 @@ INSERT INTO `detalleventa` (`IdVenta`, `IdProducto`, `Cantidad`, `Costo`, `Preci
 
 CREATE TABLE `empleado` (
   `IdEmpleado` int(11) NOT NULL,
-  `Nombre` varchar(50) COLLATE utf8_bin NOT NULL,
-  `Apellido` varchar(80) COLLATE utf8_bin NOT NULL,
-  `Sexo` varchar(1) COLLATE utf8_bin NOT NULL,
+  `Nombre` varchar(50) CHARACTER SET utf8 NOT NULL,
+  `Apellido` varchar(80) CHARACTER SET utf8 NOT NULL,
+  `Sexo` varchar(1) CHARACTER SET utf8 NOT NULL,
   `FechaNac` date NOT NULL,
-  `Direccion` varchar(100) COLLATE utf8_bin DEFAULT NULL,
-  `Telefono` varchar(10) COLLATE utf8_bin DEFAULT NULL,
-  `Celular` varchar(15) COLLATE utf8_bin DEFAULT NULL,
-  `Email` varchar(80) COLLATE utf8_bin DEFAULT NULL,
-  `Dni` varchar(8) COLLATE utf8_bin DEFAULT NULL,
+  `Direccion` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+  `Telefono` varchar(10) CHARACTER SET utf8 DEFAULT NULL,
+  `Celular` varchar(15) CHARACTER SET utf8 DEFAULT NULL,
+  `Email` varchar(80) CHARACTER SET utf8 DEFAULT NULL,
+  `Dni` varchar(8) CHARACTER SET utf8 DEFAULT NULL,
   `FechaIng` date NOT NULL,
   `Sueldo` decimal(8,2) DEFAULT NULL,
-  `Estado` varchar(30) COLLATE utf8_bin NOT NULL,
-  `Usuario` varchar(20) COLLATE utf8_bin DEFAULT NULL,
-  `Contrasenia` mediumtext COLLATE utf8_bin DEFAULT NULL,
+  `Estado` varchar(30) CHARACTER SET utf8 NOT NULL,
+  `Usuario` varchar(20) CHARACTER SET utf8 DEFAULT NULL,
+  `Contrasenia` mediumtext CHARACTER SET utf8 DEFAULT NULL,
   `IdTipoUsuario` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
@@ -1099,34 +1107,34 @@ INSERT INTO `empleado` (`IdEmpleado`, `Nombre`, `Apellido`, `Sexo`, `FechaNac`, 
 
 CREATE TABLE `producto` (
   `IdProducto` int(11) NOT NULL,
-  `Codigo` varchar(50) COLLATE utf8_bin DEFAULT NULL,
-  `Nombre` varchar(100) COLLATE utf8_bin NOT NULL,
-  `Descripcion` mediumtext COLLATE utf8_bin DEFAULT NULL,
+  `Codigo` varchar(50) CHARACTER SET utf8 DEFAULT NULL,
+  `Nombre` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `Descripcion` mediumtext CHARACTER SET utf8 DEFAULT NULL,
   `Stock` decimal(8,2) DEFAULT NULL,
   `StockMin` decimal(8,2) DEFAULT NULL,
   `PrecioCosto` decimal(8,2) DEFAULT NULL,
   `PrecioVenta` decimal(8,2) DEFAULT NULL,
   `Utilidad` decimal(8,2) DEFAULT NULL,
-  `Estado` varchar(30) COLLATE utf8_bin NOT NULL,
+  `Estado` varchar(30) CHARACTER SET utf8 NOT NULL,
   `IdCategoria` int(11) NOT NULL,
-  `Imagen` varchar(50) COLLATE utf8_bin NOT NULL
+  `Imagen` varchar(50) CHARACTER SET utf8 NOT NULL,
+  `FechaVencimiento` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Volcado de datos para la tabla `producto`
 --
 
-INSERT INTO `producto` (`IdProducto`, `Codigo`, `Nombre`, `Descripcion`, `Stock`, `StockMin`, `PrecioCosto`, `PrecioVenta`, `Utilidad`, `Estado`, `IdCategoria`, `Imagen`) VALUES
-(1, '0001', 'Coca - cola 2 litros no retornable', 'Cocacola 2 litros no retornable', '4972.00', '10.00', '6.00', '10.00', '4.00', 'ACTIVO', 5, 'cocacola_1.png'),
-(2, '0002', 'Sprite 2 litros no retornable', 'sprite 2 litros no retornable', '4977.00', '10.00', '6.00', '10.00', '4.00', 'ACTIVO', 5, 'sprite_1.jpg'),
-(3, '0003', 'fanta 2 litros no retornable', 'fanta 2 litros no retornable, económico', '4918.00', '10.00', '6.00', '10.00', '4.00', 'ACTIVO', 5, 'imagen.png'),
-(4, '0004', 'lechuga hidroponica', 'lechuga hidroponica', '4998.00', '10.00', '5.00', '8.00', '3.00', 'ACTIVO', 9, 'imagen.png'),
-(5, '0005', 'cerveza en lata paceña pequeña', 'cerveza paceña en lata pequeña', '4998.00', '10.00', '5.00', '9.00', '4.00', 'ACTIVO', 6, 'imagen.png'),
-(9, '0007', 'cerveza en lata pace?a peque?a', 'cerveza pace?a en lata peque?a', '4998.00', '10.00', '5.00', '9.00', '4.00', 'ACTIVO', 6, 'imagen.png'),
-(10, '0008', 'cerveza en lata pace?a peque?a', 'cerveza pace?a en lata peque?a', '4998.00', '10.00', '5.00', '9.00', '4.00', 'ACTIVO', 6, 'imagen.png'),
-(11, '0009', 'cerveza en lata pace?a peque?a', 'cerveza pace?a en lata peque?a', '4998.00', '10.00', '5.00', '9.00', '4.00', 'ACTIVO', 6, 'imagen.png'),
-(12, '0010', 'cerveza en lata pace?a peque?a', 'cerveza pace?a en lata peque?a', '4998.00', '10.00', '5.00', '9.00', '4.00', 'ACTIVO', 6, 'imagen.png'),
-(13, '0011', 'cerveza en lata pace?a peque?a', 'cerveza pace?a en lata peque?a', '4998.00', '10.00', '5.00', '9.00', '4.00', 'ACTIVO', 6, 'imagen.png');
+INSERT INTO `producto` (`IdProducto`, `Codigo`, `Nombre`, `Descripcion`, `Stock`, `StockMin`, `PrecioCosto`, `PrecioVenta`, `Utilidad`, `Estado`, `IdCategoria`, `Imagen`, `FechaVencimiento`) VALUES
+(1, '0001', 'Coca - cola 2 litros no retornable', 'Cocacola 2 litros no retornable', '4958.00', '10.00', '6.00', '10.00', '4.00', 'ACTIVO', 5, 'imagen.png', NULL),
+(2, '0002', 'Sprite 2 litros no retornable', 'sprite 2 litros no retornable', '4977.00', '10.00', '6.00', '10.00', '4.00', 'ACTIVO', 5, 'sprite_1.jpg', NULL),
+(3, '0003', 'fanta 2 litros no retornable', 'fanta 2 litros no retornable, económico', '4911.00', '10.00', '6.00', '10.00', '4.00', 'ACTIVO', 5, 'imagen.png', NULL),
+(4, '0004', 'lechuga hidroponica', 'lechuga hidroponica', '4994.00', '10.00', '5.00', '8.00', '3.00', 'ACTIVO', 9, 'imagen.png', NULL),
+(5, '0005', 'cerveza en lata pace?a peque?a', 'cerveza pace?a en lata peque?a', '4998.00', '10.00', '5.00', '9.00', '4.00', 'ACTIVO', 6, 'imagen.png', '2025-06-01'),
+(23, '315417', 'fanta 2 litros no retornable', 'fanta 2 litros no retornable, económico', '4911.00', '10.00', '6.00', '10.00', '4.00', 'ACTIVO', 5, 'imagen.png', NULL),
+(25, '441016', 'Coca - cola 2 litros no retornable', 'Cocacola 2 litros no retornable', '4958.00', '10.00', '6.00', '10.00', '4.00', 'INACTIVO', 5, 'imagen.png', NULL),
+(26, '445540', 'Coca - cola 2 litros no retornable', 'Cocacola 2 litros no retornable', '4958.00', '10.00', '6.00', '10.00', '4.00', 'ACTIVO', 5, 'imagen.png', NULL),
+(27, '323499', 'Coca - cola 2 litros no retornable', 'Cocacola 2 litros no retornable', '4958.00', '10.00', '6.00', '10.00', '4.00', 'INACTIVO', 5, 'imagen.png', '2023-06-11');
 
 -- --------------------------------------------------------
 
@@ -1136,17 +1144,17 @@ INSERT INTO `producto` (`IdProducto`, `Codigo`, `Nombre`, `Descripcion`, `Stock`
 
 CREATE TABLE `proveedor` (
   `IdProveedor` int(11) NOT NULL,
-  `Nombre` varchar(100) COLLATE utf8_bin NOT NULL,
-  `Ruc` varchar(11) COLLATE utf8_bin DEFAULT NULL,
-  `Dni` varchar(8) COLLATE utf8_bin DEFAULT NULL,
-  `Direccion` varchar(100) COLLATE utf8_bin DEFAULT NULL,
-  `Telefono` varchar(10) COLLATE utf8_bin DEFAULT NULL,
-  `Celular` varchar(15) COLLATE utf8_bin DEFAULT NULL,
-  `Email` varchar(80) COLLATE utf8_bin DEFAULT NULL,
-  `Cuenta1` varchar(50) COLLATE utf8_bin DEFAULT NULL,
-  `Cuenta2` varchar(50) COLLATE utf8_bin DEFAULT NULL,
-  `Estado` varchar(30) COLLATE utf8_bin NOT NULL,
-  `Obsv` mediumtext COLLATE utf8_bin DEFAULT NULL
+  `Nombre` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `Ruc` varchar(11) CHARACTER SET utf8 DEFAULT NULL,
+  `Dni` varchar(8) CHARACTER SET utf8 DEFAULT NULL,
+  `Direccion` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+  `Telefono` varchar(10) CHARACTER SET utf8 DEFAULT NULL,
+  `Celular` varchar(15) CHARACTER SET utf8 DEFAULT NULL,
+  `Email` varchar(80) CHARACTER SET utf8 DEFAULT NULL,
+  `Cuenta1` varchar(50) CHARACTER SET utf8 DEFAULT NULL,
+  `Cuenta2` varchar(50) CHARACTER SET utf8 DEFAULT NULL,
+  `Estado` varchar(30) CHARACTER SET utf8 NOT NULL,
+  `Obsv` mediumtext CHARACTER SET utf8 DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
@@ -1165,7 +1173,7 @@ INSERT INTO `proveedor` (`IdProveedor`, `Nombre`, `Ruc`, `Dni`, `Direccion`, `Te
 
 CREATE TABLE `tipodocumento` (
   `IdTipoDocumento` int(11) NOT NULL,
-  `Descripcion` varchar(80) COLLATE utf8_bin NOT NULL
+  `Descripcion` varchar(80) CHARACTER SET utf8 NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
@@ -1185,7 +1193,7 @@ INSERT INTO `tipodocumento` (`IdTipoDocumento`, `Descripcion`) VALUES
 
 CREATE TABLE `tipousuario` (
   `IdTipoUsuario` int(11) NOT NULL,
-  `Descripcion` varchar(20) COLLATE utf8_bin NOT NULL,
+  `Descripcion` varchar(20) CHARACTER SET utf8 NOT NULL,
   `p_venta` int(11) DEFAULT NULL,
   `p_compra` int(11) DEFAULT NULL,
   `p_producto` int(11) DEFAULT NULL,
@@ -1230,15 +1238,15 @@ CREATE TABLE `venta` (
   `IdTipoDocumento` int(11) NOT NULL,
   `IdCliente` int(11) NOT NULL,
   `IdEmpleado` int(11) NOT NULL,
-  `Serie` varchar(5) COLLATE utf8_bin DEFAULT NULL,
-  `Numero` varchar(20) COLLATE utf8_bin DEFAULT NULL,
+  `Serie` varchar(5) CHARACTER SET utf8 DEFAULT NULL,
+  `Numero` varchar(20) CHARACTER SET utf8 DEFAULT NULL,
   `Fecha` date NOT NULL,
   `TotalVenta` decimal(8,2) NOT NULL,
   `Descuento` decimal(8,2) NOT NULL,
   `SubTotal` decimal(8,2) NOT NULL,
   `Igv` decimal(8,2) NOT NULL,
   `TotalPagar` decimal(8,2) NOT NULL,
-  `Estado` varchar(30) COLLATE utf8_bin NOT NULL
+  `Estado` varchar(30) CHARACTER SET utf8 NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
@@ -1268,7 +1276,9 @@ INSERT INTO `venta` (`IdVenta`, `IdTipoDocumento`, `IdCliente`, `IdEmpleado`, `S
 (22, 1, 1, 1, '001', 'C00022', '2022-06-26', '18.00', '0.00', '15.25', '2.75', '18.00', 'EMITIDO'),
 (23, 1, 1, 1, '001', 'C00023', '2022-06-26', '20.00', '0.00', '16.95', '3.05', '20.00', 'EMITIDO'),
 (24, 1, 1, 1, '001', 'C00024', '2022-06-26', '20.00', '0.00', '16.95', '3.05', '20.00', 'EMITIDO'),
-(25, 1, 2, 1, '001', 'C00025', '2022-06-27', '70.00', '0.00', '59.32', '10.68', '70.00', 'EMITIDO');
+(25, 1, 2, 1, '001', 'C00025', '2022-06-27', '70.00', '0.00', '59.32', '10.68', '70.00', 'EMITIDO'),
+(26, 1, 35, 1, '001', 'C00026', '2022-06-28', '70.00', '0.00', '59.32', '10.68', '70.00', 'EMITIDO'),
+(27, 1, 32, 1, '001', 'C00027', '2022-06-29', '172.00', '0.00', '145.76', '26.24', '172.00', 'EMITIDO');
 
 --
 -- Índices para tablas volcadas
@@ -1380,7 +1390,7 @@ ALTER TABLE `categoria`
 -- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `IdCliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `IdCliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT de la tabla `compra`
@@ -1404,7 +1414,7 @@ ALTER TABLE `empleado`
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `IdProducto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `IdProducto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT de la tabla `proveedor`
@@ -1428,7 +1438,7 @@ ALTER TABLE `tipousuario`
 -- AUTO_INCREMENT de la tabla `venta`
 --
 ALTER TABLE `venta`
-  MODIFY `IdVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `IdVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- Restricciones para tablas volcadas

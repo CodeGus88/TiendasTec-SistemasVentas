@@ -352,7 +352,6 @@ static ResultSet rs=null;
         JasperReport report;
         JasperPrint print;
         try{
-
             report=JasperCompileManager.compileReport(new File("").getAbsolutePath()+ "/src/Reportes/RptVentasMensual2.jrxml");
             print=JasperFillManager.fillReport(report, p,connection);
             JasperViewer view=new JasperViewer(print,false);
