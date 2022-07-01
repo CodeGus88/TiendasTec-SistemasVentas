@@ -10,9 +10,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
-//import java.util.ArrayList;
 import java.util.Date;
-//import java.util.Iterator;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -339,7 +337,7 @@ public class FrmAnularCredito extends javax.swing.JInternalFrame {
         setClosable(true);
         setIconifiable(true);
         setResizable(true);
-        setTitle("Anular Ventas");
+        setTitle("Anular Ventas a Crédito");
         getContentPane().setLayout(null);
 
         tblCredito.setModel(new javax.swing.table.DefaultTableModel(
@@ -453,6 +451,8 @@ public class FrmAnularCredito extends javax.swing.JInternalFrame {
         btnVerDetalle.setBounds(600, 260, 140, 40);
         getContentPane().add(lblEstado);
         lblEstado.setBounds(10, 250, 230, 20);
+
+        getAccessibleContext().setAccessibleName("Anular Ventas a Crédito");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

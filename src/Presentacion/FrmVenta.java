@@ -5,16 +5,8 @@
 package Presentacion;
 
 import Conexion.ClsConexion;
-import Consultas.FrmBuscarProducto;
 import Entidad.*;
 import Negocio.*;
-import static Presentacion.FrmCotizacion.lblIdProducto;
-import static Presentacion.FrmCotizacion.txtCodigoProducto;
-import static Presentacion.FrmCotizacion.txtCostoProducto;
-import static Presentacion.FrmCotizacion.txtDescripcionProducto;
-import static Presentacion.FrmCotizacion.txtNombreProducto;
-import static Presentacion.FrmCotizacion.txtPrecioProducto;
-import static Presentacion.FrmCotizacion.txtStockProducto;
 import interfaces.ClientInterface;
 import interfaces.ProductoVentaInterface;
 
@@ -94,9 +86,6 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         tblDetalleProducto.setModel(dtmDetalle);
         CrearTablaDetalleProducto();
     }
-//-----------------------------------------------------------------------------------------------
-//--------------------------------------METODOS--------------------------------------------------
-//-----------------------------------------------------------------------------------------------
 
     public String generaNumVenta() {
 
@@ -307,7 +296,6 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
                     lblIdProducto.setText(rs.getString(1));
                     txtNombreProducto.setText(rs.getString(3));
                     txtDescripcionProducto.setText(rs.getString(4));
-                    //DescripcionProducto=rs.getString(4);
                     txtStockProducto.setText(rs.getString(5));
                     txtCostoProducto.setText(rs.getString(7));
                     txtPrecioProducto.setText(rs.getString(8));
@@ -857,29 +845,17 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
     }// </editor-fold>//GEN-END:initComponents
 
     private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
-//        txtIdEmpleado.setText(IdEmpleado);
         BuscarClientePorDefecto();
         cargarComboTipoDocumento();
-
-
     }//GEN-LAST:event_formComponentShown
 
     private void btnBuscarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarProductoActionPerformed
-//        Consultas.FrmBuscarProducto_Venta producto = new Consultas.FrmBuscarProducto_Venta();
-//        Presentacion.FrmPrincipal.Escritorio.add(producto);
-//        producto.toFront();
-//        producto.setVisible(true);
-
         Consultas.FrmBuscarProducto producto = new Consultas.FrmBuscarProducto(this);
         Presentacion.FrmPrincipal.Escritorio.add(producto);
         producto.toFront();
     }//GEN-LAST:event_btnBuscarProductoActionPerformed
 
     private void btnBuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarClienteActionPerformed
-//        Consultas.FrmBuscarCliente_Venta cliente = new Consultas.FrmBuscarCliente_Venta();
-//        Presentacion.FrmPrincipal.Escritorio.add(cliente);
-//        cliente.toFront();
-//        cliente.setVisible(true);
         Consultas.FrmBuscarCliente cliente = new Consultas.FrmBuscarCliente(this);
         Presentacion.FrmPrincipal.Escritorio.add(cliente);
         cliente.toFront();
@@ -1046,7 +1022,6 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         if (keyCode == KeyEvent.VK_ENTER) {
             btnAgregarProducto.requestFocus();
         }
-
     }//GEN-LAST:event_txtCantidadProductoKeyReleased
 
     private void btnEliminarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarProductoActionPerformed

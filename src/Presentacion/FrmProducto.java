@@ -32,9 +32,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -54,6 +52,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     String Total;
     String strCodigo;
     String accion;
+    
     String imagen = "";
     int registros;
     String id[] = new String[50];
@@ -530,7 +529,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
 
         pBuscar.setBackground(new java.awt.Color(255, 255, 255));
         pBuscar.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        pBuscar.add(lblEstado, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 450, 200, 20));
+        pBuscar.add(lblEstado, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 460, 200, 20));
 
         jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/report.png"))); // NOI18N
         jButton3.setText("Reporte");
@@ -546,7 +545,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
                 txtBusquedaKeyReleased(evt);
             }
         });
-        pBuscar.add(txtBusqueda, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, 440, -1));
+        pBuscar.add(txtBusqueda, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, 440, 30));
 
         rbtnCodigo.setText("Cód. Producto");
         rbtnCodigo.setOpaque(false);
@@ -578,7 +577,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         jLabel13.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel13.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Criterios de Búsqueda", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
         jLabel13.setOpaque(true);
-        pBuscar.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 720, 80));
+        pBuscar.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 720, 90));
 
         tblProducto.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -600,7 +599,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         });
         jScrollPane1.setViewportView(tblProducto);
 
-        pBuscar.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, 720, 340));
+        pBuscar.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, 720, 340));
 
         tabProducto.addTab("Buscar", pBuscar);
 
@@ -1038,7 +1037,40 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_rbtnNombreStateChanged
 
     private void tblProductoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProductoMouseClicked
-//        loadProduct();
+        
+        if(evt.getClickCount() == 2){
+            int row = tblProducto.getSelectedRow();
+            DefaultTableModel defaultTableModel = (DefaultTableModel) tblProducto.getModel();
+            ClsEntidadProducto product = new ClsEntidadProducto();
+            product.setStrIdProducto((String) defaultTableModel.getValueAt(row, 0));
+            product.setStrCodigoProducto( (String) defaultTableModel.getValueAt(row, 1) );
+            product.setStrNombreProducto( (String) defaultTableModel.getValueAt(row, 2) );
+            product.setStrDescripcionProducto( (String) defaultTableModel.getValueAt(row, 3) );
+            product.setStrStockProducto( (String) defaultTableModel.getValueAt(row, 4) );
+            product.setStrStockMinProducto( (String) defaultTableModel.getValueAt(row, 5) );
+            product.setStrPrecioCostoProducto( (String) defaultTableModel.getValueAt(row, 6) );
+            product.setStrPrecioVentaProducto( (String) defaultTableModel.getValueAt(row, 7) );
+            product.setStrUtilidadProducto( (String) defaultTableModel.getValueAt(row, 8) );
+            product.setStrEstadoProducto( (String) defaultTableModel.getValueAt(row, 9) );
+            product.setStrIdCategoria( (String) defaultTableModel.getValueAt(row, 10) ); // contiene el nombre de la categoría
+            product.setStrImagen( (String) defaultTableModel.getValueAt(row, 11) );
+            try {
+                if(!defaultTableModel.getValueAt(row, 12).toString().isEmpty()){
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+                    product.setFechaVencimiento(
+                            formatter.parse(defaultTableModel.getValueAt(row, 12).toString().replace("-", "/"))
+                    );
+                }
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+//            FrmProductInformation productInf = new FrmProductInformation(product);
+            
+            FrmProductInformation productInf = new FrmProductInformation(product);
+            Presentacion.FrmPrincipal.Escritorio.add(productInf);
+            productInf.toFront();
+        }
     }//GEN-LAST:event_tblProductoMouseClicked
 
     private void loadProduct() {

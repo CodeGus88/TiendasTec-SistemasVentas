@@ -13,6 +13,8 @@ import java.sql.ResultSet;
 import javax.swing.JOptionPane;
 import java.util.Date;
 import java.text.*;
+import javax.swing.GroupLayout;
+import javax.swing.SwingConstants;
 
 
 public class FrmPrincipal extends javax.swing.JFrame {
@@ -23,7 +25,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
    public String strTipo; 
    public String idAcceso;
    static ResultSet rs=null;
-      private boolean mFullScreen = false;
+//   private boolean mFullScreen = false;
    //---------------------Privilegios--------------------
     String p_venta,p_compra,p_producto,p_proveedor,p_empleado;
     String p_cliente,p_categoria,p_tipodoc,p_tipouser,p_anularv,p_anularc;
@@ -38,19 +40,8 @@ public class FrmPrincipal extends javax.swing.JFrame {
         SimpleDateFormat formato=new SimpleDateFormat(format);
         lblFecha.setText(formato.format(date));
         //---------------------ANCHO Y ALTO DEL FORM----------------------
-        //this.setSize(1024, 566);
         this.setExtendedState(MAXIMIZED_BOTH);
-        //TODA LA PANTALLA
-//    GraphicsEnvironment gEnv =
-//                GraphicsEnvironment.getLocalGraphicsEnvironment();
-//        GraphicsDevice gDev = gEnv.getDefaultScreenDevice();
-//
-//        setUndecorated(true);
-//      setResizable(true);
-      //Make it happen!
-     // gDev.setFullScreenWindow(this);
-
-            
+        //TODA LA PANTALLA 
         lblIdEmpleado.setVisible(false);
         lblUsuarioEmpleado.setVisible(false);
         lblEstado.setVisible(false);
@@ -193,7 +184,7 @@ void BuscarPermisos(){
             }
         });
 
-        Escritorio.setBackground(new java.awt.Color(34, 81, 249));
+        Escritorio.setBackground(new java.awt.Color(204, 102, 0));
 
         lblTipo.setText("Tipo");
 
@@ -203,18 +194,22 @@ void BuscarPermisos(){
 
         lblEstado.setText("Estado");
 
-        lblNombreEmpleado.setText("Nombres");
+        lblNombreEmpleado.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblNombreEmpleado.setText("Nombres: ");
 
         lblIdEmpleado.setText("ID");
 
         jLabel8.setText("Nombre:");
 
-        jLabel9.setText("Cargo:");
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel9.setText("Cargo: ");
 
         jLabel10.setText("Fecha:");
 
         TBPrincipal.setOrientation(javax.swing.SwingConstants.VERTICAL);
         TBPrincipal.setRollover(true);
+        TBPrincipal.setMaximumSize(new java.awt.Dimension(67, 647));
+        TBPrincipal.setPreferredSize(new java.awt.Dimension(67, 633));
 
         mbtnEmpleado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/user_22110 (1).png"))); // NOI18N
         mbtnEmpleado.setText("Personal");
@@ -692,17 +687,17 @@ void BuscarPermisos(){
                     .addGroup(layout.createSequentialGroup()
                         .addGap(41, 41, 41)
                         .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 253, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 260, Short.MAX_VALUE)
                         .addComponent(lblNombreEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(lblUsuarioEmpleado)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblUsuarioEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(150, 150, 150)
+                        .addGap(29, 29, 29)
                         .addComponent(lblEstado)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 254, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 259, Short.MAX_VALUE)
                         .addComponent(jLabel10)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -734,7 +729,7 @@ void BuscarPermisos(){
                 .addContainerGap())
         );
 
-        setSize(new java.awt.Dimension(1417, 604));
+        setSize(new java.awt.Dimension(1417, 750));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -880,175 +875,6 @@ void BuscarPermisos(){
     }     
     }//GEN-LAST:event_formComponentShown
 
-    private void mCambiarpassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mCambiarpassActionPerformed
-        Presentacion.FrmCambiarContrasenia Cambiar=new Presentacion.FrmCambiarContrasenia();
-        Escritorio.add(Cambiar);
-        Cambiar.show();
-        Cambiar.IdEmpleado=lblIdEmpleado.getText();
-       
-    }//GEN-LAST:event_mCambiarpassActionPerformed
-
-    private void JMSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JMSalirActionPerformed
-        //ClsAcceso acceso = new ClsAcceso();
-        //acceso.modificarAcceso(idAcceso);
-        int salir = JOptionPane.showConfirmDialog(this, "¿Desea realmente cerrar la aplicación?","Mensaje del Sistema WorldEvent",0,3);
-        if(salir==JOptionPane.OK_OPTION)
-        {
-            System.exit(0);
-        }
-        
-    }//GEN-LAST:event_JMSalirActionPerformed
-
-    private void mVentadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mVentadeActionPerformed
-       Consultas.FrmVentasRealizadas_Detallado ventasdetalladas=new Consultas.FrmVentasRealizadas_Detallado();
-       Escritorio.add(ventasdetalladas);
-       ventasdetalladas.show(); 
-    }//GEN-LAST:event_mVentadeActionPerformed
-
-    private void mVentareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mVentareActionPerformed
-       Consultas.FrmVentasRealizadas VentasRealizadas=new Consultas.FrmVentasRealizadas();
-       Escritorio.add(VentasRealizadas);
-       VentasRealizadas.show();
-    }//GEN-LAST:event_mVentareActionPerformed
-
-    private void mComprareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mComprareActionPerformed
-       Consultas.FrmComprasRelizadas ComprasRelizadas=new Consultas.FrmComprasRelizadas();
-       Escritorio.add(ComprasRelizadas);
-       ComprasRelizadas.show();
-    }//GEN-LAST:event_mComprareActionPerformed
-
-    private void mRespaldarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mRespaldarActionPerformed
-        Backup.FrmRespaldarDB Respaldar=new Backup.FrmRespaldarDB();
-        Escritorio.add(Respaldar);
-        Respaldar.show();
-    }//GEN-LAST:event_mRespaldarActionPerformed
-
-    private void mRestaurarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mRestaurarActionPerformed
-        Backup.FrmRestaurarDB Restaurar=new Backup.FrmRestaurarDB();
-        Escritorio.add(Restaurar);
-        Restaurar.show();
-    }//GEN-LAST:event_mRestaurarActionPerformed
-
-    private void mCalculadoraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mCalculadoraActionPerformed
-        try
-        {
-            Runtime obj = Runtime.getRuntime();
-            obj.exec("C:\\WINDOWS\\system32\\CALC.EXE");
-        }
-        catch(Exception e)
-        {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-        }
-    }//GEN-LAST:event_mCalculadoraActionPerformed
-
-    private void JMIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JMIniciarSesionActionPerformed
-        this.dispose();
-        Presentacion.FrmLogin Login=new Presentacion.FrmLogin();
-
-        Login.show();
-
-
-
-    }//GEN-LAST:event_JMIniciarSesionActionPerformed
-
-    private void JMCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JMCerrarSesionActionPerformed
-        JMCerrarSesion.setEnabled(false);
-        mnuRegistro.setEnabled(false);
-        mnuOperaciones.setEnabled(false);
-        mnuMantenimiento.setEnabled(false);
-        mnuInformes.setEnabled(false);
-        mnuHerramientas.setEnabled(false);
-        mnuAnulaciones.setEnabled(false);
-        TBPrincipal.setEnabled(false);
-        mbtnEmpleado.setEnabled(false);
-        mbtnCliente.setEnabled(false);
-        mbtnProducto.setEnabled(false);
-        mbtnCompra.setEnabled(false);
-        mbtnVenta.setEnabled(false);
-        mbtnCaja.setEnabled(false);
-        mbtnEstado.setEnabled(false);
-        JMIniciarSesion.setEnabled(true);
-        
-    }//GEN-LAST:event_JMCerrarSesionActionPerformed
-
-    private void mCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mCategoriaActionPerformed
-        Presentacion.FrmCategoria Categoria=new Presentacion.FrmCategoria();
-        Escritorio.add(Categoria);
-        Categoria.show();
-    }//GEN-LAST:event_mCategoriaActionPerformed
-
-    private void mClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mClienteActionPerformed
-        Presentacion.FrmCliente Cliente=new Presentacion.FrmCliente();
-        Escritorio.add(Cliente);
-        Cliente.show();
-    }//GEN-LAST:event_mClienteActionPerformed
-
-    private void mProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mProveedorActionPerformed
-        Presentacion.FrmProveedor Proveedor=new Presentacion.FrmProveedor();
-        Escritorio.add(Proveedor);
-        Proveedor.show();
-    }//GEN-LAST:event_mProveedorActionPerformed
-
-    private void mTipodocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mTipodocActionPerformed
-        Presentacion.FrmTipoDocumento Documento=new Presentacion.FrmTipoDocumento();
-        Escritorio.add(Documento);
-        Documento.show();
-    }//GEN-LAST:event_mTipodocActionPerformed
-
-    private void mTipouserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mTipouserActionPerformed
-        Presentacion.FrmTipoUsuario Usuario=new Presentacion.FrmTipoUsuario();
-        Escritorio.add(Usuario);
-        Usuario.show();
-    }//GEN-LAST:event_mTipouserActionPerformed
-
-    private void mProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mProductoActionPerformed
-        Presentacion.FrmProducto Producto=new Presentacion.FrmProducto();
-        Escritorio.add(Producto);
-        Producto.show();
-    }//GEN-LAST:event_mProductoActionPerformed
-
-    private void mVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mVentaActionPerformed
-      
-        Presentacion.FrmVenta venta=new Presentacion.FrmVenta();
-        Escritorio.add(venta);
-        venta.show();
-        venta.IdEmpleado=lblIdEmpleado.getText();
-        venta.NombreEmpleado=lblNombreEmpleado.getText();
-
-    }//GEN-LAST:event_mVentaActionPerformed
-
-    private void mCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mCompraActionPerformed
-        Presentacion.FrmCompra compra=new Presentacion.FrmCompra();
-        Escritorio.add(compra);
-        compra.show();
-        compra.IdEmpleado=lblIdEmpleado.getText();
-        compra.NombreEmpleado=lblNombreEmpleado.getText();
-    }//GEN-LAST:event_mCompraActionPerformed
-
-    private void mEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mEmpleadoActionPerformed
-        Presentacion.FrmEmpleado Empleado=new Presentacion.FrmEmpleado();
-        Escritorio.add(Empleado);
-        Empleado.show();
-    }//GEN-LAST:event_mEmpleadoActionPerformed
-
-    private void mEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mEstadoActionPerformed
-        Presentacion.FrmProductoEstado ProductoEstado=new Presentacion.FrmProductoEstado();
-        Escritorio.add(ProductoEstado);
-        ProductoEstado.show();
-    }//GEN-LAST:event_mEstadoActionPerformed
-
-    private void mAnularvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mAnularvActionPerformed
-        Presentacion.FrmAnularVenta AnularVenta=new Presentacion.FrmAnularVenta();
-        Escritorio.add(AnularVenta);
-        AnularVenta.show();
-    }//GEN-LAST:event_mAnularvActionPerformed
-
-    private void mAnularcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mAnularcActionPerformed
-        Presentacion.FrmAnularCompra AnularCompra=new Presentacion.FrmAnularCompra();
-        Escritorio.add(AnularCompra);
-        AnularCompra.show();
-    }//GEN-LAST:event_mAnularcActionPerformed
-
     private void mbtnProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mbtnProductoActionPerformed
         Presentacion.FrmProducto Producto=new Presentacion.FrmProducto();
         Escritorio.add(Producto);
@@ -1095,18 +921,6 @@ void BuscarPermisos(){
         Caja.show();
     }//GEN-LAST:event_mbtnCajaActionPerformed
 
-    private void mEstadisticaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mEstadisticaActionPerformed
-        Consultas.FrmVentasMensuales Ventas=new Consultas.FrmVentasMensuales();
-        Escritorio.add(Ventas);
-        Ventas.show();
-    }//GEN-LAST:event_mEstadisticaActionPerformed
-
-    private void mCompradeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mCompradeActionPerformed
-       Consultas.FrmComprasRealizadas_Detallado Compras=new Consultas.FrmComprasRealizadas_Detallado();
-        Escritorio.add(Compras);
-        Compras.show();
-    }//GEN-LAST:event_mCompradeActionPerformed
-
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
         // TODO add your handling code here:
         FrmAcercaDe form =new FrmAcercaDe();
@@ -1116,13 +930,87 @@ void BuscarPermisos(){
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
-         try {
+        try {
             File path = new File("Manual.pdf");
             Desktop.getDesktop().open(path);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void mTipouserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mTipouserActionPerformed
+        Presentacion.FrmTipoUsuario Usuario=new Presentacion.FrmTipoUsuario();
+        Escritorio.add(Usuario);
+        Usuario.show();
+    }//GEN-LAST:event_mTipouserActionPerformed
+
+    private void mTipodocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mTipodocActionPerformed
+        Presentacion.FrmTipoDocumento Documento=new Presentacion.FrmTipoDocumento();
+        Escritorio.add(Documento);
+        Documento.show();
+    }//GEN-LAST:event_mTipodocActionPerformed
+
+    private void mEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mEmpleadoActionPerformed
+        Presentacion.FrmEmpleado Empleado=new Presentacion.FrmEmpleado();
+        Escritorio.add(Empleado);
+        Empleado.show();
+    }//GEN-LAST:event_mEmpleadoActionPerformed
+
+    private void mAnularcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mAnularcActionPerformed
+        Presentacion.FrmAnularCompra AnularCompra=new Presentacion.FrmAnularCompra();
+        Escritorio.add(AnularCompra);
+        AnularCompra.show();
+    }//GEN-LAST:event_mAnularcActionPerformed
+
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+        Presentacion.FrmAnularCredito AnularVentaCredito=new Presentacion.FrmAnularCredito();
+        Escritorio.add(AnularVentaCredito);
+        AnularVentaCredito.show();
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void mAnularvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mAnularvActionPerformed
+        Presentacion.FrmAnularVenta AnularVenta=new Presentacion.FrmAnularVenta();
+        Escritorio.add(AnularVenta);
+        AnularVenta.show();
+    }//GEN-LAST:event_mAnularvActionPerformed
+
+    private void mRestaurarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mRestaurarActionPerformed
+        Backup.FrmRestaurarDB Restaurar=new Backup.FrmRestaurarDB();
+        Escritorio.add(Restaurar);
+        Restaurar.show();
+    }//GEN-LAST:event_mRestaurarActionPerformed
+
+    private void mRespaldarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mRespaldarActionPerformed
+        Backup.FrmRespaldarDB Respaldar=new Backup.FrmRespaldarDB();
+        Escritorio.add(Respaldar);
+        Respaldar.show();
+    }//GEN-LAST:event_mRespaldarActionPerformed
+
+    private void mCalculadoraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mCalculadoraActionPerformed
+        try
+        {
+            Runtime obj = Runtime.getRuntime();
+            obj.exec("C:\\WINDOWS\\system32\\CALC.EXE");
+        }
+        catch(Exception e)
+        {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+    }//GEN-LAST:event_mCalculadoraActionPerformed
+
+    private void mCambiarpassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mCambiarpassActionPerformed
+        Presentacion.FrmCambiarContrasenia Cambiar=new Presentacion.FrmCambiarContrasenia();
+        Escritorio.add(Cambiar);
+        Cambiar.show();
+        Cambiar.IdEmpleado=lblIdEmpleado.getText();
+
+    }//GEN-LAST:event_mCambiarpassActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        FrmKardexValorizado form =new FrmKardexValorizado();
+        Escritorio.add(form);
+        form.show();
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         // TODO add your handling code here:
@@ -1131,11 +1019,67 @@ void BuscarPermisos(){
         form.show();
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
-    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        FrmKardexValorizado form =new FrmKardexValorizado();
-        Escritorio.add(form);
-        form.show();
-    }//GEN-LAST:event_jMenuItem3ActionPerformed
+    private void mCompradeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mCompradeActionPerformed
+        Consultas.FrmComprasRealizadas_Detallado Compras=new Consultas.FrmComprasRealizadas_Detallado();
+        Escritorio.add(Compras);
+        Compras.show();
+    }//GEN-LAST:event_mCompradeActionPerformed
+
+    private void mComprareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mComprareActionPerformed
+        Consultas.FrmComprasRelizadas ComprasRelizadas=new Consultas.FrmComprasRelizadas();
+        Escritorio.add(ComprasRelizadas);
+        ComprasRelizadas.show();
+    }//GEN-LAST:event_mComprareActionPerformed
+
+    private void mEstadisticaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mEstadisticaActionPerformed
+        Consultas.FrmVentasMensuales Ventas=new Consultas.FrmVentasMensuales();
+        Escritorio.add(Ventas);
+        Ventas.show();
+    }//GEN-LAST:event_mEstadisticaActionPerformed
+
+    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
+        Consultas.FrmCreditosRealizados_Detallado ventasCreditoDetalladas=new Consultas.FrmCreditosRealizados_Detallado();
+        Escritorio.add(ventasCreditoDetalladas);
+        ventasCreditoDetalladas.show();
+    }//GEN-LAST:event_jMenuItem8ActionPerformed
+
+    private void mVentadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mVentadeActionPerformed
+        Consultas.FrmVentasRealizadas_Detallado ventasdetalladas=new Consultas.FrmVentasRealizadas_Detallado();
+        Escritorio.add(ventasdetalladas);
+        ventasdetalladas.show();
+    }//GEN-LAST:event_mVentadeActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        Consultas.FrmCreditosRealizados VentasCreditoRealizadas=new Consultas.FrmCreditosRealizados();
+        Escritorio.add(VentasCreditoRealizadas);
+        VentasCreditoRealizadas.show();
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
+
+    private void mVentareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mVentareActionPerformed
+        Consultas.FrmVentasRealizadas VentasRealizadas=new Consultas.FrmVentasRealizadas();
+        Escritorio.add(VentasRealizadas);
+        VentasRealizadas.show();
+    }//GEN-LAST:event_mVentareActionPerformed
+
+    private void mClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mClienteActionPerformed
+        Presentacion.FrmCliente Cliente=new Presentacion.FrmCliente();
+        Escritorio.add(Cliente);
+        Cliente.show();
+    }//GEN-LAST:event_mClienteActionPerformed
+
+    private void mEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mEstadoActionPerformed
+        Presentacion.FrmProductoEstado ProductoEstado=new Presentacion.FrmProductoEstado();
+        Escritorio.add(ProductoEstado);
+        ProductoEstado.show();
+    }//GEN-LAST:event_mEstadoActionPerformed
+
+    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
+        Presentacion.FrmCotizacion cotizacion = new Presentacion.FrmCotizacion();
+        Escritorio.add(cotizacion);
+        cotizacion.show();
+        cotizacion.IdEmpleado = lblIdEmpleado.getText();
+        cotizacion.NombreEmpleado = lblNombreEmpleado.getText();
+    }//GEN-LAST:event_jMenuItem9ActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         Presentacion.FrmCredito credito=new Presentacion.FrmCredito();
@@ -1145,31 +1089,79 @@ void BuscarPermisos(){
         credito.NombreEmpleado=lblNombreEmpleado.getText();
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
-    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
-       Consultas.FrmCreditosRealizados VentasCreditoRealizadas=new Consultas.FrmCreditosRealizados();
-       Escritorio.add(VentasCreditoRealizadas);
-       VentasCreditoRealizadas.show();
-    }//GEN-LAST:event_jMenuItem6ActionPerformed
+    private void mVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mVentaActionPerformed
 
-    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
-        Presentacion.FrmAnularCredito AnularVentaCredito=new Presentacion.FrmAnularCredito();
-        Escritorio.add(AnularVentaCredito);
-        AnularVentaCredito.show();
-    }//GEN-LAST:event_jMenuItem7ActionPerformed
+        Presentacion.FrmVenta venta=new Presentacion.FrmVenta();
+        Escritorio.add(venta);
+        venta.show();
+        venta.IdEmpleado=lblIdEmpleado.getText();
+        venta.NombreEmpleado=lblNombreEmpleado.getText();
+    }//GEN-LAST:event_mVentaActionPerformed
 
-    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
-       Consultas.FrmCreditosRealizados_Detallado ventasCreditoDetalladas=new Consultas.FrmCreditosRealizados_Detallado();
-       Escritorio.add(ventasCreditoDetalladas);
-       ventasCreditoDetalladas.show(); 
-    }//GEN-LAST:event_jMenuItem8ActionPerformed
+    private void mProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mProveedorActionPerformed
+        Presentacion.FrmProveedor Proveedor=new Presentacion.FrmProveedor();
+        Escritorio.add(Proveedor);
+        Proveedor.show();
+    }//GEN-LAST:event_mProveedorActionPerformed
 
-    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
-        Presentacion.FrmCotizacion cotizacion = new Presentacion.FrmCotizacion();
-        Escritorio.add(cotizacion);
-        cotizacion.show();
-        cotizacion.IdEmpleado = lblIdEmpleado.getText();
-        cotizacion.NombreEmpleado = lblNombreEmpleado.getText();
-    }//GEN-LAST:event_jMenuItem9ActionPerformed
+    private void mCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mCompraActionPerformed
+        Presentacion.FrmCompra compra=new Presentacion.FrmCompra();
+        Escritorio.add(compra);
+        compra.show();
+        compra.IdEmpleado=lblIdEmpleado.getText();
+        compra.NombreEmpleado=lblNombreEmpleado.getText();
+    }//GEN-LAST:event_mCompraActionPerformed
+
+    private void mCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mCategoriaActionPerformed
+        Presentacion.FrmCategoria Categoria=new Presentacion.FrmCategoria();
+        Escritorio.add(Categoria);
+        Categoria.show();
+    }//GEN-LAST:event_mCategoriaActionPerformed
+
+    private void mProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mProductoActionPerformed
+        Presentacion.FrmProducto Producto=new Presentacion.FrmProducto();
+        Escritorio.add(Producto);
+        Producto.show();
+    }//GEN-LAST:event_mProductoActionPerformed
+
+    private void JMSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JMSalirActionPerformed
+        //ClsAcceso acceso = new ClsAcceso();
+        //acceso.modificarAcceso(idAcceso);
+        int salir = JOptionPane.showConfirmDialog(this, "¿Desea realmente cerrar la aplicación?","Mensaje del Sistema WorldEvent",0,3);
+        if(salir==JOptionPane.OK_OPTION)
+        {
+            System.exit(0);
+        }
+
+    }//GEN-LAST:event_JMSalirActionPerformed
+
+    private void JMCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JMCerrarSesionActionPerformed
+        JMCerrarSesion.setEnabled(false);
+        mnuRegistro.setEnabled(false);
+        mnuOperaciones.setEnabled(false);
+        mnuMantenimiento.setEnabled(false);
+        mnuInformes.setEnabled(false);
+        mnuHerramientas.setEnabled(false);
+        mnuAnulaciones.setEnabled(false);
+        TBPrincipal.setEnabled(false);
+        mbtnEmpleado.setEnabled(false);
+        mbtnCliente.setEnabled(false);
+        mbtnProducto.setEnabled(false);
+        mbtnCompra.setEnabled(false);
+        mbtnVenta.setEnabled(false);
+        mbtnCaja.setEnabled(false);
+        mbtnEstado.setEnabled(false);
+        JMIniciarSesion.setEnabled(true);
+
+    }//GEN-LAST:event_JMCerrarSesionActionPerformed
+
+    private void JMIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JMIniciarSesionActionPerformed
+        this.dispose();
+        Presentacion.FrmLogin Login=new Presentacion.FrmLogin();
+
+        Login.show();
+
+    }//GEN-LAST:event_JMIniciarSesionActionPerformed
 
     /**
      * @param args the command line arguments
