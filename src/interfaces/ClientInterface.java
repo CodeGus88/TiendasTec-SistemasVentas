@@ -8,7 +8,7 @@ import Entidad.ClsEntidadCliente;
 
 /**
  * @author Gustavo
- */
+ **/
 public interface ClientInterface {
     public void loadNewClient(ClsEntidadCliente cliente);
     public void loadClient(ClsEntidadCliente cliente);

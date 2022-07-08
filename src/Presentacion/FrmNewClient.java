@@ -9,6 +9,7 @@ import Negocio.ClsCliente;
 import interfaces.ClientInterface;
 import java.awt.Color;
 import javax.swing.JOptionPane;
+import statics.Design;
 import tools.TextPrompt;
 
 /**
@@ -19,7 +20,7 @@ public class FrmNewClient extends javax.swing.JDialog {
     /**
      * Creates new form FrmNewUser
      */
-    private ClientInterface clientInterface;
+    private final ClientInterface clientInterface;
     
     public FrmNewClient(java.awt.Frame parent, boolean modal, ClientInterface clientInterface) {
         super(parent, modal);
@@ -36,8 +37,16 @@ public class FrmNewClient extends javax.swing.JDialog {
         new TextPrompt("Dirección", txtAddress);
         new TextPrompt("Cédula de identidad", txtCi);
         
+        design();
+        
         this.setVisible(true);
         
+    }
+    
+    private void design(){
+        this.getContentPane().setBackground(Design.COLOR_PRIMARY);
+        this.btnCancel.setBackground(Color.RED);
+        this.btnSave.setBackground(Color.GRAY);
     }
 
     /**
@@ -75,8 +84,8 @@ public class FrmNewClient extends javax.swing.JDialog {
         setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         setLocationByPlatform(true);
 
-        jPanel1.setBackground(new java.awt.Color(208, 218, 247));
         jPanel1.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel1.setOpaque(false);
 
         txtName.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         txtName.addActionListener(new java.awt.event.ActionListener() {
@@ -119,6 +128,7 @@ public class FrmNewClient extends javax.swing.JDialog {
         });
 
         btnCancel.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnCancel.setForeground(new java.awt.Color(255, 255, 255));
         btnCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/cancelar_p.png"))); // NOI18N
         btnCancel.setText("Cancelar");
         btnCancel.setMargin(new java.awt.Insets(2, 2, 2, 2));
@@ -129,6 +139,7 @@ public class FrmNewClient extends javax.swing.JDialog {
         });
 
         btnSave.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnSave.setForeground(new java.awt.Color(255, 255, 255));
         btnSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Agregar_p1.png"))); // NOI18N
         btnSave.setText("Guardar");
         btnSave.setAutoscrolls(true);
@@ -142,27 +153,35 @@ public class FrmNewClient extends javax.swing.JDialog {
         });
 
         jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("ID Cliente: ");
 
         jLabel2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Nombre o razón social: ");
 
         jLabel3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("NIT: ");
 
         jLabel4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("CI: ");
 
         jLabel5.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Dirección: ");
 
         jLabel6.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Teféfono:");
 
         jLabel7.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("Observación:");
 
-        labelTitle.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
+        labelTitle.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        labelTitle.setForeground(new java.awt.Color(255, 255, 255));
         labelTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         labelTitle.setText("Completa los datos del cliente");
 

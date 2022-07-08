@@ -9,7 +9,6 @@ package tools;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.border.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
@@ -51,9 +50,7 @@ public class TextPrompt extends JLabel implements FocusListener, DocumentListene
 		setText(text);
 		setFont(component.getFont());
                 
-//		setForeground(component.getForeground());
 		setForeground(Color.gray);
-//		setBorder(new EmptyBorder(component.getInsets()));
 		setHorizontalAlignment(JLabel.LEADING);
 
 		component.addFocusListener(this);

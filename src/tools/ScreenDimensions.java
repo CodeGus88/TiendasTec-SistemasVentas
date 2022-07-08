@@ -11,16 +11,16 @@ import java.awt.Toolkit;
 public class ScreenDimensions {
     //Dimensiones automáticas a escala
 
-    private int TamPanX;
-    private int TamPanY;
-    private float a;
-    private float b;
-    private int x;
-    private int y;
+    private final int TamPanX;
+    private final int TamPanY;
+    private final float a;
+    private final float b;
+    private final int x;
+    private final int y;
     private int X;
     private int Y;
 
-    private Toolkit screenDimension;
+    private final Toolkit screenDimension;
     private Dimension dimensions;
 
     public ScreenDimensions() {
@@ -31,7 +31,7 @@ public class ScreenDimensions {
         TamPanX = dimensions.width;//IOptenemos las dimensiones de la pantalla (X = Horizontal)
         TamPanY = dimensions.height;//OPtenemos las dimensiones de la pantalla (Y = Vertical)
         a = ((float) TamPanX) * 1F;//Tamaño horizontal en float *0.25F
-        b = ((float) (TamPanY)) * 1F;//Tamaño horizontal en float *0.731489F
+        b = ((float) (TamPanY)) * 1F;//Tamaño Vertical en float *0.731489F
         x = (int) Math.round(a);//Se enviarán para la interfaz
         y = (int) Math.round(b);//Se enviarán para la interfaz
     }

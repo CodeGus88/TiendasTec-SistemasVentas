@@ -45,6 +45,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.view.JasperViewer;
 import net.sourceforge.barbecue.output.OutputException;
+import statics.TableConfigurator;
 
 public class FrmProducto extends javax.swing.JInternalFrame {
 
@@ -95,41 +96,9 @@ public class FrmProducto extends javax.swing.JInternalFrame {
 //-----------------------------------------------------------------------------------------------
 
     void CrearTabla() {
-        //--------------------PRESENTACION DE JTABLE----------------------
-
-        TableCellRenderer render = new DefaultTableCellRenderer() {
-
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                //aqui obtengo el render de la calse superior 
-                JLabel l = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                //Determinar Alineaciones   
-
-                if (column == 0 || column == 1 || column == 4 || column == 5 || column == 6 || column == 7 || column == 8 || column == 9 || column == 10) {
-                    l.setHorizontalAlignment(SwingConstants.CENTER);
-                } else {
-                    l.setHorizontalAlignment(SwingConstants.LEFT);
-                }
-
-                //Colores en Jtable        
-                if (isSelected) {
-                    l.setBackground(new Color(203, 159, 41));
-                    //l.setBackground(new Color(168, 198, 238));
-                    l.setForeground(Color.WHITE);
-                } else {
-                    l.setForeground(Color.BLACK);
-                    if (row % 2 == 0) {
-                        l.setBackground(Color.WHITE);
-                    } else {
-                        //l.setBackground(new Color(232, 232, 232));
-                        l.setBackground(new Color(254, 227, 152));
-                    }
-                }
-                return l;
-            }
-        };
-
         //Agregar Render
         for (int i = 0; i < tblProducto.getColumnCount(); i++) {
+            TableCellRenderer render = TableConfigurator.configureTableItem();
             tblProducto.getColumnModel().getColumn(i).setCellRenderer(render);
         }
 
@@ -162,8 +131,6 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         txtCodigoBar.requestFocus();
         rbtnActivo.setSelected(true);
         rbtnInactivo.setSelected(false);
-//       txtStock.setText("0");
-//       txtStockMin.setText("0");
         txtPrecioCosto.setText("0.0");
         txtPrecioVenta.setText("0.0");
         txtUtilidad.setText("0.0");
@@ -459,6 +426,9 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         jLabel14 = new javax.swing.JLabel();
         btnSalir1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+
+        jPopupMenu.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jPopupMenu.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         duplicateItem.setText("Duplicar");
         duplicateItem.addActionListener(new java.awt.event.ActionListener() {
@@ -1106,10 +1076,13 @@ public class FrmProducto extends javax.swing.JInternalFrame {
             lblImagen.setIcon(icono);
             lblImagen.repaint();
             try {
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-                dcFechaVencimiento.setDate(
-                        formatter.parse(defaultTableModel.getValueAt(fila, 12).toString().replace("-", "/"))
-                );
+                if(defaultTableModel.getValueAt(fila, 12) != null & !defaultTableModel.getValueAt(fila, 12).toString().isEmpty()){
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+                    dcFechaVencimiento.setDate(
+                            formatter.parse(defaultTableModel.getValueAt(fila, 12).toString().replace("-", "/"))
+                    );
+                }
+                
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -1412,10 +1385,6 @@ public class FrmProducto extends javax.swing.JInternalFrame {
             Icon icono = new ImageIcon(fot.getImage().getScaledInstance(lblImagen.getWidth(), lblImagen.getHeight(), Image.SCALE_DEFAULT));
             lblImagen.setIcon(icono);
             lblImagen.repaint();
-//            ImageIcon img = new ImageIcon(ruta);
-//            lblImagen.setIcon(img);
-//            lblImagen.repaint();
-            //System.out.println(ruta);
 
         }
 

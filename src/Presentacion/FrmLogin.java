@@ -5,17 +5,21 @@ import Negocio.*;
 import Entidad.*;
 import javax.swing.*;
 import Presentacion.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Image;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
-import java.lang.String.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
+import statics.Design;
+import statics.Paths;
+import statics.ScreenUses;
+import statics.ImageLoader;
+import tools.toast.Toast;
 
 public class FrmLogin extends javax.swing.JFrame {
     
@@ -42,12 +46,31 @@ public class FrmLogin extends javax.swing.JFrame {
         cargarComboCargo();
         generarAleatorio();
         lblIntentos.setVisible(false);
-        //---------------------ANCHO Y ALTO DEL FORM----------------------
-        this.setSize(586, 307);
+        setVisible(true);
+        setExtendedState(this.MAXIMIZED_BOTH);
+        getContentPane().setBackground(Design.COLOR_PRIMARY_DARK);
+        design();
     }
-//-----------------------------------------------------------------------------------------------
-//--------------------------------------METODOS--------------------------------------------------
-//-----------------------------------------------------------------------------------------------
+    
+    private void design(){
+        ImageLoader.setImage(image, Paths.IMGE_ICON_PATH + "/login.png", Image.SCALE_SMOOTH);
+        ImageLoader.setImage(storeIcon, Paths.IMGE_ICON_PATH + "/store_icon.png", Image.SCALE_DEFAULT);
+        btnCancelar.setBackground(Design.COLOR_PRIMARY_DARK);
+        btnD0.setBackground(Design.COLOR_PRIMARY_DARK);
+        btnD1.setBackground(Design.COLOR_PRIMARY_DARK);
+        btnD2.setBackground(Design.COLOR_PRIMARY_DARK);
+        btnD3.setBackground(Design.COLOR_PRIMARY_DARK);
+        btnD4.setBackground(Design.COLOR_PRIMARY_DARK);
+        btnD5.setBackground(Design.COLOR_PRIMARY_DARK);
+        btnD6.setBackground(Design.COLOR_PRIMARY_DARK);
+        btnD7.setBackground(Design.COLOR_PRIMARY_DARK);
+        btnD8.setBackground(Design.COLOR_PRIMARY_DARK);
+        btnD9.setBackground(Design.COLOR_PRIMARY_DARK);
+        btnIniciar.setBackground(Design.COLOR_PRIMARY_DARK);
+        btnLimpiar.setBackground(Design.COLOR_PRIMARY_DARK);
+        panelRight.setBackground(Design.COLOR_SECONDARY);
+    }
+    
     void cargarComboCargo(){
        ClsTipoUsuario tipousuarios=new ClsTipoUsuario();
        ArrayList<ClsEntidadTipoUsuario> operacion=tipousuarios.listarTipoUsuario();
@@ -66,7 +89,6 @@ public class FrmLogin extends javax.swing.JFrame {
            fila[0]=TipoUsuario.getStrIdTipoUsuario();
            fila[1]=TipoUsuario.getStrDescripcionTipoUsuario();
 
-           //DefaultComboBoxModel.addElement(Tipo.getStrIdTipo()+ " " + Tipo.getStrNomTipo());
            DefaultComboBoxModel.addElement(TipoUsuario.getStrDescripcionTipoUsuario());
            intContador++;
               
@@ -82,7 +104,6 @@ public class FrmLogin extends javax.swing.JFrame {
         Random rnd=new Random();
         int res;
         
-        
         //Rellenamos la matriz
         for(int i=0;i<n;i++){
             //numeros[i]=i+1; //----Empieza en 1
@@ -94,9 +115,7 @@ public class FrmLogin extends javax.swing.JFrame {
             resultado[i]=numeros[res];
             numeros[res]=numeros[k-1];
             k--;
-            
         }
-
         
         btnD1.setText(String.valueOf(resultado[0]));
         btnD2.setText(String.valueOf(resultado[1]));
@@ -108,10 +127,7 @@ public class FrmLogin extends javax.swing.JFrame {
         btnD8.setText(String.valueOf(resultado[7]));
         btnD9.setText(String.valueOf(resultado[8]));
         btnD0.setText(String.valueOf(resultado[9]));
-//        System.out.println("El resultado de la matriz es:");
-//        for(int i=0;i<n;i++){
-//            System.out.println(resultado[i]);
-//        }
+
     }
     
      private static String toHexadecimal(byte[] digest)
@@ -147,53 +163,212 @@ public class FrmLogin extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        txtUsuario = new javax.swing.JTextField();
-        btnIniciar = new javax.swing.JButton();
-        btnCancelar = new javax.swing.JButton();
+        panelLeft = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
+        jPanel8 = new javax.swing.JPanel();
+        storeIcon = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        txtContraseña = new javax.swing.JPasswordField();
-        lblIntentos = new javax.swing.JLabel();
-        btnLimpiar = new javax.swing.JButton();
-        btnD9 = new javax.swing.JButton();
-        btnD8 = new javax.swing.JButton();
-        btnD7 = new javax.swing.JButton();
-        btnD0 = new javax.swing.JButton();
-        btnD4 = new javax.swing.JButton();
-        btnD5 = new javax.swing.JButton();
+        panelRight = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        btnD1 = new javax.swing.JButton();
         btnD2 = new javax.swing.JButton();
         btnD3 = new javax.swing.JButton();
         btnD6 = new javax.swing.JButton();
-        btnD1 = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
+        btnD5 = new javax.swing.JButton();
+        btnD4 = new javax.swing.JButton();
+        btnD7 = new javax.swing.JButton();
+        btnD8 = new javax.swing.JButton();
+        btnD9 = new javax.swing.JButton();
+        btnD0 = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        btnLimpiar = new javax.swing.JButton();
+        jPanel5 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        txtUsuario = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        txtContraseña = new javax.swing.JPasswordField();
         cboCargo = new javax.swing.JComboBox();
-        jLabel6 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        btnIniciar = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
+        image = new javax.swing.JLabel();
+        lblIntentos = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Sistema de Ventas");
         setBackground(new java.awt.Color(255, 255, 255));
-        getContentPane().setLayout(null);
+        setMinimumSize(new java.awt.Dimension(1030, 650));
+        getContentPane().setLayout(new java.awt.GridLayout(1, 2, -100, 0));
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        panelLeft.setOpaque(false);
+        panelLeft.setLayout(new java.awt.GridLayout(2, 1));
+
+        jPanel6.setOpaque(false);
+        jPanel6.setLayout(new java.awt.GridBagLayout());
+
+        jPanel8.setOpaque(false);
+
+        storeIcon.setMaximumSize(new java.awt.Dimension(200, 200));
+        storeIcon.setMinimumSize(new java.awt.Dimension(200, 200));
+        storeIcon.setPreferredSize(new java.awt.Dimension(200, 200));
+        jPanel8.add(storeIcon);
+
+        jPanel6.add(jPanel8, new java.awt.GridBagConstraints());
+
+        panelLeft.add(jPanel6);
+
+        jPanel3.setOpaque(false);
+        jPanel3.setPreferredSize(new java.awt.Dimension(500, 500));
+
+        jLabel6.setFont(new java.awt.Font("Arial", 1, 120)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setText("Tiendas");
+        jPanel3.add(jLabel6);
+
+        jLabel5.setFont(new java.awt.Font("Arial", 1, 120)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 153, 0));
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel5.setText("TEC");
+        jPanel3.add(jLabel5);
+
+        panelLeft.add(jPanel3);
+
+        getContentPane().add(panelLeft);
+
+        panelRight.setLayout(new java.awt.GridBagLayout());
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        jPanel1.setPreferredSize(new java.awt.Dimension(550, 600));
+        jPanel1.setLayout(null);
+
+        jLabel1.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("ACCESO AL SISTEMA");
-        getContentPane().add(jLabel1);
-        jLabel1.setBounds(160, 0, 194, 40);
+        jPanel1.add(jLabel1);
+        jLabel1.setBounds(0, 20, 550, 29);
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jPanel4.setLayout(new java.awt.GridLayout(4, 3, 5, 5));
+
+        btnD1.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
+        btnD1.setForeground(new java.awt.Color(255, 255, 255));
+        btnD1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnD1ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(btnD1);
+
+        btnD2.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
+        btnD2.setForeground(new java.awt.Color(255, 255, 255));
+        btnD2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnD2ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(btnD2);
+
+        btnD3.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
+        btnD3.setForeground(new java.awt.Color(255, 255, 255));
+        btnD3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnD3ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(btnD3);
+
+        btnD6.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
+        btnD6.setForeground(new java.awt.Color(255, 255, 255));
+        btnD6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnD6ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(btnD6);
+
+        btnD5.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
+        btnD5.setForeground(new java.awt.Color(255, 255, 255));
+        btnD5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnD5ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(btnD5);
+
+        btnD4.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
+        btnD4.setForeground(new java.awt.Color(255, 255, 255));
+        btnD4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnD4ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(btnD4);
+
+        btnD7.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
+        btnD7.setForeground(new java.awt.Color(255, 255, 255));
+        btnD7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnD7ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(btnD7);
+
+        btnD8.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
+        btnD8.setForeground(new java.awt.Color(255, 255, 255));
+        btnD8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnD8ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(btnD8);
+
+        btnD9.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
+        btnD9.setForeground(new java.awt.Color(255, 255, 255));
+        btnD9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnD9ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(btnD9);
+
+        btnD0.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
+        btnD0.setForeground(new java.awt.Color(255, 255, 255));
+        btnD0.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnD0ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(btnD0);
+        jPanel4.add(jPanel2);
+
+        btnLimpiar.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnLimpiar.setForeground(new java.awt.Color(255, 255, 255));
+        btnLimpiar.setText("Limpiar");
+        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarActionPerformed(evt);
+            }
+        });
+        jPanel4.add(btnLimpiar);
+
+        jPanel1.add(jPanel4);
+        jPanel4.setBounds(20, 340, 210, 220);
+
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        jPanel5.setLayout(null);
+
+        jLabel2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setText("Usuario:");
-        getContentPane().add(jLabel2);
-        jLabel2.setBounds(303, 60, 80, 15);
-
-        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel3.setText("Constraseña:");
-        getContentPane().add(jLabel3);
-        jLabel3.setBounds(300, 90, 80, 15);
+        jPanel5.add(jLabel2);
+        jLabel2.setBounds(0, 17, 100, 20);
 
         txtUsuario.setBackground(new java.awt.Color(255, 255, 204));
+        txtUsuario.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         txtUsuario.setText("admin");
         txtUsuario.setToolTipText("");
         txtUsuario.addActionListener(new java.awt.event.ActionListener() {
@@ -201,9 +376,35 @@ public class FrmLogin extends javax.swing.JFrame {
                 txtUsuarioActionPerformed(evt);
             }
         });
-        getContentPane().add(txtUsuario);
-        txtUsuario.setBounds(390, 50, 160, 30);
+        jPanel5.add(txtUsuario);
+        txtUsuario.setBounds(110, 10, 170, 30);
 
+        jLabel3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel3.setText("Constraseña:");
+        jPanel5.add(jLabel3);
+        jLabel3.setBounds(0, 57, 100, 20);
+
+        txtContraseña.setBackground(new java.awt.Color(255, 255, 204));
+        txtContraseña.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtContraseña.setText("123");
+        txtContraseña.setEnabled(false);
+        jPanel5.add(txtContraseña);
+        txtContraseña.setBounds(110, 50, 170, 30);
+
+        cboCargo.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        cboCargo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jPanel5.add(cboCargo);
+        cboCargo.setBounds(110, 90, 170, 30);
+
+        jLabel4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel4.setText("Cargo:");
+        jPanel5.add(jLabel4);
+        jLabel4.setBounds(0, 97, 100, 20);
+
+        btnIniciar.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnIniciar.setForeground(new java.awt.Color(255, 255, 255));
         btnIniciar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/iniciar.png"))); // NOI18N
         btnIniciar.setText("Iniciar");
         btnIniciar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -213,9 +414,11 @@ public class FrmLogin extends javax.swing.JFrame {
                 btnIniciarActionPerformed(evt);
             }
         });
-        getContentPane().add(btnIniciar);
-        btnIniciar.setBounds(340, 167, 100, 80);
+        jPanel5.add(btnIniciar);
+        btnIniciar.setBounds(60, 130, 100, 80);
 
+        btnCancelar.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnCancelar.setForeground(new java.awt.Color(255, 255, 255));
         btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/cancelar2.png"))); // NOI18N
         btnCancelar.setText("Cancelar");
         btnCancelar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -225,125 +428,28 @@ public class FrmLogin extends javax.swing.JFrame {
                 btnCancelarActionPerformed(evt);
             }
         });
-        getContentPane().add(btnCancelar);
-        btnCancelar.setBounds(450, 167, 100, 80);
+        jPanel5.add(btnCancelar);
+        btnCancelar.setBounds(180, 130, 100, 80);
 
-        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Banned User.png"))); // NOI18N
-        getContentPane().add(jLabel5);
-        jLabel5.setBounds(10, 60, 134, 170);
+        jPanel1.add(jPanel5);
+        jPanel5.setBounds(240, 340, 290, 220);
 
-        txtContraseña.setBackground(new java.awt.Color(255, 255, 204));
-        txtContraseña.setText("123");
-        txtContraseña.setEnabled(false);
-        getContentPane().add(txtContraseña);
-        txtContraseña.setBounds(390, 90, 160, 30);
-        getContentPane().add(lblIntentos);
-        lblIntentos.setBounds(478, 11, 11, 18);
+        image.setBackground(new java.awt.Color(204, 204, 0));
+        jPanel1.add(image);
+        image.setBounds(130, 60, 290, 270);
 
-        btnLimpiar.setText("Limpiar");
-        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnLimpiarActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnLimpiar);
-        btnLimpiar.setBounds(200, 160, 80, 33);
+        lblIntentos.setFont(new java.awt.Font("Arial", 2, 14)); // NOI18N
+        lblIntentos.setForeground(new java.awt.Color(255, 255, 255));
+        lblIntentos.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        lblIntentos.setOpaque(true);
+        jPanel1.add(lblIntentos);
+        lblIntentos.setBounds(170, 570, 250, 20);
 
-        btnD9.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnD9ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnD9);
-        btnD9.setBounds(240, 130, 40, 33);
+        panelRight.add(jPanel1, new java.awt.GridBagConstraints());
 
-        btnD8.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnD8ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnD8);
-        btnD8.setBounds(200, 130, 40, 33);
+        getContentPane().add(panelRight);
 
-        btnD7.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnD7ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnD7);
-        btnD7.setBounds(160, 130, 40, 33);
-
-        btnD0.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnD0ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnD0);
-        btnD0.setBounds(160, 160, 40, 33);
-
-        btnD4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnD4ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnD4);
-        btnD4.setBounds(160, 100, 40, 33);
-
-        btnD5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnD5ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnD5);
-        btnD5.setBounds(200, 100, 40, 33);
-
-        btnD2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnD2ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnD2);
-        btnD2.setBounds(200, 70, 40, 33);
-
-        btnD3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnD3ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnD3);
-        btnD3.setBounds(240, 70, 40, 33);
-
-        btnD6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnD6ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnD6);
-        btnD6.setBounds(240, 100, 40, 33);
-
-        btnD1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnD1ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnD1);
-        btnD1.setBounds(160, 70, 40, 33);
-
-        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel4.setText("Cargo:");
-        getContentPane().add(jLabel4);
-        jLabel4.setBounds(305, 140, 80, 15);
-
-        cboCargo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        getContentPane().add(cboCargo);
-        cboCargo.setBounds(390, 130, 160, 30);
-
-        jLabel6.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        getContentPane().add(jLabel6);
-        jLabel6.setBounds(10, 40, 550, 220);
-
-        setSize(new java.awt.Dimension(586, 316));
+        setSize(new java.awt.Dimension(1203, 682));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -390,13 +496,13 @@ public class FrmLogin extends javax.swing.JFrame {
                     if(!rs.getString(14).equals("")){
                         if(rs.getString(14).equals(usuario)&&rs.getString(15).equals(resultado1)&&rs.getString(16).equals(descripcion)) { 
                             if(rs.getString(13).equals("ACTIVO")) { 
-                                JOptionPane.showMessageDialog(null,"Bienvenidos: Sr."+rs.getString(2)+" "+rs.getString(3),"Login Usuarios",1);
+//                                JOptionPane.showMessageDialog(null,"Bienvenidos: Sr."+rs.getString(2)+" "+rs.getString(3),"Login Usuarios",1);
+                                Toast.makeText("Bienvenido...", Toast.LENGTH_LONG).show();
                                 sen=2;
                             }else{
                                 JOptionPane.showMessageDialog(this, "Usuario Inactivo");
                                 sen=3;
-                            }
-                                
+                            }     
                        }
                     }else{
                         JOptionPane.showMessageDialog(this, "Usuario no existe");
@@ -505,57 +611,49 @@ public class FrmLogin extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-   
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-          //new FrmLogin().setVisible(true);
-                
-         Presentacion.FrmLogin f = new Presentacion.FrmLogin();
-
-         
-         try {
-//            UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-//            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-//            UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
-            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-//            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel");
-
-            SwingUtilities.updateComponentTreeUI(f);
-            f.setVisible(true);
-            //new FrmLogin().setVisible(true);
-        } catch (UnsupportedLookAndFeelException ex) {}
-          catch (ClassNotFoundException ex) {}
-          catch (InstantiationException ex) {}
-          catch (IllegalAccessException ex) {}
-            }
-        });
-        
-    }
+//    public static void main(String args[]) {
+//   
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(FrmLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(FrmLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(FrmLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(FrmLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//         Presentacion.FrmLogin f = new Presentacion.FrmLogin();
+//         try {
+//            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+//
+//            SwingUtilities.updateComponentTreeUI(f);
+//            f.setVisible(true);
+//            //new FrmLogin().setVisible(true);
+//        } catch (UnsupportedLookAndFeelException ex) {}
+//          catch (ClassNotFoundException ex) {}
+//          catch (InstantiationException ex) {}
+//          catch (IllegalAccessException ex) {}
+//            }
+//        });
+//        
+//    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnD0;
@@ -571,13 +669,24 @@ public class FrmLogin extends javax.swing.JFrame {
     private javax.swing.JButton btnIniciar;
     private javax.swing.JButton btnLimpiar;
     private javax.swing.JComboBox cboCargo;
+    private javax.swing.JLabel image;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel8;
     private javax.swing.JLabel lblIntentos;
+    private javax.swing.JPanel panelLeft;
+    private javax.swing.JPanel panelRight;
+    private javax.swing.JLabel storeIcon;
     private javax.swing.JPasswordField txtContraseña;
     private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables

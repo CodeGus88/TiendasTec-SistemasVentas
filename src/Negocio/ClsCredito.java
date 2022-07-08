@@ -12,16 +12,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
-import javax.swing.JOptionPane;
+import java.util.logging.Level;
+import statics.Message;
 
 public class ClsCredito {
 
     private Connection connection = new ClsConexion().getConection();
 
-    //--------------------------------------------------------------------------------------------------
-    //-----------------------------------------METODOS--------------------------------------------------
-    //-------------------------------------------------------------------------------------------------- 
-    public void agregarCredito(ClsEntidadCredito credito) {
+    public boolean agregarCredito(ClsEntidadCredito credito) {
         try {
             CallableStatement statement = connection.prepareCall("{call 000_SP_I_Credito(?,?,?,?,?,?,?,?,?,?,?,?)}");
             statement.setString("pidtipodocumento", credito.getStrIdTipoDocumento());
@@ -37,16 +35,14 @@ public class ClsCredito {
             statement.setString("ptotalpagar", credito.getStrTotalPagarCredito());
             statement.setString("pestado", credito.getStrEstadoCredito());
             statement.execute();
-
-            JOptionPane.showMessageDialog(null, "¡Crédito Realizado con éxito!", "Mensaje del Sistema", 1);
-
+            return true;
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            Message.LOGGER.log(Level.SEVERE, ex.getMessage());
+            return false;
         }
-
     }
 
-    public void modificarCredito(String codigo, ClsEntidadCredito credito) {
+    public boolean modificarCredito(String codigo, ClsEntidadCredito credito) {
         try {
             CallableStatement statement = connection.prepareCall("{call 000_SP_U_Credito(?,?,?,?,?,?,?,?,?,?,?,?,?)}");
             statement.setString("pidcredito", codigo);
@@ -63,11 +59,11 @@ public class ClsCredito {
             statement.setString("ptotalpagar", credito.getStrTotalPagarCredito());
             statement.setString("pestado", credito.getStrEstadoCredito());
             statement.executeUpdate();
-
+            return true;
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            Message.LOGGER.log(Level.SEVERE, ex.getMessage());
+            return false;
         }
-        JOptionPane.showMessageDialog(null, "¡Crédito Actualizado!", "Mensaje del Sistema", 1);
     }
 
     public ArrayList<ClsEntidadCredito> listarCredito() {
@@ -96,7 +92,7 @@ public class ClsCredito {
             }
             return creditos;
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            Message.LOGGER.log(Level.SEVERE, ex.getMessage());
             return null;
         }
     }
@@ -110,7 +106,8 @@ public class ClsCredito {
             rs = statement.executeQuery();
             return rs;
         } catch (SQLException SQLex) {
-            throw SQLex;
+            Message.LOGGER.log(Level.SEVERE, SQLex.getMessage());
+            return null;
         }
     }
 
@@ -121,7 +118,8 @@ public class ClsCredito {
             rs = statement.executeQuery();
             return rs;
         } catch (SQLException SQLex) {
-            throw SQLex;
+            Message.LOGGER.log(Level.SEVERE, SQLex.getMessage());
+            return null;
         }
     }
 
@@ -136,21 +134,22 @@ public class ClsCredito {
             rs = statement.executeQuery();
             return rs;
         } catch (SQLException SQLex) {
-            throw SQLex;
+            Message.LOGGER.log(Level.SEVERE, SQLex.getMessage());
+            return null;
         }
     }
 
-    public void actualizarCreditoEstado(String codigo, ClsEntidadCredito credito) {
+    public boolean actualizarCreditoEstado(String codigo, ClsEntidadCredito credito) {
         try {
             CallableStatement statement = connection.prepareCall("{call 000_SP_U_ActualizarCreditoEstado(?,?)}");
             statement.setString("pidcredito", codigo);
             statement.setString("pestado", credito.getStrEstadoCredito());
             statement.executeUpdate();
-
+            return true;
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            Message.LOGGER.log(Level.SEVERE, ex.getMessage());
+            return false;
         }
-        JOptionPane.showMessageDialog(null, "¡Credito Anulado!", "Mensaje del Sistema", 1);
     }
 
     public ResultSet listarCreditoPorDetalle(String criterio, Date fechaini, Date fechafin) throws Exception {
@@ -163,7 +162,7 @@ public class ClsCredito {
             rs = statement.executeQuery();
             return rs;
         } catch (SQLException SQLex) {
-            throw SQLex;
+            return null;
         }
     }
 
@@ -175,9 +174,9 @@ public class ClsCredito {
             statement.setString("pfecha_ini", fecha_ini);
             statement.setString("pfecha_fin", fecha_fin);
             rs = statement.executeQuery();
-            return rs;
         } catch (SQLException SQLex) {
-            throw SQLex;
+            Message.LOGGER.log(Level.SEVERE, SQLex.getMessage());
         }
+        return rs;
     }
 }

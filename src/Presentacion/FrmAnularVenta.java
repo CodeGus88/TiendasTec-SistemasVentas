@@ -10,9 +10,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -21,6 +19,8 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import statics.Message;
+import tools.toast.Toast;
 
 /**
  *
@@ -517,7 +517,10 @@ public class FrmAnularVenta extends javax.swing.JInternalFrame {
                 ClsVenta ventas=new ClsVenta();
                     ClsEntidadVenta venta=new ClsEntidadVenta();
                     venta.setStrEstadoVenta("ANULADO");
-                    ventas.actualizarVentaEstado(lblIdVenta.getText(), venta);
+                    if(ventas.actualizarVentaEstado(lblIdVenta.getText(), venta))
+                        Toast.makeText(Toast.SUCCESS, Message.SUCCESS_MESSAGE, Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(Toast.UNSUCCESS, Message.UNSUCCESS_MESSAGE, Toast.LENGTH_SHORT).show();
 
                     BuscarVenta();
                     CrearTabla();

@@ -19,6 +19,8 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import statics.Message;
+import tools.toast.Toast;
 
 /**
  *
@@ -53,9 +55,6 @@ public class FrmAnularCredito extends javax.swing.JInternalFrame {
         CrearTabla(); 
         CantidadTotal();
     }
-//-----------------------------------------------------------------------------------------------
-//--------------------------------------METODOS--------------------------------------------------
-//-----------------------------------------------------------------------------------------------
 
     void CrearTabla(){
    //--------------------PRESENTACION DE JTABLE----------------------
@@ -135,10 +134,8 @@ public class FrmAnularCredito extends javax.swing.JInternalFrame {
                 Datos[6]=(String) rs.getString(7);
                 Datos[7]=(String) rs.getString(8);
                 Datos[8]=(String) rs.getString(9);
-
                 dtm.addRow(Datos);
                 encuentra=true;
-
             }
             if(encuentra=false){
                 JOptionPane.showMessageDialog(null, "¡No se encuentra!");
@@ -517,7 +514,10 @@ public class FrmAnularCredito extends javax.swing.JInternalFrame {
                 ClsCredito ventasCredito=new ClsCredito();
                     ClsEntidadCredito credito=new ClsEntidadCredito();
                     credito.setStrEstadoCredito("ANULADO");
-                    ventasCredito.actualizarCreditoEstado(lblIdCredito.getText(), credito);
+                    if(ventasCredito.actualizarCreditoEstado(lblIdCredito.getText(), credito))
+                        Toast.makeText(Toast.SUCCESS, Message.SUCCESS_MESSAGE, Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(Toast.UNSUCCESS, Message.UNSUCCESS_MESSAGE, Toast.LENGTH_SHORT).show();
 
                     BuscarVentaCredito();
                     CrearTabla();

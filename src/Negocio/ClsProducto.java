@@ -83,7 +83,6 @@ private Connection connection=new ClsConexion().getConection();
         }catch(SQLException ex){
             ex.printStackTrace();
         }
-        //JOptionPane.showMessageDialog(null,"¡Producto Actualizado!","Mensaje del Sistema",1);
     }
     public ArrayList<ClsEntidadProducto> listarProducto(){
         ArrayList<ClsEntidadProducto> productos=new ArrayList<ClsEntidadProducto>();
