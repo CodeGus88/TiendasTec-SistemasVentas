@@ -106,7 +106,7 @@ public class FrmCaja extends javax.swing.JInternalFrame {
 
     }
   void BuscarIngresos(){
-        String titulos[]={"Cantidad","Producto","Precio","Importe","Ganancia","Fecha"};
+        String titulos[]={"CANTIDAD","PRODUCTO","PRECIO","IMPORTE","GANACIA","FECHA"};
         dtm.setColumnIdentifiers(titulos);
         
         ClsVenta venta=new ClsVenta();

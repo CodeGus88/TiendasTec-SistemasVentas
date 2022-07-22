@@ -165,6 +165,7 @@ public class FrmPrincipal extends javax.swing.JFrame implements FrameState {
         mnuOperaciones = new javax.swing.JMenu();
         mVenta = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem10 = new javax.swing.JMenuItem();
         jMenuItem9 = new javax.swing.JMenuItem();
         mEstado = new javax.swing.JMenuItem();
         mCliente = new javax.swing.JMenuItem();
@@ -424,6 +425,15 @@ public class FrmPrincipal extends javax.swing.JFrame implements FrameState {
             }
         });
         mnuOperaciones.add(jMenuItem4);
+
+        jMenuItem10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Buscadetalle_p.png"))); // NOI18N
+        jMenuItem10.setText("Cuentas por cobrar");
+        jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem10ActionPerformed(evt);
+            }
+        });
+        mnuOperaciones.add(jMenuItem10);
 
         jMenuItem9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/importe.png"))); // NOI18N
         jMenuItem9.setText("Cotización");
@@ -1202,6 +1212,12 @@ public class FrmPrincipal extends javax.swing.JFrame implements FrameState {
 
     }//GEN-LAST:event_JMIniciarSesionActionPerformed
 
+    private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
+        Presentacion.FrmAccountsReceivable cuentasPorCobrar = new Presentacion.FrmAccountsReceivable();
+        Escritorio.add(cuentasPorCobrar);
+        cuentasPorCobrar.show();
+    }//GEN-LAST:event_jMenuItem10ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1254,6 +1270,7 @@ public class FrmPrincipal extends javax.swing.JFrame implements FrameState {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;

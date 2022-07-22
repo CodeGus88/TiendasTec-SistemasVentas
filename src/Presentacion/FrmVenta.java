@@ -97,11 +97,11 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         panelsConfigurator();
         eFormState = EFormState.DISABLE;
         
-        autoLoadWindows();
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         readFrameRectanble();
         design();
         invisibleComponents();
+        autoLoadWindows();
     }
     
     // por el momento no interesa que se muestren estos

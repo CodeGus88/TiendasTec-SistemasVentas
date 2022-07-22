@@ -8,17 +8,14 @@ import Conexion.ClsConexion;
 import Entidad.*;
 import Negocio.*;
 import java.awt.Color;
-import java.awt.Component;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
-//--------------CODIGO DE BARRAS------------
 import java.awt.Image;
 import javax.swing.ImageIcon;
 import net.sourceforge.barbecue.BarcodeFactory;
@@ -63,7 +60,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     static ResultSet rs = null;
     DefaultTableModel dtm = new DefaultTableModel();
     String criterio, busqueda;
-    private final String[] titulos = {"ID", "Cód. de Barras", "Nombre", "Descripción", "Stock", "Stock Min.", "Costo", "Precio", "Utilidad", "Estado", "Categoría", "Imagen", "Vencimiento"};
+    private final String[] titulos = {"ID", "CÓDIGO", "NOMBRE", "DESCRIPCIÓN", "STOCK", "STOCK MIN", "COSTO", "PRECIO", "UTILIDAD", "ESTADO", "CATEGORÍA", "IMAGEN", "VENCIMIENTO"};
 
     public FrmProducto() {
         initComponents();
@@ -1035,8 +1032,6 @@ public class FrmProducto extends javax.swing.JInternalFrame {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-//            FrmProductInformation productInf = new FrmProductInformation(product);
-            
             FrmProductInformation productInf = new FrmProductInformation(product);
             Presentacion.FrmPrincipal.Escritorio.add(productInf);
             productInf.toFront();

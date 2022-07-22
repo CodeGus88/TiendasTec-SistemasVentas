@@ -28,6 +28,8 @@ public class ClsEntidadCredito{
     private String strIgvCredito;
     private String strTotalPagarCredito;
     private String strEstadoCredito;
+    private boolean porCobrar;
+    private Date strFechaCobro;
 
     public String getStrIdCredito() {
         return strIdCredito;
@@ -155,6 +157,22 @@ public class ClsEntidadCredito{
 
     public void setStrEstadoCredito(String strEstadoCredito) {
         this.strEstadoCredito = strEstadoCredito;
+    }
+
+    public Date getStrFechaCobro() {
+        return strFechaCobro;
+    }
+
+    public void setStrFechaCobro(Date strFechaCobro) {
+        this.strFechaCobro = strFechaCobro;
+    }
+
+    public boolean isPorCobrar() {
+        return porCobrar;
+    }
+
+    public void setPorCobrar(boolean porCobrar) {
+        this.porCobrar = porCobrar;
     }
     
 }

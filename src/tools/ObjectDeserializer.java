@@ -35,7 +35,7 @@ public class ObjectDeserializer<O extends Rectangle> {
     
     private void open(){
         try {
-            file = new FileInputStream(directory + "/" + fileName);
+            file = new FileInputStream(directory + "\\" + fileName);
             input = new ObjectInputStream(file);
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.getMessage());

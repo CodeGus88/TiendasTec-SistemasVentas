@@ -18,7 +18,6 @@ import net.sf.jasperreports.view.*;
 import java.util.HashMap;
 import java.util.Map;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
@@ -36,7 +35,6 @@ import java.util.Iterator;
 import java.util.Scanner;
 import java.util.logging.Level;
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import statics.Design;
@@ -63,12 +61,12 @@ public class FrmVentaCredito extends javax.swing.JInternalFrame implements Clien
     public String IdEmpleado, NombreEmpleado;
     int idventaCredito;
     String idventa_print;
-    //-----------------------------------------------
     public String codigo;
 
     static ResultSet rs = null;
     DefaultTableModel dtmDetalle;
 
+    private final String[] titles = {"ID", "CÓDIGO", "PRODUCTO", "DESCRIPCIÓN", "CANTIDAD", "COSTO", "PRECIO", "TOTAL"};
     
     public FrmVentaCredito() {
         initComponents();
@@ -86,10 +84,7 @@ public class FrmVentaCredito extends javax.swing.JInternalFrame implements Clien
         txtDescripcionProducto.setVisible(false);
         txtCostoProducto.setVisible(false);
         mirar();
-        //--------------------JTABLE - DETALLEPRODUCTO--------------------
-
-        String titulos[] = {"ID", "CÓDIGO", "PRODUCTO", "DESCRIPCIÓN", "CANTIDAD", "COSTO", "PRECIO", "TOTAL"};
-        dtmDetalle = new DefaultTableModel(null, titulos) {
+        dtmDetalle = new DefaultTableModel(null, titles) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -100,18 +95,18 @@ public class FrmVentaCredito extends javax.swing.JInternalFrame implements Clien
         panelsConfigurator();
         eFormState = EFormState.DISABLE;
 
-        DefaultTableModel defaultTableModel = new DefaultTableModel(null, titulos) {
+        DefaultTableModel defaultTableModel = new DefaultTableModel(null, titles) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
         
-        autoLoadWindows();
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         readFrameRectanble();
         design();
         invisibleComponents();
+        autoLoadWindows();
     }
     
     // por el momento no interesa que se muestren estos
@@ -1046,7 +1041,6 @@ public class FrmVentaCredito extends javax.swing.JInternalFrame implements Clien
         client = new Consultas.FrmBuscarCliente(this);
         Presentacion.FrmPrincipal.Escritorio.add(client);
         client.toFront();
-        
     }//GEN-LAST:event_btnBuscarClienteActionPerformed
 
     void CalcularTotal() {
@@ -1303,7 +1297,7 @@ public class FrmVentaCredito extends javax.swing.JInternalFrame implements Clien
     }//GEN-LAST:event_btnImporteActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        int result = JOptionPane.showConfirmDialog(this, "¿Desea Generar la Venta a crédito?", "Mensaje del Sistema", JOptionPane.YES_NO_OPTION);
+        int result = JOptionPane.showConfirmDialog(this, "¿Desea generar la venta a crédito?", "Mensaje del Sistema", JOptionPane.YES_NO_OPTION);
         if (result == JOptionPane.YES_OPTION) {
             if (accion.equals("Nuevo")) {
                 ClsCredito creditos = new ClsCredito();
@@ -1320,20 +1314,19 @@ public class FrmVentaCredito extends javax.swing.JInternalFrame implements Clien
                 credito.setStrIgvCredito(txtIGV.getText());
                 credito.setStrTotalPagarCredito(txtTotalPagar.getText());
                 credito.setStrEstadoCredito("EMITIDO");
+                credito.setPorCobrar(true);
                 if(creditos.agregarCredito(credito))
                     Toast.makeText(Toast.SUCCESS, Message.SUCCESS_MESSAGE, Toast.LENGTH_SHORT).show();
                 else
                     Toast.makeText(Toast.UNSUCCESS, Message.UNSUCCESS_MESSAGE, Toast.LENGTH_SHORT).show();
                 guardarDetalle();
             }
-
             mirar();
             tipoDocumento = cboTipoDocumento.getSelectedItem().toString();
             limpiarTabla();
             numVentaCredito = generaNumVentaCredito();
             txtNumero.setText(numVentaCredito);
             BuscarClientePorDefecto();
-//------------ Imprimir Venta --------------            
             if (cboTipoDocumento.getSelectedItem().equals("TICKET")) {
                 int imprime = JOptionPane.showConfirmDialog(this, "¿Desea Imprimir el Ticket?", "Mensaje del Sistema", JOptionPane.YES_NO_OPTION);
                 if (imprime == JOptionPane.YES_OPTION) {
@@ -1354,8 +1347,6 @@ public class FrmVentaCredito extends javax.swing.JInternalFrame implements Clien
                     }
                 }
             }
-            //fin imprimir            
-
         }
 
         if (result == JOptionPane.NO_OPTION) {

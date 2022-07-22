@@ -6,13 +6,14 @@ package Negocio;
 
 import Conexion.*;
 import Entidad.*;
-import java.awt.List;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
 import javax.swing.JOptionPane;
+import statics.Message;
 
 public class ClsCliente {
 private Connection connection=new ClsConexion().getConection();
@@ -81,6 +82,31 @@ private Connection connection=new ClsConexion().getConection();
         }
         JOptionPane.showMessageDialog(null,"¡Cliente Actualizado!","Mensaje del Sistema",1);
     }
+    
+    
+    public ClsEntidadCliente findById(int clientId){
+        ClsEntidadCliente client = null;
+        try {
+            CallableStatement statement = connection.prepareCall("{call 002_SP_S_ClientePorId(?)}");
+            statement.setInt("pidcliente", clientId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                client = new ClsEntidadCliente();
+                client.setStrIdCliente(resultSet.getString("idcliente"));
+                client.setStrNombreCliente(resultSet.getString("nombre"));
+                client.setStrRucCliente(resultSet.getString("ruc"));
+                client.setStrDniCliente(resultSet.getString("dni"));
+                client.setStrDireccionCliente(resultSet.getString("direccion"));
+                client.setStrTelefonoCliente(resultSet.getString("telefono"));
+                client.setStrObsvCliente(resultSet.getString("obsv"));
+            }
+            return client;
+        } catch (SQLException e) {
+            Message.LOGGER.log(Level.SEVERE, e.getMessage());
+            return client;
+        }
+    }
+    
     public ArrayList<ClsEntidadCliente> listarCliente(){
         ArrayList<ClsEntidadCliente> clienteusuarios=new ArrayList<ClsEntidadCliente>();
         try{

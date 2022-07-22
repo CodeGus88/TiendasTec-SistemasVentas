@@ -73,7 +73,7 @@ public class FrmBuscarProducto extends javax.swing.JInternalFrame implements Fra
         getContentPane().setBackground(Design.COLOR_PRIMARY_DARK);
         jPanel4.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         btnSalir.setBackground(Design.COLOR_ACCENT);
-        
+        btnSalir.setBorder(Design.BORDER_BUTTON);
         // Place holder
         new TextPrompt("Buscar...", txtBusqueda);
     }

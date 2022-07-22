@@ -167,12 +167,4 @@ public class ClsEntidadEmpleado {
         this.strTipoUsuario = strTipoUsuario;
     }
 
-    
-    
-
-      
-
-   
-    
-            
 }

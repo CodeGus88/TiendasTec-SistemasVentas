@@ -43,7 +43,7 @@ public class FrmBuscarCliente extends javax.swing.JInternalFrame implements Fram
     
     private ClientInterface clientInterface;
     
-    private String titulos[] = {"ID", "Nombre o Razón Social", "NIT", "CI", "Dirección", "Teléfono", "Observación"};
+    private String titulos[] = {"ID", "NOMBRE O RAZÓN SOCIAL", "NIT", "CI", "DIRECCIÓN", "TELÉFONO", "OBSERVACIÓN"};
     private float[] widths = {4.95F, 23.81F, 9.52F, 9.52F, 21.86F, 9.52F, 20.81F};
     
     public FrmBuscarCliente(ClientInterface clientInterface) {
@@ -70,7 +70,7 @@ public class FrmBuscarCliente extends javax.swing.JInternalFrame implements Fram
         this.getContentPane().setBackground(Design.COLOR_PRIMARY_DARK);
         jPanel6.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         btnSalir.setBackground(Design.COLOR_ACCENT);
-        
+        btnSalir.setBorder(Design.BORDER_BUTTON);
         // place holder
         new TextPrompt("Buscar...", txtBusqueda);
     }

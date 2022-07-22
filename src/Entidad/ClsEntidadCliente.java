@@ -9,6 +9,7 @@ package Entidad;
  * @author dayperperu
  */
 public class ClsEntidadCliente {
+    
     private String strIdCliente;
     private String strNombreCliente;
     private String strRucCliente;

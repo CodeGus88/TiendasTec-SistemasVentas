@@ -15,9 +15,7 @@ import javax.swing.JOptionPane;
 
 public class ClsProducto {
 private Connection connection=new ClsConexion().getConection();
-    //--------------------------------------------------------------------------------------------------
-    //-----------------------------------------METODOS--------------------------------------------------
-    //-------------------------------------------------------------------------------------------------- 
+
     public void agregarProducto(ClsEntidadProducto producto){
         try{
             CallableStatement statement=connection.prepareCall("{call SP_I_Producto(?,?,?,?,?,?,?,?,?,?,?,?)}");

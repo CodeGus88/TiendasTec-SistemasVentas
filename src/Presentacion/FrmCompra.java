@@ -26,7 +26,6 @@ import java.util.Iterator;
 import java.util.Scanner;
 import java.util.logging.Level;
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import statics.Design;
@@ -42,20 +41,15 @@ public class FrmCompra extends javax.swing.JInternalFrame {
     String numCompra;
     int registros;
     String id[] = new String[50];
-    //String Datos[]=new String[50];
 
     static int intContador;
     public String IdEmpleado, NombreEmpleado;
-    int idventa; // , nidventa;
-    //-----------------------------------------------
+    int idventa;
     public String codigo;
     static Connection conn = null;
 
     static ResultSet rs = null;
-    DefaultTableModel dtm = new DefaultTableModel();
-    DefaultTableModel dtmDetalle = new DefaultTableModel();
-
-//    String criterio, busqueda;
+   private DefaultTableModel defaultTableModel;
 
     private String[] titles = {"ID", "CÓDIGO", "PRODUCTO", "DESCRIPCIÓN", "CANTIDAD", "PRECIO", "TOTAL"};
     private float[] widths = {4.95F, 10F, 25F, 30F, 10F, 10F, 10F};
@@ -79,14 +73,19 @@ public class FrmCompra extends javax.swing.JInternalFrame {
         lblIdProveedor.setVisible(false);
         txtDescripcionProducto.setVisible(false);
         mirar();
-        dtmDetalle.setColumnIdentifiers(titles);
-        tblDetalleProducto.setModel(dtmDetalle);
+        defaultTableModel = new DefaultTableModel(null, titles) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        tblDetalleProducto.setModel(defaultTableModel);
         CrearTablaDetalleProducto();
         panelConfigurator();
         tableConfigurator();
         design();
     }
-
+    
     private void panelConfigurator() {
         Container container = getContentPane();
         container.removeAll();
@@ -95,7 +94,8 @@ public class FrmCompra extends javax.swing.JInternalFrame {
         JPanel panelContent = new JPanel(new BorderLayout(5, 5));
         panelBackground.setOpaque(false);
         panelContent.setOpaque(false);
-        panelContent.add(panelHead, BorderLayout.NORTH);
+//        panelContent.add(panelHead, BorderLayout.NORTH);
+        panelContent.add(scrollHead, BorderLayout.NORTH);
         panelContent.add(panelBody, BorderLayout.CENTER);
         panelContent.add(panelFooter, BorderLayout.SOUTH);
         panelBackground.add(panelContent);
@@ -107,6 +107,7 @@ public class FrmCompra extends javax.swing.JInternalFrame {
     
     private void design(){
         getContentPane().setBackground(Design.COLOR_PRIMARY_DARK);
+        panelHead.setBackground(Design.COLOR_PRIMARY_DARK);
         btnAgregarProducto.setBackground(Design.COLOR_ACCENT);
         btnBuscarProducto.setBackground(Design.COLOR_ACCENT);
         btnBuscarProveedor.setBackground(Design.COLOR_ACCENT);
@@ -116,6 +117,16 @@ public class FrmCompra extends javax.swing.JInternalFrame {
         btnLimpiarTabla.setBackground(Design.COLOR_ACCENT);
         btnNuevo.setBackground(Design.COLOR_ACCENT);
         btnSalir.setBackground(Design.COLOR_ACCENT);
+        
+        btnAgregarProducto.setBorder(Design.BORDER_BUTTON);
+        btnBuscarProducto.setBorder(Design.BORDER_BUTTON);
+        btnBuscarProveedor.setBorder(Design.BORDER_BUTTON);
+        btnCancelar.setBorder(Design.BORDER_BUTTON);
+        btnEliminarProducto.setBorder(Design.BORDER_BUTTON);
+        btnGuardar.setBorder(Design.BORDER_BUTTON);
+        btnLimpiarTabla.setBorder(Design.BORDER_BUTTON);
+        btnNuevo.setBorder(Design.BORDER_BUTTON);
+        btnSalir.setBorder(Design.BORDER_BUTTON);
     }
 
     private void tableConfigurator() {
@@ -288,7 +299,6 @@ public class FrmCompra extends javax.swing.JInternalFrame {
                     lblIdProducto.setText(rs.getString(1));
                     txtNombreProducto.setText(rs.getString(3));
                     txtDescripcionProducto.setText(rs.getString(4));
-                    //DescripcionProducto=rs.getString(4);
                     txtStockProducto.setText(rs.getString(5));
                     txtPrecioProducto.setText(rs.getString(7));
                 }
@@ -316,7 +326,6 @@ public class FrmCompra extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(this, ex.getMessage());
             System.out.println(ex.getMessage());
         }
-
     }
 
     void CalcularTotal() {
@@ -336,14 +345,11 @@ public class FrmCompra extends javax.swing.JInternalFrame {
         fila = tblDetalleProducto.getRowCount();
 
         for (int f = 0; f < fila; f++) {
-            if (Integer.parseInt(String.valueOf(dtmDetalle.getValueAt(f, 0))) == id) {
-
+            if (Integer.parseInt(String.valueOf(defaultTableModel.getValueAt(f, 0))) == id) {
                 valor = f;
-                //JOptionPane.showMessageDialog(null, "te encontre!");
                 break;
 
             } else {
-                //JOptionPane.showMessageDialog(null, "no estas!");
                 valor = -1;
             }
 
@@ -365,9 +371,9 @@ public class FrmCompra extends javax.swing.JInternalFrame {
 
         } else {
             String Datos[] = {String.valueOf(item), cod, nom, descrip, String.valueOf(cant), String.valueOf(pre), String.valueOf(tot)};
-            dtmDetalle.addRow(Datos);
+            defaultTableModel.addRow(Datos);
         }
-        tblDetalleProducto.setModel(dtmDetalle);
+        tblDetalleProducto.setModel(defaultTableModel);
     }
 
     void CalcularSubTotal() {
@@ -391,7 +397,7 @@ public class FrmCompra extends javax.swing.JInternalFrame {
     void CalcularTotal_Compra() {
         int fila = 0;
         double valorCompra = 0;
-        fila = dtmDetalle.getRowCount();
+        fila = defaultTableModel.getRowCount();
         for (int f = 0; f < fila; f++) {
             valorCompra += Double.parseDouble(String.valueOf(tblDetalleProducto.getModel().getValueAt(f, 6)));
         }
@@ -402,7 +408,7 @@ public class FrmCompra extends javax.swing.JInternalFrame {
         try {
             int filas = tblDetalleProducto.getRowCount();
             for (int i = 0; filas > i; i++) {
-                dtmDetalle.removeRow(0);
+                defaultTableModel.removeRow(0);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error al limpiar la tabla.");
@@ -484,14 +490,16 @@ public class FrmCompra extends javax.swing.JInternalFrame {
         txtIGV = new javax.swing.JTextField();
         txtTotalCompra = new javax.swing.JTextField();
         btnGuardar = new javax.swing.JButton();
+        scrollHead = new javax.swing.JScrollPane();
         panelHead = new javax.swing.JPanel();
         panel = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jLabel21 = new javax.swing.JLabel();
         txtCantidadProducto = new javax.swing.JTextField();
-        btnAgregarProducto = new javax.swing.JButton();
         jLabel24 = new javax.swing.JLabel();
         txtTotalProducto = new javax.swing.JTextField();
+        jPanel5 = new javax.swing.JPanel();
+        btnAgregarProducto = new javax.swing.JButton();
         btnEliminarProducto = new javax.swing.JButton();
         btnLimpiarTabla = new javax.swing.JButton();
         txtNumero = new javax.swing.JTextField();
@@ -681,9 +689,11 @@ public class FrmCompra extends javax.swing.JInternalFrame {
         getContentPane().add(panelFooter);
         panelFooter.setBounds(10, 560, 800, 82);
 
+        scrollHead.setOpaque(false);
+        scrollHead.setPreferredSize(new java.awt.Dimension(1000, 330));
+
         panelHead.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 11), new java.awt.Color(255, 255, 255))); // NOI18N
         panelHead.setForeground(new java.awt.Color(255, 255, 255));
-        panelHead.setOpaque(false);
 
         panel.setForeground(new java.awt.Color(255, 255, 255));
         panel.setOpaque(false);
@@ -692,13 +702,14 @@ public class FrmCompra extends javax.swing.JInternalFrame {
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Pre transacción", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 11), new java.awt.Color(255, 255, 255))); // NOI18N
         jPanel3.setForeground(new java.awt.Color(255, 255, 255));
         jPanel3.setOpaque(false);
-        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel3.setLayout(null);
 
         jLabel21.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel21.setForeground(new java.awt.Color(255, 255, 255));
         jLabel21.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel21.setText("Cantidad: ");
-        jPanel3.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 100, 40));
+        jPanel3.add(jLabel21);
+        jLabel21.setBounds(0, 10, 100, 40);
 
         txtCantidadProducto.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         txtCantidadProducto.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -710,7 +721,30 @@ public class FrmCompra extends javax.swing.JInternalFrame {
                 txtCantidadProductoKeyTyped(evt);
             }
         });
-        jPanel3.add(txtCantidadProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 10, 250, 40));
+        jPanel3.add(txtCantidadProducto);
+        txtCantidadProducto.setBounds(100, 20, 250, 40);
+
+        jLabel24.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel24.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel24.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel24.setText("Total a parar: ");
+        jPanel3.add(jLabel24);
+        jLabel24.setBounds(0, 50, 100, 40);
+
+        txtTotalProducto.setBackground(new java.awt.Color(204, 255, 204));
+        txtTotalProducto.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        txtTotalProducto.setForeground(new java.awt.Color(0, 102, 204));
+        txtTotalProducto.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtTotalProducto.setDisabledTextColor(new java.awt.Color(0, 102, 204));
+        txtTotalProducto.setEnabled(false);
+        jPanel3.add(txtTotalProducto);
+        txtTotalProducto.setBounds(100, 60, 250, 40);
+
+        jPanel5.setMaximumSize(new java.awt.Dimension(144, 92));
+        jPanel5.setMinimumSize(new java.awt.Dimension(144, 92));
+        jPanel5.setOpaque(false);
+        jPanel5.setPreferredSize(new java.awt.Dimension(144, 92));
+        jPanel5.setLayout(new java.awt.GridLayout(3, 1, 0, 2));
 
         btnAgregarProducto.setForeground(new java.awt.Color(255, 255, 255));
         btnAgregarProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Agregar_p1.png"))); // NOI18N
@@ -720,21 +754,7 @@ public class FrmCompra extends javax.swing.JInternalFrame {
                 btnAgregarProductoActionPerformed(evt);
             }
         });
-        jPanel3.add(btnAgregarProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 10, 210, -1));
-
-        jLabel24.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel24.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel24.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel24.setText("Total a parar: ");
-        jPanel3.add(jLabel24, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 50, 100, 40));
-
-        txtTotalProducto.setBackground(new java.awt.Color(204, 255, 204));
-        txtTotalProducto.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        txtTotalProducto.setForeground(new java.awt.Color(0, 102, 204));
-        txtTotalProducto.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtTotalProducto.setDisabledTextColor(new java.awt.Color(0, 102, 204));
-        txtTotalProducto.setEnabled(false);
-        jPanel3.add(txtTotalProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 50, 250, 40));
+        jPanel5.add(btnAgregarProducto);
 
         btnEliminarProducto.setForeground(new java.awt.Color(255, 255, 255));
         btnEliminarProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Remove.png"))); // NOI18N
@@ -744,7 +764,7 @@ public class FrmCompra extends javax.swing.JInternalFrame {
                 btnEliminarProductoActionPerformed(evt);
             }
         });
-        jPanel3.add(btnEliminarProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 40, 210, -1));
+        jPanel5.add(btnEliminarProducto);
 
         btnLimpiarTabla.setForeground(new java.awt.Color(255, 255, 255));
         btnLimpiarTabla.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/nuevo1.png"))); // NOI18N
@@ -754,9 +774,12 @@ public class FrmCompra extends javax.swing.JInternalFrame {
                 btnLimpiarTablaActionPerformed(evt);
             }
         });
-        jPanel3.add(btnLimpiarTabla, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 70, 210, 20));
+        jPanel5.add(btnLimpiarTabla);
 
-        panel.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 200, 600, 100));
+        jPanel3.add(jPanel5);
+        jPanel5.setBounds(440, 10, 150, 90);
+
+        panel.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 200, 600, 110));
 
         txtNumero.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         txtNumero.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -889,8 +912,10 @@ public class FrmCompra extends javax.swing.JInternalFrame {
 
         panelHead.add(panel);
 
-        getContentPane().add(panelHead);
-        panelHead.setBounds(0, 0, 810, 330);
+        scrollHead.setViewportView(panelHead);
+
+        getContentPane().add(scrollHead);
+        scrollHead.setBounds(10, 0, 790, 370);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -918,7 +943,7 @@ public class FrmCompra extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtCantidadProductoKeyReleased
 
     private void btnAgregarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarProductoActionPerformed
-        double stock, cant;
+        double cant; //stock, 
 
         if (!txtCantidadProducto.getText().equals("")) {
             if (txtCantidadProducto.getText().equals("")) {
@@ -927,9 +952,7 @@ public class FrmCompra extends javax.swing.JInternalFrame {
             } else {
                 cant = Double.parseDouble(txtCantidadProducto.getText());
             }
-
             if (cant > 0) {
-
                 int d1 = Integer.parseInt(lblIdProducto.getText());
                 String d2 = txtCodigoProducto.getText();
                 String d3 = txtNombreProducto.getText();
@@ -957,18 +980,17 @@ public class FrmCompra extends javax.swing.JInternalFrame {
             txtCantidadProducto.requestFocus();
         }
 
-
     }//GEN-LAST:event_btnAgregarProductoActionPerformed
 
     private void btnEliminarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarProductoActionPerformed
         int fila = tblDetalleProducto.getSelectedRow();
         if (fila > 0) {
-            dtmDetalle.removeRow(fila);
+            defaultTableModel.removeRow(fila);
             CalcularTotal_Compra();
             CalcularSubTotal();
             CalcularIGV();
         } else if (fila == 0) {
-            dtmDetalle.removeRow(fila);
+            defaultTableModel.removeRow(fila);
             txtSubTotal.setText("0.0");
             txtIGV.setText("0.0");
             txtTotalCompra.setText("0.0");
@@ -1054,7 +1076,6 @@ public class FrmCompra extends javax.swing.JInternalFrame {
     private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
         BuscarProveedorPorDefecto();
         cargarComboTipoDocumento();
-
     }//GEN-LAST:event_formComponentShown
 
     private void txtCodigoProductoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodigoProductoKeyTyped
@@ -1099,6 +1120,7 @@ public class FrmCompra extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane3;
     public static javax.swing.JLabel lblIdProducto;
@@ -1108,6 +1130,7 @@ public class FrmCompra extends javax.swing.JInternalFrame {
     private javax.swing.JPanel panelFooter;
     private javax.swing.JPanel panelHead;
     private javax.swing.JPanel panelRightButtons;
+    private javax.swing.JScrollPane scrollHead;
     private javax.swing.JTable tblDetalleProducto;
     private javax.swing.JTextField txtCantidadProducto;
     public static javax.swing.JTextField txtCodigoProducto;

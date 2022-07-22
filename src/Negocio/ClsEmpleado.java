@@ -10,7 +10,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
 import javax.swing.JOptionPane;
+import statics.Message;
 
 
 public class ClsEmpleado {
@@ -41,7 +43,39 @@ public class ClsEmpleado {
         }  
     }
     
-    public void modificarEmpleado (String codigo,ClsEntidadEmpleado empleado){
+    public ClsEntidadEmpleado findById(int employeeId){
+        ClsEntidadEmpleado employee = null;
+        try {
+            CallableStatement statement = connection.prepareCall("{call 003_SP_S_EmpleadoPorId(?)}");
+            statement.setInt("pidempleado", employeeId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                employee = new ClsEntidadEmpleado();
+                employee.setStrIdEmpleado(resultSet.getString("IdEmpleado"));
+                employee.setStrNombreEmpleado(resultSet.getString("Nombre"));
+                employee.setStrApellidoEmpleado(resultSet.getString("Apellido"));
+                employee.setStrSexoEmpleado(resultSet.getString("Sexo"));
+                employee.setStrFechaNacEmpleado(resultSet.getDate("FechaNac"));
+                employee.setStrDireccionEmpleado(resultSet.getString("Direccion"));
+                employee.setStrTelefonoEmpleado(resultSet.getString("Telefono"));
+                employee.setStrCelularEmpleado(resultSet.getString("Celular"));
+                employee.setStrEmailEmpleado(resultSet.getString("Email"));
+                employee.setStrDniEmpleado(resultSet.getString("Dni"));
+                employee.setStrFechaIngEmpleado(resultSet.getDate("FechaIng"));
+                employee.setStrSueldoEmpleado(resultSet.getString("Sueldo"));
+                employee.setStrEstadoEmpleado(resultSet.getString("Estado"));
+                employee.setStrUsuarioEmpleado(resultSet.getString("Usuario"));
+                employee.setStrContraseniaEmpleado(resultSet.getString("Contrasenia"));
+                employee.setStrIdTipoUsuario(resultSet.getString("idTipoUsuario"));
+            }
+            return employee;
+        } catch (SQLException e) {
+            Message.LOGGER.log(Level.SEVERE, e.getMessage());
+            return employee;
+        }
+    }
+    
+    public void modificarEmpleado (String codigo, ClsEntidadEmpleado empleado){
         try{
             CallableStatement statement=connection.prepareCall("{call SP_U_Empleado(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
             statement.setString("pnombre", empleado.getStrNombreEmpleado());
@@ -68,7 +102,6 @@ public class ClsEmpleado {
     }
     
     public ResultSet LoginEmpleados(String usu, String contra, String desc) throws Exception{
-    
         ResultSet rs=null;
         try{
             CallableStatement statement=connection.prepareCall("{call SP_S_Login(?,?,?)}");
@@ -87,7 +120,6 @@ public class ClsEmpleado {
         try{
             CallableStatement statement=connection.prepareCall("{call SP_S_Empleado}");
             ResultSet resultSet=statement.executeQuery();
-            
             while (resultSet.next()){
                 ClsEntidadEmpleado empleado=new ClsEntidadEmpleado();
                 empleado.setStrIdEmpleado(resultSet.getString("IdEmpleado"));
@@ -106,8 +138,6 @@ public class ClsEmpleado {
                 empleado.setStrUsuarioEmpleado(resultSet.getString("Usuario"));
                 empleado.setStrContraseniaEmpleado(resultSet.getString("Contrasenia"));
                 empleado.setStrTipoUsuario(resultSet.getString("TipoUsuario"));
-                
-                
                 empleados.add(empleado);
             }
             return empleados;
@@ -128,13 +158,12 @@ public class ClsEmpleado {
             throw SQLex;            
         }        
     } 
-    public void cambiarContrasenia(String codigo,ClsEntidadEmpleado Empleado){
+    public void cambiarContrasenia(String codigo, ClsEntidadEmpleado Empleado){
         try{
             CallableStatement statement=connection.prepareCall("{call SP_U_CambiarPass(?,?)}");
             statement.setString("pidempleado",codigo);
             statement.setString("pcontrasenia",Empleado.getStrContraseniaEmpleado());        
             statement.executeUpdate();
-            
         }catch(SQLException ex){
             ex.printStackTrace();
         }
