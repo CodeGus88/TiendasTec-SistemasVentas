@@ -10,9 +10,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
-//import java.util.ArrayList;
 import java.util.Date;
-//import java.util.Iterator;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -21,6 +19,8 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import statics.Message;
+import tools.toast.Toast;
 
 /**
  *
@@ -55,9 +55,6 @@ public class FrmAnularCredito extends javax.swing.JInternalFrame {
         CrearTabla(); 
         CantidadTotal();
     }
-//-----------------------------------------------------------------------------------------------
-//--------------------------------------METODOS--------------------------------------------------
-//-----------------------------------------------------------------------------------------------
 
     void CrearTabla(){
    //--------------------PRESENTACION DE JTABLE----------------------
@@ -137,10 +134,8 @@ public class FrmAnularCredito extends javax.swing.JInternalFrame {
                 Datos[6]=(String) rs.getString(7);
                 Datos[7]=(String) rs.getString(8);
                 Datos[8]=(String) rs.getString(9);
-
                 dtm.addRow(Datos);
                 encuentra=true;
-
             }
             if(encuentra=false){
                 JOptionPane.showMessageDialog(null, "¡No se encuentra!");
@@ -339,7 +334,7 @@ public class FrmAnularCredito extends javax.swing.JInternalFrame {
         setClosable(true);
         setIconifiable(true);
         setResizable(true);
-        setTitle("Anular Ventas");
+        setTitle("Anular Ventas a Crédito");
         getContentPane().setLayout(null);
 
         tblCredito.setModel(new javax.swing.table.DefaultTableModel(
@@ -454,6 +449,8 @@ public class FrmAnularCredito extends javax.swing.JInternalFrame {
         getContentPane().add(lblEstado);
         lblEstado.setBounds(10, 250, 230, 20);
 
+        getAccessibleContext().setAccessibleName("Anular Ventas a Crédito");
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -517,7 +514,10 @@ public class FrmAnularCredito extends javax.swing.JInternalFrame {
                 ClsCredito ventasCredito=new ClsCredito();
                     ClsEntidadCredito credito=new ClsEntidadCredito();
                     credito.setStrEstadoCredito("ANULADO");
-                    ventasCredito.actualizarCreditoEstado(lblIdCredito.getText(), credito);
+                    if(ventasCredito.actualizarCreditoEstado(lblIdCredito.getText(), credito))
+                        Toast.makeText(Toast.SUCCESS, Message.SUCCESS_MESSAGE, Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(Toast.UNSUCCESS, Message.UNSUCCESS_MESSAGE, Toast.LENGTH_SHORT).show();
 
                     BuscarVentaCredito();
                     CrearTabla();

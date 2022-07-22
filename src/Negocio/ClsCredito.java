@@ -6,24 +6,23 @@ package Negocio;
 
 import Conexion.*;
 import Entidad.*;
+import Entidad.dtos.accountsreceivable.AccountsReceivableItem;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
-import javax.swing.JOptionPane;
+import java.util.logging.Level;
+import statics.Message;
 
 public class ClsCredito {
 
     private Connection connection = new ClsConexion().getConection();
 
-    //--------------------------------------------------------------------------------------------------
-    //-----------------------------------------METODOS--------------------------------------------------
-    //-------------------------------------------------------------------------------------------------- 
-    public void agregarCredito(ClsEntidadCredito credito) {
+    public boolean agregarCredito(ClsEntidadCredito credito) {
         try {
-            CallableStatement statement = connection.prepareCall("{call 000_SP_I_Credito(?,?,?,?,?,?,?,?,?,?,?,?)}");
+            CallableStatement statement = connection.prepareCall("{call 000_SP_I_Credito(?,?,?,?,?,?,?,?,?,?,?,?,?)}");
             statement.setString("pidtipodocumento", credito.getStrIdTipoDocumento());
             statement.setString("pidcliente", credito.getStrIdCliente());
             statement.setString("pidempleado", credito.getStrIdEmpleado());
@@ -36,19 +35,18 @@ public class ClsCredito {
             statement.setString("pigv", credito.getStrIgvCredito());
             statement.setString("ptotalpagar", credito.getStrTotalPagarCredito());
             statement.setString("pestado", credito.getStrEstadoCredito());
+            statement.setBoolean("pporcobrar", credito.isPorCobrar());
             statement.execute();
-
-            JOptionPane.showMessageDialog(null, "¡Crédito Realizado con éxito!", "Mensaje del Sistema", 1);
-
+            return true;
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            Message.LOGGER.log(Level.SEVERE, ex.getMessage());
+            return false;
         }
-
     }
 
-    public void modificarCredito(String codigo, ClsEntidadCredito credito) {
+    public boolean modificarCredito(String codigo, ClsEntidadCredito credito) {
         try {
-            CallableStatement statement = connection.prepareCall("{call 000_SP_U_Credito(?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+            CallableStatement statement = connection.prepareCall("{call 000_SP_U_Credito(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
             statement.setString("pidcredito", codigo);
             statement.setString("pidtipodocumento", credito.getStrIdTipoDocumento());
             statement.setString("pidcliente", credito.getStrIdCliente());
@@ -62,12 +60,58 @@ public class ClsCredito {
             statement.setString("pigv", credito.getStrIgvCredito());
             statement.setString("ptotalpagar", credito.getStrTotalPagarCredito());
             statement.setString("pestado", credito.getStrEstadoCredito());
+            statement.setBoolean("pporcobrar", credito.isPorCobrar());
             statement.executeUpdate();
-
+            return true;
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            Message.LOGGER.log(Level.SEVERE, ex.getMessage());
+            return false;
         }
-        JOptionPane.showMessageDialog(null, "¡Crédito Actualizado!", "Mensaje del Sistema", 1);
+    }
+    
+    public boolean payCredit(int creditId, boolean payable, java.sql.Date date) {
+        try {
+            CallableStatement statement = connection.prepareCall("{call 001_SP_U_PagarCredito(?,?,?)}");
+            statement.setInt("pidcredito", creditId);
+            statement.setDate("pfechacobro", date);
+            statement.setBoolean("pporcobrar", payable);
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            Message.LOGGER.log(Level.SEVERE, ex.getMessage());
+            return false;
+        }
+    }
+    
+    public ClsEntidadCredito findById(int creditId){
+        try {
+            CallableStatement statement = connection.prepareCall("{call 000_CreditoPorId(?)}");
+            statement.setInt("pidcredito", creditId);
+            ResultSet resultSet = statement.executeQuery();
+            ClsEntidadCredito credito = null;
+            while (resultSet.next()) {
+                credito = new ClsEntidadCredito();
+                credito.setStrIdCredito(resultSet.getString("idcredito"));
+                credito.setStrIdTipoDocumento(resultSet.getString("idtipodocumento"));
+                credito.setStrIdCliente(resultSet.getString("idcliente"));
+                credito.setStrIdEmpleado(resultSet.getString("idempleado"));
+                credito.setStrSerieCredito(resultSet.getString("serie"));
+                credito.setStrNumeroCredito(resultSet.getString("numero"));
+                credito.setStrFechaCredito(resultSet.getDate("fecha"));
+                credito.setStrTotalCredito(resultSet.getString("totalcredito"));
+                credito.setStrDescuentoCredito(resultSet.getString("descuento"));
+                credito.setStrSubTotalCredito(resultSet.getString("subtotal"));
+                credito.setStrIgvCredito(resultSet.getString("igv"));
+                credito.setStrTotalPagarCredito(resultSet.getString("totalpagar"));
+                credito.setStrEstadoCredito(resultSet.getString("estado"));
+                credito.setStrFechaCobro(resultSet.getDate("fechacobro"));
+                credito.setPorCobrar(resultSet.getBoolean("porcobrar"));
+            }
+            return credito;
+        } catch (SQLException e) {
+            Message.LOGGER.log(Level.SEVERE, e.getMessage());
+            return null;
+        }
     }
 
     public ArrayList<ClsEntidadCredito> listarCredito() {
@@ -91,15 +135,46 @@ public class ClsCredito {
                 credito.setStrIgvCredito(resultSet.getString("Igv"));
                 credito.setStrTotalPagarCredito(resultSet.getString("TotalPagar"));
                 credito.setStrEstadoCredito(resultSet.getString("Estado"));
-
                 creditos.add(credito);
             }
             return creditos;
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            Message.LOGGER.log(Level.SEVERE, ex.getMessage());
             return null;
         }
     }
+    
+    /**
+     * Lista todos los dréditos
+     * @return listaCreditos
+     */
+    public ArrayList<AccountsReceivableItem> listarCreditoPagable() {
+        ArrayList<AccountsReceivableItem> items = new ArrayList<AccountsReceivableItem>();
+        try {
+            CallableStatement statement = connection.prepareCall("{call 000_SP_S_CreditoPagable}");
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                AccountsReceivableItem receivableItem = new AccountsReceivableItem();
+                receivableItem.setId(resultSet.getInt("idCredito"));
+                receivableItem.setClientName(resultSet.getString("nombrecliente"));
+                receivableItem.setClientDni(resultSet.getString("dnicliente"));
+                receivableItem.setClientRuc(resultSet.getString("ruccliente"));
+                receivableItem.setEmployeeName(resultSet.getString("nombreempleado"));
+                receivableItem.setIgv(resultSet.getFloat("igv"));
+                receivableItem.setSubtotal(resultSet.getFloat("subtotal"));
+                receivableItem.setTotalCredit(resultSet.getFloat("totalcredito"));
+                receivableItem.setDiscount(resultSet.getFloat("descuento"));
+                receivableItem.setTotal(resultSet.getFloat("totalpagar"));
+                receivableItem.setDate(resultSet.getDate("fecha"));
+                items.add(receivableItem);
+            }
+            return items;
+        } catch (SQLException ex) {
+            Message.LOGGER.log(Level.SEVERE, ex.getMessage());
+            return null;
+        }
+    }
+
 
     public ResultSet listarCreditoPorParametro(String criterio, String busqueda) throws Exception {
         ResultSet rs = null;
@@ -110,7 +185,8 @@ public class ClsCredito {
             rs = statement.executeQuery();
             return rs;
         } catch (SQLException SQLex) {
-            throw SQLex;
+            Message.LOGGER.log(Level.SEVERE, SQLex.getMessage());
+            return null;
         }
     }
 
@@ -121,7 +197,8 @@ public class ClsCredito {
             rs = statement.executeQuery();
             return rs;
         } catch (SQLException SQLex) {
-            throw SQLex;
+            Message.LOGGER.log(Level.SEVERE, SQLex.getMessage());
+            return null;
         }
     }
 
@@ -136,21 +213,22 @@ public class ClsCredito {
             rs = statement.executeQuery();
             return rs;
         } catch (SQLException SQLex) {
-            throw SQLex;
+            Message.LOGGER.log(Level.SEVERE, SQLex.getMessage());
+            return null;
         }
     }
 
-    public void actualizarCreditoEstado(String codigo, ClsEntidadCredito credito) {
+    public boolean actualizarCreditoEstado(String codigo, ClsEntidadCredito credito) {
         try {
             CallableStatement statement = connection.prepareCall("{call 000_SP_U_ActualizarCreditoEstado(?,?)}");
             statement.setString("pidcredito", codigo);
             statement.setString("pestado", credito.getStrEstadoCredito());
             statement.executeUpdate();
-
+            return true;
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            Message.LOGGER.log(Level.SEVERE, ex.getMessage());
+            return false;
         }
-        JOptionPane.showMessageDialog(null, "¡Credito Anulado!", "Mensaje del Sistema", 1);
     }
 
     public ResultSet listarCreditoPorDetalle(String criterio, Date fechaini, Date fechafin) throws Exception {
@@ -163,7 +241,7 @@ public class ClsCredito {
             rs = statement.executeQuery();
             return rs;
         } catch (SQLException SQLex) {
-            throw SQLex;
+            return null;
         }
     }
 
@@ -175,9 +253,9 @@ public class ClsCredito {
             statement.setString("pfecha_ini", fecha_ini);
             statement.setString("pfecha_fin", fecha_fin);
             rs = statement.executeQuery();
-            return rs;
         } catch (SQLException SQLex) {
-            throw SQLex;
+            Message.LOGGER.log(Level.SEVERE, SQLex.getMessage());
         }
+        return rs;
     }
 }

@@ -4,14 +4,12 @@
  */
 package Presentacion;
 
-import Conexion.ClsConexion;
 import Entidad.*;
 import Negocio.*;
-import java.awt.Color;
-import java.awt.Component;
+import enums.EFormState;
+import interfaces.FrameState;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
@@ -26,7 +24,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Scanner;
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -36,32 +33,55 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
 import interfaces.ProductoVentaInterface;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Rectangle;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.util.logging.Level;
+import statics.Design;
+import statics.Message;
+import statics.Paths;
+import statics.ScreenUses;
 
-public class FrmCotizacion extends javax.swing.JInternalFrame implements ProductoVentaInterface{
+import statics.TableConfigurator;
+import tools.ObjectDeserializer;
+import tools.ObjectSerializer;
+import tools.toast.Toast;
 
-    private Connection connection = new ClsConexion().getConection();
-    String Total;
-    String strCodigo;
+public class FrmCotizacion extends javax.swing.JInternalFrame implements ProductoVentaInterface, FrameState{
+
+//    private Connection connection = new ClsConexion().getConection();
+//    String Total;
+//    String strCodigo;
     String accion;
     String numVenta, tipoDocumento;
-    int registros;
+//    int registros;
     String id[] = new String[50];
 
     static int intContador;
     public String IdEmpleado, NombreEmpleado;
-    int idventa, nidventa;
+    int idventa; // , nidventa;
     String idventa_print;
     //-----------------------------------------------
     public String codigo;
-    static Connection conn = null;
+//    static Connection conn = null;
 
     static ResultSet rs = null;
-    DefaultTableModel dtm = new DefaultTableModel();
-    DefaultTableModel dtmDetalle = new DefaultTableModel();
-
+//    DefaultTableModel dtm = new DefaultTableModel();
+    private DefaultTableModel dtmDetalle; 
+    
+    private EFormState state;
+    
+    private Consultas.FrmBuscarProducto product;
+    
+    private String[] titles = {"ID", "CÓDIGO", "PRODUCTO", "DESCRIPCIÓN", "CANT.", "COSTO", "PRECIO", "TOTAL"};
+    private float[] widths = {0F, 8.333F, 28.667F, 39.668F, 7.778F, 0, 7.778F, 7.778F};
+    
     public FrmCotizacion() {
         initComponents();
         //---------------------FECHA ACTUAL-------------------------------
+        state = EFormState.DISABLE;
         Date date = new Date();
         String format = new String("dd/MM/yyyy");
         SimpleDateFormat formato = new SimpleDateFormat(format);
@@ -69,23 +89,83 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
         numVenta = generaNumVenta();
         txtNumero.setText(numVenta);
         //---------------------ANCHO Y ALTO DEL FORM----------------------
-        this.setSize(955, 505);
         cargarComboTipoDocumento();
 
         lblIdProducto.setVisible(false);
         txtDescripcionProducto.setVisible(false);
         txtCostoProducto.setVisible(false);
         mirar();
-        //--------------------JTABLE - DETALLEPRODUCTO--------------------
 
-        String titulos[] = {"ID", "CÓDIGO", "PRODUCTO", "DESCRIPCIÓN", "CANT.", "COSTO", "PRECIO", "TOTAL"};
-        dtmDetalle.setColumnIdentifiers(titulos);
+        
+        dtmDetalle = new DefaultTableModel(null, titles){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         tblDetalleProducto.setModel(dtmDetalle);
+        
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         CrearTablaDetalleProducto();
+        autoLoadWindows();
+        design();
+        readFrameRectanble();
+        invisibleComponents();
     }
-//-----------------------------------------------------------------------------------------------
-//--------------------------------------METODOS--------------------------------------------------
-//-----------------------------------------------------------------------------------------------
+    
+    // por el momento no interesa que se muestren estos
+    private void invisibleComponents() {
+        jLabel1.setVisible(false);
+        jLabel2.setVisible(false);
+        txtSubTotal.setVisible(false);
+        txtIGV.setVisible(false);
+    }
+    
+    private void autoLoadWindows(){
+        btnNuevo.doClick();
+        btnBuscarProducto.doClick();
+    }
+    
+    private void design() {
+        this.getContentPane().setBackground(Design.COLOR_PRIMARY_DARK);
+        this.getContentPane().removeAll();
+        this.getContentPane().add(center, BorderLayout.CENTER);
+        this.getContentPane().add(footer, BorderLayout.SOUTH);
+        this.getContentPane().add(menuButton, BorderLayout.EAST);
+        footer.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        menuButton.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        
+        btnGuardar.setBackground(Design.COLOR_ACCENT);
+        btnGuardar.setBackground(Design.COLOR_ACCENT);
+        btnAgregarProducto.setBackground(Design.COLOR_ACCENT);
+        btnBuscarProducto.setBackground(Design.COLOR_ACCENT);
+        btnCancel.setBackground(Design.COLOR_ACCENT);
+        btnEliminarProducto.setBackground(Design.COLOR_ACCENT);
+        btnLimpiarTabla.setBackground(Design.COLOR_ACCENT);
+        btnNuevo.setBackground(Design.COLOR_ACCENT);
+        btnSalir.setBackground(Design.COLOR_ACCENT);
+
+        btnGuardar.setBorder(Design.BORDER_BUTTON);
+        btnAgregarProducto.setBorder(Design.BORDER_BUTTON);
+        btnBuscarProducto.setBorder(Design.BORDER_BUTTON);
+        btnCancel.setBorder(Design.BORDER_BUTTON);
+        btnEliminarProducto.setBorder(Design.BORDER_BUTTON);
+        btnLimpiarTabla.setBorder(Design.BORDER_BUTTON);
+        btnNuevo.setBorder(Design.BORDER_BUTTON);
+        btnSalir.setBorder(Design.BORDER_BUTTON);
+        panelsConfigurator();
+    }
+    
+    private void panelsConfigurator() {
+        tablePanel.addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent evt) {
+                Component c = (Component) evt.getSource(); //........ }
+                for (int i = 0; i < tblDetalleProducto.getColumnCount(); i++) {
+                    tblDetalleProducto.getColumnModel().getColumn(i).setPreferredWidth(ScreenUses.getPinTotal(c.getWidth(), widths[i]));
+                }
+            }
+        });
+    }
 
     public String generaNumVenta() {
 
@@ -97,7 +177,6 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
                 if (rs.getString(1) != null) {
                     Scanner s = new Scanner(rs.getString(1));
                     int c = s.useDelimiter("C").nextInt() + 1;
-
                     if (c < 10) {
                         return "C0000" + c;
                     }
@@ -125,56 +204,18 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
             }
         }
         return "C00001";
-
     }
-
+    
     void CrearTablaDetalleProducto() {
-        //--------------------PRESENTACION DE JTABLE----------------------
-
-        TableCellRenderer render = new DefaultTableCellRenderer() {
-
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                //aqui obtengo el render de la calse superior 
-                JLabel l = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                //Determinar Alineaciones   
-                if (column == 0 || column == 1 || column == 4 || column == 5 || column == 6 || column == 7) {
-                    l.setHorizontalAlignment(SwingConstants.CENTER);
-                } else {
-                    l.setHorizontalAlignment(SwingConstants.LEFT);
-                }
-
-                //Colores en Jtable        
-                if (isSelected) {
-                    l.setBackground(new Color(203, 159, 41));
-                    //l.setBackground(new Color(168, 198, 238));
-                    l.setForeground(Color.WHITE);
-                } else {
-                    l.setForeground(Color.BLACK);
-                    if (row % 2 == 0) {
-                        l.setBackground(Color.WHITE);
-                    } else {
-                        //l.setBackground(new Color(232, 232, 232));
-                        l.setBackground(new Color(254, 227, 152));
-                    }
-                }
-                return l;
-            }
-        };
         //Agregar Render
         for (int i = 0; i < tblDetalleProducto.getColumnCount(); i++) {
+            TableCellRenderer render = TableConfigurator.configureTableItem(TableConfigurator.TABLE_COLUMN_ALIGEMENT_1);
             tblDetalleProducto.getColumnModel().getColumn(i).setCellRenderer(render);
         }
         //Activar ScrollBar
         tblDetalleProducto.setAutoResizeMode(tblDetalleProducto.AUTO_RESIZE_OFF);
-
-        //Anchos de cada columna
-        int[] anchos = {50, 120, 190, 260, 70, 70, 70, 70};
-        for (int i = 0; i < tblDetalleProducto.getColumnCount(); i++) {
-            tblDetalleProducto.getColumnModel().getColumn(i).setPreferredWidth(anchos[i]);
-        }
         //Ocultar columa
         setOcultarColumnasJTable(tblDetalleProducto, new int[]{0, 5});
-
     }
 
     void limpiarCampos() {
@@ -197,6 +238,7 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
     void mirar() {
         btnNuevo.setEnabled(true);
         btnGuardar.setEnabled(false);
+        btnCancel.setEnabled(false);
         btnSalir.setEnabled(true);
         txtCodigoProducto.setEnabled(false);
         txtSerie.setEnabled(false);
@@ -229,9 +271,8 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
     void modificar() {
 
         btnNuevo.setEnabled(false);
-
+        btnCancel.setEnabled(true);
         btnGuardar.setEnabled(true);
-//        btnSalir.setEnabled(false);
 
         txtCodigoProducto.setEnabled(true);
         txtSerie.setEnabled(true);
@@ -301,41 +342,13 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
         }
     }
 
-    void obtenerUltimoIdVenta_print() {
-        try {
-            ClsVenta oVenta = new ClsVenta();
-            rs = oVenta.obtenerUltimoIdVenta();
-            while (rs.next()) {
-                idventa_print = String.valueOf(rs.getInt(1));
-            }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage());
-            System.out.println(ex.getMessage());
-        }
-    }
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane3 = new javax.swing.JScrollPane();
-        tblDetalleProducto = new javax.swing.JTable();
-        jPanel4 = new javax.swing.JPanel();
-        btnNuevo = new javax.swing.JButton();
-        btnSalir = new javax.swing.JButton();
+        center = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
-        jPanel3 = new javax.swing.JPanel();
-        jLabel21 = new javax.swing.JLabel();
-        txtCantidadProducto = new javax.swing.JTextField();
-        btnAgregarProducto = new javax.swing.JButton();
-        jLabel24 = new javax.swing.JLabel();
-        txtTotalProducto = new javax.swing.JTextField();
-        btnEliminarProducto = new javax.swing.JButton();
-        btnLimpiarTabla = new javax.swing.JButton();
-        jLabel5 = new javax.swing.JLabel();
-        txtSerie = new javax.swing.JTextField();
-        txtNumero = new javax.swing.JTextField();
-        jLabel6 = new javax.swing.JLabel();
+        jPanel7 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel22 = new javax.swing.JLabel();
         txtCodigoProducto = new javax.swing.JTextField();
@@ -349,38 +362,275 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
         lblIdProducto = new javax.swing.JLabel();
         jLabel23 = new javax.swing.JLabel();
         txtCostoProducto = new javax.swing.JLabel();
-        chkCambiarNumero = new javax.swing.JCheckBox();
-        jLabel4 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel21 = new javax.swing.JLabel();
+        txtCantidadProducto = new javax.swing.JTextField();
+        jLabel24 = new javax.swing.JLabel();
+        txtTotalProducto = new javax.swing.JTextField();
         jPanel6 = new javax.swing.JPanel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
-        txtSubTotal = new javax.swing.JTextField();
-        txtIGV = new javax.swing.JTextField();
-        txtTotalPagar = new javax.swing.JTextField();
-        txtTotalVenta = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
-        txtDescuento = new javax.swing.JTextField();
-        btnGuardar = new javax.swing.JButton();
-        jPanel7 = new javax.swing.JPanel();
-        jLabel8 = new javax.swing.JLabel();
+        btnAgregarProducto = new javax.swing.JButton();
+        btnEliminarProducto = new javax.swing.JButton();
+        btnLimpiarTabla = new javax.swing.JButton();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        txtNumero = new javax.swing.JTextField();
+        txtSerie = new javax.swing.JTextField();
+        chkCambiarNumero = new javax.swing.JCheckBox();
+        tablePanel = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tblDetalleProducto = new javax.swing.JTable();
+        footer = new javax.swing.JPanel();
+        labelImporte = new javax.swing.JLabel();
         txtImporte = new javax.swing.JTextField();
-        jLabel11 = new javax.swing.JLabel();
+        labelTotalVenta = new javax.swing.JLabel();
+        txtTotalVenta = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        txtSubTotal = new javax.swing.JTextField();
+        labelTotalAPagar = new javax.swing.JLabel();
+        txtTotalPagar = new javax.swing.JTextField();
+        labelCambio = new javax.swing.JLabel();
         txtCambio = new javax.swing.JTextField();
+        labelDescuento = new javax.swing.JLabel();
+        txtDescuento = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        txtIGV = new javax.swing.JTextField();
+        jPanel1 = new javax.swing.JPanel();
+        btnGuardar = new javax.swing.JButton();
+        menuButton = new javax.swing.JPanel();
+        btnNuevo = new javax.swing.JButton();
+        btnCancel = new javax.swing.JButton();
+        btnSalir = new javax.swing.JButton();
 
-        setBackground(new java.awt.Color(255, 255, 255));
+        setBackground(new java.awt.Color(0, 0, 0));
         setClosable(true);
         setIconifiable(true);
         setResizable(true);
         setTitle("Cotización");
         setToolTipText("");
+        setPreferredSize(new java.awt.Dimension(900, 601));
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentShown(java.awt.event.ComponentEvent evt) {
                 formComponentShown(evt);
             }
         });
-        getContentPane().setLayout(null);
+        getContentPane().setLayout(new java.awt.BorderLayout(5, 5));
+
+        center.setOpaque(false);
+        center.setLayout(new java.awt.BorderLayout());
+
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        jPanel5.setMinimumSize(new java.awt.Dimension(700, 150));
+        jPanel5.setOpaque(false);
+        jPanel5.setPreferredSize(new java.awt.Dimension(100, 205));
+
+        jPanel7.setOpaque(false);
+        jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos del Producto", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 11), new java.awt.Color(255, 255, 255))); // NOI18N
+        jPanel2.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel2.setOpaque(false);
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel22.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel22.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel22.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel22.setText("Codigo de barras del producto: ");
+        jPanel2.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 230, 30));
+
+        txtCodigoProducto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtCodigoProductoKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCodigoProductoKeyTyped(evt);
+            }
+        });
+        jPanel2.add(txtCodigoProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 20, 130, 30));
+
+        btnBuscarProducto.setForeground(new java.awt.Color(255, 255, 255));
+        btnBuscarProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Buscar_p.png"))); // NOI18N
+        btnBuscarProducto.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
+        btnBuscarProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarProductoActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnBuscarProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 20, 40, 30));
+
+        jLabel17.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel17.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel17.setText("Nombre del producto: ");
+        jPanel2.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 60, 170, 30));
+
+        txtNombreProducto.setEnabled(false);
+        jPanel2.add(txtNombreProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 60, 230, 30));
+
+        jLabel19.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel19.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel19.setText("Stock:");
+        jPanel2.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 14, 80, 20));
+        jPanel2.add(txtDescripcionProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 60, 30, 20));
+
+        txtStockProducto.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        txtStockProducto.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtStockProducto.setEnabled(false);
+        jPanel2.add(txtStockProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 30, 80, 20));
+
+        txtPrecioProducto.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        txtPrecioProducto.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtPrecioProducto.setEnabled(false);
+        jPanel2.add(txtPrecioProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 70, 80, 20));
+        jPanel2.add(lblIdProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 20, 20, 20));
+
+        jLabel23.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel23.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel23.setText("Precio:");
+        jPanel2.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 52, 80, 20));
+        jPanel2.add(txtCostoProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 80, 90, 20));
+
+        jPanel7.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 560, 110));
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Pre transacción", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 11), new java.awt.Color(255, 255, 255))); // NOI18N
+        jPanel3.setOpaque(false);
+        jPanel3.setPreferredSize(new java.awt.Dimension(540, 70));
+        jPanel3.setLayout(null);
+
+        jLabel21.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel21.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel21.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel21.setText("Cantidad: ");
+        jPanel3.add(jLabel21);
+        jLabel21.setBounds(0, 20, 80, 30);
+
+        txtCantidadProducto.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        txtCantidadProducto.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtCantidadProducto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtCantidadProductoKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCantidadProductoKeyTyped(evt);
+            }
+        });
+        jPanel3.add(txtCantidadProducto);
+        txtCantidadProducto.setBounds(80, 20, 60, 30);
+
+        jLabel24.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel24.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel24.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel24.setText("Total: ");
+        jPanel3.add(jLabel24);
+        jLabel24.setBounds(140, 20, 90, 30);
+
+        txtTotalProducto.setBackground(new java.awt.Color(204, 255, 204));
+        txtTotalProducto.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        txtTotalProducto.setForeground(new java.awt.Color(0, 102, 204));
+        txtTotalProducto.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtTotalProducto.setDisabledTextColor(new java.awt.Color(0, 102, 204));
+        txtTotalProducto.setEnabled(false);
+        jPanel3.add(txtTotalProducto);
+        txtTotalProducto.setBounds(230, 20, 80, 30);
+
+        jPanel6.setOpaque(false);
+        jPanel6.setLayout(new java.awt.GridLayout(1, 3, 5, 5));
+
+        btnAgregarProducto.setForeground(new java.awt.Color(255, 255, 255));
+        btnAgregarProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Agregar_p1.png"))); // NOI18N
+        btnAgregarProducto.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
+        btnAgregarProducto.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnAgregarProductoMouseClicked(evt);
+            }
+        });
+        btnAgregarProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarProductoActionPerformed(evt);
+            }
+        });
+        btnAgregarProducto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                btnAgregarProductoKeyReleased(evt);
+            }
+        });
+        jPanel6.add(btnAgregarProducto);
+
+        btnEliminarProducto.setForeground(new java.awt.Color(255, 255, 255));
+        btnEliminarProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Remove.png"))); // NOI18N
+        btnEliminarProducto.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
+        btnEliminarProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarProductoActionPerformed(evt);
+            }
+        });
+        jPanel6.add(btnEliminarProducto);
+
+        btnLimpiarTabla.setForeground(new java.awt.Color(255, 255, 255));
+        btnLimpiarTabla.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/nuevo1.png"))); // NOI18N
+        btnLimpiarTabla.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
+        btnLimpiarTabla.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarTablaActionPerformed(evt);
+            }
+        });
+        jPanel6.add(btnLimpiarTabla);
+
+        jPanel3.add(jPanel6);
+        jPanel6.setBounds(340, 10, 200, 50);
+
+        jPanel7.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 120, 560, -1));
+
+        jPanel5.add(jPanel7);
+
+        jPanel4.setOpaque(false);
+        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/bar_code_22177 (2).png"))); // NOI18N
+        jPanel4.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 230, 100));
+
+        jLabel5.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel5.setText("Serie");
+        jPanel4.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, 60, 20));
+
+        jLabel6.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setText("Nº  de venta");
+        jPanel4.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 120, 110, 20));
+
+        txtNumero.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtNumero.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jPanel4.add(txtNumero, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 140, 110, -1));
+
+        txtSerie.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtSerie.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtSerie.setText("001");
+        jPanel4.add(txtSerie, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 140, 59, -1));
+
+        chkCambiarNumero.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        chkCambiarNumero.setForeground(new java.awt.Color(255, 255, 255));
+        chkCambiarNumero.setText("Cambiar Número");
+        chkCambiarNumero.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        chkCambiarNumero.setOpaque(false);
+        chkCambiarNumero.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                chkCambiarNumeroStateChanged(evt);
+            }
+        });
+        jPanel4.add(chkCambiarNumero, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 170, 180, -1));
+
+        jPanel5.add(jPanel4);
+
+        center.add(jPanel5, java.awt.BorderLayout.PAGE_START);
+
+        tablePanel.setLayout(new java.awt.GridLayout(1, 0));
+
+        jScrollPane3.setPreferredSize(new java.awt.Dimension(50, 403));
 
         tblDetalleProducto.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         tblDetalleProducto.setModel(new javax.swing.table.DefaultTableModel(
@@ -397,233 +647,61 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
         tblDetalleProducto.setRowHeight(22);
         jScrollPane3.setViewportView(tblDetalleProducto);
 
-        getContentPane().add(jScrollPane3);
-        jScrollPane3.setBounds(10, 207, 790, 190);
+        tablePanel.add(jScrollPane3);
 
-        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        center.add(tablePanel, java.awt.BorderLayout.CENTER);
 
-        btnNuevo.setBackground(new java.awt.Color(51, 255, 51));
-        btnNuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/money_22144 (1).png"))); // NOI18N
-        btnNuevo.setText("Nueva venta");
-        btnNuevo.setToolTipText("");
-        btnNuevo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnNuevo.setIconTextGap(0);
-        btnNuevo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnNuevo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNuevoActionPerformed(evt);
-            }
-        });
-        jPanel4.add(btnNuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 110, 70));
+        getContentPane().add(center, java.awt.BorderLayout.CENTER);
 
-        btnSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/principal.png"))); // NOI18N
-        btnSalir.setText("Salir");
-        btnSalir.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnSalir.setIconTextGap(0);
-        btnSalir.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnSalir.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSalirActionPerformed(evt);
-            }
-        });
-        jPanel4.add(btnSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 370, 110, 70));
+        footer.setBackground(new java.awt.Color(247, 254, 255));
+        footer.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        footer.setOpaque(false);
+        footer.setLayout(new java.awt.GridLayout(2, 8, 5, 5));
 
-        getContentPane().add(jPanel4);
-        jPanel4.setBounds(803, 10, 130, 460);
+        labelImporte.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        labelImporte.setForeground(new java.awt.Color(255, 255, 255));
+        labelImporte.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        labelImporte.setText("Importe:");
+        footer.add(labelImporte);
 
-        jPanel5.setBackground(new java.awt.Color(34, 81, 249));
-        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        txtImporte.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        txtImporte.setForeground(new java.awt.Color(255, 255, 255));
+        txtImporte.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtImporte.setDisabledTextColor(new java.awt.Color(255, 255, 255));
+        txtImporte.setEnabled(false);
+        footer.add(txtImporte);
 
-        jPanel3.setBackground(new java.awt.Color(208, 218, 247));
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        labelTotalVenta.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        labelTotalVenta.setForeground(new java.awt.Color(255, 255, 255));
+        labelTotalVenta.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        labelTotalVenta.setText("Valor venta:");
+        footer.add(labelTotalVenta);
 
-        jLabel21.setText("CANTIDAD:");
-        jPanel3.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 9, 70, 30));
+        txtTotalVenta.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        txtTotalVenta.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtTotalVenta.setEnabled(false);
+        footer.add(txtTotalVenta);
 
-        txtCantidadProducto.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        txtCantidadProducto.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtCantidadProducto.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtCantidadProductoKeyReleased(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtCantidadProductoKeyTyped(evt);
-            }
-        });
-        jPanel3.add(txtCantidadProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 9, 60, 30));
+        jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel1.setText("Subtotal:");
+        footer.add(jLabel1);
 
-        btnAgregarProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Agregar_p1.png"))); // NOI18N
-        btnAgregarProducto.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnAgregarProductoMouseClicked(evt);
-            }
-        });
-        btnAgregarProducto.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregarProductoActionPerformed(evt);
-            }
-        });
-        btnAgregarProducto.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                btnAgregarProductoKeyReleased(evt);
-            }
-        });
-        jPanel3.add(btnAgregarProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 5, 50, 40));
-
-        jLabel24.setText("TOTAL:");
-        jPanel3.add(jLabel24, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 9, 50, 30));
-
-        txtTotalProducto.setBackground(new java.awt.Color(204, 255, 204));
-        txtTotalProducto.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        txtTotalProducto.setForeground(new java.awt.Color(0, 102, 204));
-        txtTotalProducto.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtTotalProducto.setDisabledTextColor(new java.awt.Color(0, 102, 204));
-        txtTotalProducto.setEnabled(false);
-        jPanel3.add(txtTotalProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 9, 80, 30));
-
-        btnEliminarProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Remove.png"))); // NOI18N
-        btnEliminarProducto.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEliminarProductoActionPerformed(evt);
-            }
-        });
-        jPanel3.add(btnEliminarProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 5, 50, 40));
-
-        btnLimpiarTabla.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/nuevo1.png"))); // NOI18N
-        btnLimpiarTabla.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnLimpiarTablaActionPerformed(evt);
-            }
-        });
-        jPanel3.add(btnLimpiarTabla, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 5, 50, 40));
-
-        jPanel5.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 130, 530, 50));
-
-        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setText("SERIE");
-        jPanel5.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 110, 60, 20));
-
-        txtSerie.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        txtSerie.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtSerie.setText("001");
-        jPanel5.add(txtSerie, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 130, 59, -1));
-
-        txtNumero.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        txtNumero.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jPanel5.add(txtNumero, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 130, 110, -1));
-
-        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6.setText("Nº DE VENTA");
-        jPanel5.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 110, 110, 20));
-
-        jPanel2.setBackground(new java.awt.Color(208, 218, 247));
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos del Producto"));
-        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel22.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel22.setText("Codigo de barras del producto: ");
-        jPanel2.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 230, 30));
-
-        txtCodigoProducto.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtCodigoProductoKeyReleased(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtCodigoProductoKeyTyped(evt);
-            }
-        });
-        jPanel2.add(txtCodigoProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 20, 130, 30));
-
-        btnBuscarProducto.setBackground(new java.awt.Color(51, 51, 255));
-        btnBuscarProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Buscar_p.png"))); // NOI18N
-        btnBuscarProducto.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscarProductoActionPerformed(evt);
-            }
-        });
-        jPanel2.add(btnBuscarProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 20, 40, 30));
-
-        jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel17.setText("Nombre del producto: ");
-        jPanel2.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 60, 170, 30));
-
-        txtNombreProducto.setEnabled(false);
-        jPanel2.add(txtNombreProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 60, 230, 30));
-
-        jLabel19.setText("STOCK:");
-        jPanel2.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 17, -1, -1));
-        jPanel2.add(txtDescripcionProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 60, 30, 20));
-
-        txtStockProducto.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        txtStockProducto.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtStockProducto.setEnabled(false);
-        jPanel2.add(txtStockProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 30, 80, 20));
-
-        txtPrecioProducto.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        txtPrecioProducto.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtPrecioProducto.setEnabled(false);
-        jPanel2.add(txtPrecioProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 70, 80, 20));
-        jPanel2.add(lblIdProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 20, 20, 20));
-
-        jLabel23.setText("PRECIO:");
-        jPanel2.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 55, 50, -1));
-        jPanel2.add(txtCostoProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 80, 90, 20));
-
-        jPanel5.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 530, 110));
-
-        chkCambiarNumero.setText("Cambiar Número");
-        chkCambiarNumero.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                chkCambiarNumeroStateChanged(evt);
-            }
-        });
-        jPanel5.add(chkCambiarNumero, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 160, 110, -1));
-
-        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/bar_code_22177 (2).png"))); // NOI18N
-        jPanel5.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 10, 230, 100));
-
-        getContentPane().add(jPanel5);
-        jPanel5.setBounds(10, 10, 790, 250);
-
-        jPanel6.setBackground(new java.awt.Color(34, 81, 249));
-        jPanel6.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel7.setText("SUB TOTAL");
-        jPanel6.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(221, 3, 0, 0));
-
-        jLabel9.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel9.setText("I.G.V.");
-        jPanel6.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(332, 3, -1, 0));
-
-        jLabel12.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel12.setText("TOTAL");
-        jLabel12.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jPanel6.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 0, 130, 20));
-
-        txtSubTotal.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        txtSubTotal.setEditable(false);
+        txtSubTotal.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         txtSubTotal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtSubTotal.setEnabled(false);
-        jPanel6.add(txtSubTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(221, 25, -1, 0));
+        footer.add(txtSubTotal);
 
-        txtIGV.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        txtIGV.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtIGV.setEnabled(false);
-        jPanel6.add(txtIGV, new org.netbeans.lib.awtextra.AbsoluteConstraints(332, 25, 0, 0));
+        labelTotalAPagar.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        labelTotalAPagar.setForeground(new java.awt.Color(255, 255, 255));
+        labelTotalAPagar.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        labelTotalAPagar.setText("Total:");
+        labelTotalAPagar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        footer.add(labelTotalAPagar);
 
-        txtTotalPagar.setBackground(new java.awt.Color(0, 0, 0));
-        txtTotalPagar.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        txtTotalPagar.setBackground(java.awt.Color.darkGray);
+        txtTotalPagar.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         txtTotalPagar.setForeground(new java.awt.Color(0, 255, 102));
         txtTotalPagar.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtTotalPagar.setDisabledTextColor(new java.awt.Color(0, 255, 102));
@@ -633,34 +711,59 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
                 txtTotalPagarActionPerformed(evt);
             }
         });
-        jPanel6.add(txtTotalPagar, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 20, 135, 30));
+        footer.add(txtTotalPagar);
 
-        txtTotalVenta.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        txtTotalVenta.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtTotalVenta.setEnabled(false);
-        jPanel6.add(txtTotalVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 25, 100, 30));
+        labelCambio.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        labelCambio.setForeground(new java.awt.Color(255, 255, 255));
+        labelCambio.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        labelCambio.setText("Cambio:");
+        footer.add(labelCambio);
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("VALOR VENTA");
-        jPanel6.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 3, 100, 20));
+        txtCambio.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        txtCambio.setForeground(new java.awt.Color(255, 255, 0));
+        txtCambio.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtCambio.setDisabledTextColor(new java.awt.Color(255, 255, 0));
+        txtCambio.setEnabled(false);
+        footer.add(txtCambio);
 
-        jLabel15.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel15.setText("DESCUENTO");
-        jPanel6.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 3, 90, 20));
+        labelDescuento.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        labelDescuento.setForeground(new java.awt.Color(255, 255, 255));
+        labelDescuento.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        labelDescuento.setText("Descuento:");
+        footer.add(labelDescuento);
 
         txtDescuento.setBackground(new java.awt.Color(255, 255, 204));
-        txtDescuento.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        txtDescuento.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         txtDescuento.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtDescuento.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtDescuentoKeyReleased(evt);
             }
         });
-        jPanel6.add(txtDescuento, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 25, 90, 30));
+        footer.add(txtDescuento);
 
+        jLabel2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel2.setText("I.G.V.:");
+        footer.add(jLabel2);
+
+        txtIGV.setEditable(false);
+        txtIGV.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        txtIGV.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtIGV.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtIGVActionPerformed(evt);
+            }
+        });
+        footer.add(txtIGV);
+
+        jPanel1.setOpaque(false);
+        footer.add(jPanel1);
+
+        btnGuardar.setForeground(new java.awt.Color(255, 255, 255));
         btnGuardar.setText("GENERAR");
+        btnGuardar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
         btnGuardar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnGuardar.setIconTextGap(0);
         btnGuardar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -669,56 +772,78 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
                 btnGuardarActionPerformed(evt);
             }
         });
-        jPanel6.add(btnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 10, 90, 40));
+        footer.add(btnGuardar);
 
-        getContentPane().add(jPanel6);
-        jPanel6.setBounds(210, 403, 590, 65);
+        getContentPane().add(footer, java.awt.BorderLayout.PAGE_END);
 
-        jPanel7.setBackground(new java.awt.Color(247, 254, 255));
-        jPanel7.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        menuButton.setBackground(new java.awt.Color(255, 255, 255));
+        menuButton.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        menuButton.setOpaque(false);
+        menuButton.setLayout(new java.awt.GridLayout(3, 1, 5, 5));
 
-        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel8.setText("IMPORTE");
-        jPanel7.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 3, 80, 20));
+        btnNuevo.setForeground(new java.awt.Color(255, 255, 255));
+        btnNuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/money_22144 (1).png"))); // NOI18N
+        btnNuevo.setText("Nueva venta");
+        btnNuevo.setToolTipText("");
+        btnNuevo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
+        btnNuevo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnNuevo.setIconTextGap(0);
+        btnNuevo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnNuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoActionPerformed(evt);
+            }
+        });
+        menuButton.add(btnNuevo);
 
-        txtImporte.setBackground(new java.awt.Color(0, 0, 0));
-        txtImporte.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        txtImporte.setForeground(new java.awt.Color(255, 255, 255));
-        txtImporte.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtImporte.setDisabledTextColor(new java.awt.Color(255, 255, 255));
-        txtImporte.setEnabled(false);
-        jPanel7.add(txtImporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 25, 80, 30));
+        btnCancel.setForeground(new java.awt.Color(255, 255, 255));
+        btnCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/anular-proceso.png"))); // NOI18N
+        btnCancel.setText("Cancelar");
+        btnCancel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
+        btnCancel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnCancel.setIconTextGap(0);
+        btnCancel.setMaximumSize(new java.awt.Dimension(95, 73));
+        btnCancel.setMinimumSize(new java.awt.Dimension(95, 73));
+        btnCancel.setPreferredSize(new java.awt.Dimension(95, 73));
+        btnCancel.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelActionPerformed(evt);
+            }
+        });
+        menuButton.add(btnCancel);
 
-        jLabel11.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel11.setText("CAMBIO");
-        jPanel7.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 3, 80, 20));
+        btnSalir.setForeground(new java.awt.Color(255, 255, 255));
+        btnSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/principal.png"))); // NOI18N
+        btnSalir.setText("Salir");
+        btnSalir.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 255), 2, true));
+        btnSalir.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnSalir.setIconTextGap(0);
+        btnSalir.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalirActionPerformed(evt);
+            }
+        });
+        menuButton.add(btnSalir);
 
-        txtCambio.setBackground(new java.awt.Color(0, 0, 0));
-        txtCambio.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        txtCambio.setForeground(new java.awt.Color(255, 255, 0));
-        txtCambio.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtCambio.setDisabledTextColor(new java.awt.Color(255, 255, 0));
-        txtCambio.setEnabled(false);
-        jPanel7.add(txtCambio, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 25, 80, 30));
-
-        getContentPane().add(jPanel7);
-        jPanel7.setBounds(10, 403, 190, 65);
+        getContentPane().add(menuButton, java.awt.BorderLayout.PAGE_START);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
-
         cargarComboTipoDocumento();
     }//GEN-LAST:event_formComponentShown
 
     private void btnBuscarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarProductoActionPerformed
-        Consultas.FrmBuscarProducto producto = new Consultas.FrmBuscarProducto(this);
-        Presentacion.FrmPrincipal.Escritorio.add(producto);
-        producto.toFront();
+        if(product != null){
+            product.dispose();
+            System.gc();
+        } 
+        product = new Consultas.FrmBuscarProducto(this);
+        Presentacion.FrmPrincipal.Escritorio.add(product);
+        product.toFront();
     }//GEN-LAST:event_btnBuscarProductoActionPerformed
 
     void CalcularTotal() {
@@ -741,14 +866,11 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
             if (Integer.parseInt(String.valueOf(dtmDetalle.getValueAt(f, 0))) == id) {
 
                 valor = f;
-                //JOptionPane.showMessageDialog(null, "te encontre!");
                 break;
 
             } else {
-                //JOptionPane.showMessageDialog(null, "no estas!");
                 valor = -1;
             }
-
         }
         return valor;
     }
@@ -764,8 +886,6 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
 
             n_total = Double.parseDouble(String.valueOf(tblDetalleProducto.getModel().getValueAt(p, 4))) * Double.parseDouble(String.valueOf(tblDetalleProducto.getModel().getValueAt(p, 5)));
             tblDetalleProducto.setValueAt(n_total, p, 7);
-
-            //JOptionPane.showMessageDialog(null, "IGUALL!");
         } else {
             String Datos[] = {String.valueOf(item), cod, nom, descrip, String.valueOf(cant), String.valueOf(cost), String.valueOf(pre), String.valueOf(tot)};
             dtmDetalle.addRow(Datos);
@@ -882,7 +1002,6 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
         if (keyCode == KeyEvent.VK_ENTER) {
             btnAgregarProducto.requestFocus();
         }
-
     }//GEN-LAST:event_txtCantidadProductoKeyReleased
 
     private void btnEliminarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarProductoActionPerformed
@@ -952,11 +1071,9 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        
+        Toast.makeText("Generando documento...", Toast.LENGTH_MICRO).show();
         ArrayList<ItemProductoCotizacion> lista = new ArrayList<>();
-        //String titulos[] = {"ID -> 0"
-        // , "CÓDIGO -> 1", "PRODUCTO -> 2", "DESCRIPCIÓN -> 3", "CANT. -> 4"
-        // , "COSTO -> 5", "PRECIO -> 6", "TOTAL -> 7"};
+        
         for( int i = 0; i < tblDetalleProducto.getRowCount(); i++){
             ItemProductoCotizacion item = new ItemProductoCotizacion();
             item.setId(tblDetalleProducto.getValueAt(i, 0).toString());
@@ -967,17 +1084,12 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
             item.setCosto(tblDetalleProducto.getValueAt(i, 5).toString());
             item.setPrecio(tblDetalleProducto.getValueAt(i, 6).toString());
             item.setTotal(tblDetalleProducto.getValueAt(i, 7).toString());
-            
             lista.add(item);
         }
         
-        
-        
         try {
-
             Map parametros = new HashMap();
-//            parametros.put("fecha", LocalDate.now().toString());
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM//yyyy HH:mm:ss");
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
             parametros.put("fecha", dtf.format(LocalDateTime.now()));
             parametros.put("total", txtTotalVenta.getText());
             parametros.put("descuento", txtDescuento.getText());
@@ -988,51 +1100,18 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
             JasperViewer visualiza = new JasperViewer(print, false);
             visualiza.setTitle("Cotización");
             visualiza.setVisible(true);
+            Toast.makeText(Toast.SUCCESS, Message.SUCCESS_MESSAGE, Toast.LENGTH_MICRO).show();
         } catch (Exception e) {
-            e.printStackTrace();
+            Toast.makeText(Toast.UNSUCCESS, Message.UNSUCCESS_MESSAGE , Toast.LENGTH_MICRO).show();
+            Message.LOGGER.log(Level.WARNING, e.getMessage());
         }
-        
-        
-        /*
-        ClsEntidadVenta venta = new ClsEntidadVenta();
-        venta.setStrIdEmpleado(IdEmpleado);
-        venta.setStrSerieVenta(txtSerie.getText());
-        venta.setStrNumeroVenta(txtNumero.getText());
-        venta.setStrTotalVenta(txtTotalVenta.getText());
-        venta.setStrDescuentoVenta(txtDescuento.getText());
-        venta.setStrSubTotalVenta(txtSubTotal.getText());
-        venta.setStrIgvVenta(txtIGV.getText());
-        venta.setStrTotalPagarVenta(txtTotalPagar.getText());
-        venta.setStrEstadoVenta("EMITIDO");
-        guardarDetalle();
-
-        mirar();
-        limpiarTabla();
-        numVenta = generaNumVenta();
-
-
-            obtenerUltimoIdVenta_print();
-            Map p = new HashMap();
-            p.put("busqueda", idventa_print);
-
-            JasperReport report;
-            JasperPrint print;
-            try {
-                report = JasperCompileManager.compileReport(new File("").getAbsolutePath() + "/src/Reportes/RptCotizacion.jrxml");
-                print = JasperFillManager.fillReport(report, p, connection);
-                JasperViewer view = new JasperViewer(print, false);
-                JasperPrintManager.printReport(print, false);
-
-            } catch (JRException e) {
-                e.printStackTrace();
-            }
-     */
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
         accion = "Nuevo";
         modificar();
         limpiarCampos();
+        state = EFormState.ENABLE;
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void txtCantidadProductoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCantidadProductoKeyTyped
@@ -1058,6 +1137,16 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
     private void txtTotalPagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTotalPagarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtTotalPagarActionPerformed
+
+    private void txtIGVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIGVActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtIGVActionPerformed
+
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+        mirar();
+        limpiarTabla();
+        state = EFormState.DISABLE;
+    }//GEN-LAST:event_btnCancelActionPerformed
     void obtenerUltimoIdVenta() {
         try {
             ClsVenta oVenta = new ClsVenta();
@@ -1091,7 +1180,6 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
             detalleventa.setStrPrecioDet(String.valueOf(tblDetalleProducto.getModel().getValueAt(f, 6)));
             detalleventa.setStrTotalDet(String.valueOf(tblDetalleProducto.getModel().getValueAt(f, 7)));
             detalleventas.agregarDetalleVenta(detalleventa);
-
             try {
                 ClsProducto oProducto = new ClsProducto();
 
@@ -1112,34 +1200,32 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
             stock = cant - ncant;
             producto.setStrStockProducto(String.valueOf(stock));
             productos.actualizarProductoStock(strId, producto);
-
         }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarProducto;
     private javax.swing.JButton btnBuscarProducto;
+    private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnEliminarProducto;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnLimpiarTabla;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JButton btnSalir;
+    private javax.swing.JPanel center;
     private javax.swing.JCheckBox chkCambiarNumero;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel15;
+    private javax.swing.JPanel footer;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -1147,7 +1233,14 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JLabel labelCambio;
+    private javax.swing.JLabel labelDescuento;
+    private javax.swing.JLabel labelImporte;
+    private javax.swing.JLabel labelTotalAPagar;
+    private javax.swing.JLabel labelTotalVenta;
     public static javax.swing.JLabel lblIdProducto;
+    private javax.swing.JPanel menuButton;
+    private javax.swing.JPanel tablePanel;
     private javax.swing.JTable tblDetalleProducto;
     private javax.swing.JTextField txtCambio;
     private javax.swing.JTextField txtCantidadProducto;
@@ -1169,16 +1262,61 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public void cargarProducto(ClsEntidadProducto producto) {
-        
-        lblIdProducto.setText(producto.getStrIdProducto());
-        txtCodigoProducto.setText(producto.getStrCodigoProducto());
-        txtNombreProducto.setText(producto.getStrNombreProducto());
-        txtDescripcionProducto.setText(producto.getStrDescripcionProducto());
-        txtStockProducto.setText(producto.getStrStockProducto());
-        txtCostoProducto.setText(producto.getStrPrecioCostoProducto());  // producto.preciocosto 
-        txtPrecioProducto.setText(producto.getStrPrecioVentaProducto()); // producto.precioVenta
-                
+    public void loadProduct(ClsEntidadProducto producto) {
+        if(state.equals(EFormState.ENABLE)){
+            lblIdProducto.setText(producto.getStrIdProducto());
+            txtCodigoProducto.setText(producto.getStrCodigoProducto());
+            txtNombreProducto.setText(producto.getStrNombreProducto());
+            txtDescripcionProducto.setText(producto.getStrDescripcionProducto());
+            txtStockProducto.setText(producto.getStrStockProducto());
+            txtCostoProducto.setText(producto.getStrPrecioCostoProducto());  // producto.preciocosto 
+            txtPrecioProducto.setText(producto.getStrPrecioVentaProducto()); // producto.precioVenta
+            Toast.makeText(Toast.SUCCESS, "Se agregó el producto", Toast.LENGTH_MICRO).show();
+        } else {
+            Toast.makeText(Toast.UNSUCCESS, "Fornulario inactivo, no se agregó el producto", Toast.LENGTH_SHORT).show();
+        }
     }
 
+    @Override
+    public void readFrameRectanble() {
+        ObjectDeserializer<Rectangle> deserializer = new ObjectDeserializer<>(Paths.SERIAL_DIRECTORY_DATA, Paths.QUOTATION_RECTANGLE_NAME);
+        Rectangle rectangle = deserializer.deserialicer();
+        if(rectangle != null)
+            this.setBounds( rectangle );
+    }
+
+    @Override
+    public void writeFrameRectangle() {
+        ObjectSerializer<Rectangle> serializer = new ObjectSerializer<>(Paths.SERIAL_DIRECTORY_DATA, Paths.QUOTATION_RECTANGLE_NAME);
+        serializer.serilizer(this.getBounds());
+    }
+    
+    //    @Override
+//    public void dispose(){
+//        try {
+//            if (product != null) {
+//                product.dispose();
+//            }
+//            writeFrameRectangle();
+//        } catch (Exception e) {
+//            Message.LOGGER.log(Level.SEVERE, e.getMessage());
+//        }
+//        super.dispose();
+//    }
+
+    @Override
+    public void dispose() {
+        try {
+            if (product != null) {
+                product.dispose();
+            }
+            writeFrameRectangle();
+        } catch (Exception e) {
+            Message.LOGGER.log(Level.SEVERE, e.getMessage());
+        }
+        super.dispose();
+    }
+
+   
+    
 }

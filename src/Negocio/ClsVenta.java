@@ -12,16 +12,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
-import javax.swing.JOptionPane;
+import java.util.logging.Level;
+import statics.Message;
 
 public class ClsVenta {
 
     private Connection connection = new ClsConexion().getConection();
 
-    //--------------------------------------------------------------------------------------------------
-    //-----------------------------------------METODOS--------------------------------------------------
-    //-------------------------------------------------------------------------------------------------- 
-    public void agregarVenta(ClsEntidadVenta venta) {
+    public boolean agregarVenta(ClsEntidadVenta venta) {
         try {
             CallableStatement statement = connection.prepareCall("{call SP_I_Venta(?,?,?,?,?,?,?,?,?,?,?,?)}");
             statement.setString("pidtipodocumento", venta.getStrIdTipoDocumento());
@@ -37,16 +35,15 @@ public class ClsVenta {
             statement.setString("ptotalpagar", venta.getStrTotalPagarVenta());
             statement.setString("pestado", venta.getStrEstadoVenta());
             statement.execute();
-
-            JOptionPane.showMessageDialog(null, "¡Venta Realizada con éxito!", "Mensaje del Sistema", 1);
-
+            return true;
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            Message.LOGGER.log(Level.SEVERE, ex.getMessage());
+            return false;
         }
 
     }
 
-    public void modificarVenta(String codigo, ClsEntidadVenta venta) {
+    public boolean modificarVenta(String codigo, ClsEntidadVenta venta) {
         try {
             CallableStatement statement = connection.prepareCall("{call SP_U_Venta(?,?,?,?,?,?,?,?,?,?,?,?,?)}");
             statement.setString("pidventa", codigo);
@@ -63,11 +60,11 @@ public class ClsVenta {
             statement.setString("ptotalpagar", venta.getStrTotalPagarVenta());
             statement.setString("pestado", venta.getStrEstadoVenta());
             statement.executeUpdate();
-
+            return true;
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            Message.LOGGER.log(Level.SEVERE, ex.getMessage());
+            return false;
         }
-        JOptionPane.showMessageDialog(null, "¡Venta Actualizada!", "Mensaje del Sistema", 1);
     }
 
     public ArrayList<ClsEntidadVenta> listarVenta() {
@@ -140,17 +137,17 @@ public class ClsVenta {
         }
     }
 
-    public void actualizarVentaEstado(String codigo, ClsEntidadVenta Venta) {
+    public boolean actualizarVentaEstado(String codigo, ClsEntidadVenta Venta) {
         try {
             CallableStatement statement = connection.prepareCall("{call SP_U_ActualizarVentaEstado(?,?)}");
             statement.setString("pidventa", codigo);
             statement.setString("pestado", Venta.getStrEstadoVenta());
             statement.executeUpdate();
-
+            return true;
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            Message.LOGGER.log(Level.SEVERE, ex.getMessage());
+            return false;
         }
-        JOptionPane.showMessageDialog(null, "¡Venta Anulada!", "Mensaje del Sistema", 1);
     }
 
     public ResultSet listarVentaPorDetalle(String criterio, Date fechaini, Date fechafin) throws Exception {

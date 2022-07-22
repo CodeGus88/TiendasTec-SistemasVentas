@@ -9,12 +9,12 @@ package Presentacion;
  *
  * @author JCarlos ArcilaD
  */
-public class frmVerProducto extends javax.swing.JInternalFrame {
+public class FrmVerProducto extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form frmVerProducto
      */
-    public frmVerProducto() {
+    public FrmVerProducto() {
         initComponents();
     }
 

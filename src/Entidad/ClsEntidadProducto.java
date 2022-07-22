@@ -4,11 +4,16 @@
  */
 package Entidad;
 
+import java.util.Date;
+
+
+
 /**
  *
  * @author DAYPER-PERU
  */
 public class ClsEntidadProducto {
+    
     private String strIdProducto;
     private String strCodigoProducto;
     private String strNombreProducto;
@@ -22,6 +27,7 @@ public class ClsEntidadProducto {
     private String strIdCategoria;
     private String strDescripcionCategoria;
     private String strImagen;
+    private Date fechaVencimiento;
     
     public String getStrImagen() {
         return strImagen;
@@ -127,4 +133,12 @@ public class ClsEntidadProducto {
         this.strDescripcionCategoria = strDescripcionCategoria;
     }
 
+    public Date getFechaVencimiento() {
+        return fechaVencimiento;
+    }
+
+    public void setFechaVencimiento(Date fechaVencimiento) {
+        this.fechaVencimiento = fechaVencimiento;
+    }
+    
 }

@@ -12,6 +12,6 @@ import Entidad.ClsEntidadProducto;
  */
 public interface ProductoVentaInterface {
    
-    void cargarProducto(ClsEntidadProducto producto);
+    void loadProduct(ClsEntidadProducto producto);
     
 }
