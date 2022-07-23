@@ -148,14 +148,15 @@ public class ClsCredito {
      * Lista todos los dréditos
      * @return listaCreditos
      */
-    public ArrayList<AccountsReceivableItem> listarCreditoPagable() {
+    public ArrayList<AccountsReceivableItem> listarCreditoPagable(boolean porCobrar) {
         ArrayList<AccountsReceivableItem> items = new ArrayList<AccountsReceivableItem>();
         try {
-            CallableStatement statement = connection.prepareCall("{call 000_SP_S_CreditoPagable}");
+            CallableStatement statement = connection.prepareCall("{call 000_SP_S_CreditoPagable(?)}");
+            statement.setBoolean("pporcobrar", porCobrar);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 AccountsReceivableItem receivableItem = new AccountsReceivableItem();
-                receivableItem.setId(resultSet.getInt("idCredito"));
+                receivableItem.setId(resultSet.getInt("idcredito"));
                 receivableItem.setClientName(resultSet.getString("nombrecliente"));
                 receivableItem.setClientDni(resultSet.getString("dnicliente"));
                 receivableItem.setClientRuc(resultSet.getString("ruccliente"));
