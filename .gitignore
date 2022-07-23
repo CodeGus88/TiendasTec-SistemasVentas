@@ -1,2 +1,3 @@
 # serial data
- src/serialdata/*
+src/serialdata/*
+build/*
