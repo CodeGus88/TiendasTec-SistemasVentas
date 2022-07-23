@@ -34,17 +34,17 @@ import tools.TextPrompt;
  *
  * @author DAYPER-PERU
  */
-public class FrmBuscarCliente extends javax.swing.JInternalFrame implements FrameState{
+public final class FrmBuscarCliente extends javax.swing.JInternalFrame implements FrameState{
 
     static ResultSet rs=null;
     DefaultTableModel dtm=new DefaultTableModel();
 
     String criterio,busqueda,Total;
     
-    private ClientInterface clientInterface;
+    private final ClientInterface clientInterface;
     
-    private String titulos[] = {"ID", "NOMBRE O RAZÓN SOCIAL", "NIT", "CI", "DIRECCIÓN", "TELÉFONO", "OBSERVACIÓN"};
-    private float[] widths = {4.95F, 23.81F, 9.52F, 9.52F, 21.86F, 9.52F, 20.81F};
+    private final String titulos[] = {"ID", "NOMBRE O RAZÓN SOCIAL", "NIT", "CI", "DIRECCIÓN", "TELÉFONO", "OBSERVACIÓN"};
+    private final float[] widths = {4.95F, 23.81F, 9.52F, 9.52F, 21.86F, 9.52F, 20.81F};
     
     public FrmBuscarCliente(ClientInterface clientInterface) {
         this.clientInterface = clientInterface;
