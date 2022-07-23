@@ -1,2 +1,0 @@
-statics.TableHeaderConfigurator
-statics.TableConfigurator

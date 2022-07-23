@@ -1,3 +1,6 @@
 # serial data
-src/serialdata/*
-build/*
+src/serialdata/
+# build
+build/
+# Jasper Report
+*.jasper
