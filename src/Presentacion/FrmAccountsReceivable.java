@@ -39,7 +39,6 @@ public class FrmAccountsReceivable extends javax.swing.JInternalFrame implements
     
     public FrmAccountsReceivable() {
         initComponents();
-//        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         readFrameRectanble();
         tableConfigurator();
         clsCredito = new ClsCredito();
@@ -106,7 +105,6 @@ public class FrmAccountsReceivable extends javax.swing.JInternalFrame implements
     private void searchItem(){
         String text = jTextFieldSearch.getText().toLowerCase();
         ArrayList<AccountsReceivableItem> auxLit = new ArrayList<>();
-        System.out.println(text);
         for(AccountsReceivableItem item: originalList){
             if(item.plaintContent().toLowerCase().contains(text))
                 auxLit.add(item);
@@ -245,8 +243,8 @@ public class FrmAccountsReceivable extends javax.swing.JInternalFrame implements
     }//GEN-LAST:event_jTextFieldSearchKeyReleased
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-        jTextFieldSearch.setText(null);
         updateList();
+        searchItem();
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void jTablePayableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTablePayableMouseClicked
@@ -260,7 +258,7 @@ public class FrmAccountsReceivable extends javax.swing.JInternalFrame implements
     }//GEN-LAST:event_jTablePayableMouseClicked
 
     private void updateList(){
-        originalList = clsCredito.listarCreditoPagable();
+        originalList = clsCredito.listarCreditoPagable(true);
         ArrayList<AccountsReceivableItem> auxList = new ArrayList<>();
         auxList.addAll(originalList);
         loadList(originalList);

@@ -71,6 +71,8 @@ public class FrmBuscarCliente extends javax.swing.JInternalFrame implements Fram
         jPanel6.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         btnSalir.setBackground(Design.COLOR_ACCENT);
         btnSalir.setBorder(Design.BORDER_BUTTON);
+//        jPanel1.setBackground(Design.COLOR_ACCENT);
+//        jPanel1.setBorder(Design.BORDER_BUTTON);
         // place holder
         new TextPrompt("Buscar...", txtBusqueda);
     }
@@ -114,9 +116,9 @@ public class FrmBuscarCliente extends javax.swing.JInternalFrame implements Fram
     }
     void CrearTablaCliente(){
         //Agregar Render
+        Hashtable<Integer, Integer> map = new Hashtable<Integer, Integer>();
+        map.put(0, SwingConstants.CENTER);
         for (int i=0;i<tblCliente.getColumnCount();i++){
-            Hashtable<Integer, Integer> map = new Hashtable<Integer, Integer>();
-            map.put(0, SwingConstants.CENTER);
             TableCellRenderer render = TableConfigurator.configureTableItem(map);
             tblCliente.getColumnModel().getColumn(i).setCellRenderer(render);
         }
@@ -208,7 +210,6 @@ public class FrmBuscarCliente extends javax.swing.JInternalFrame implements Fram
         setMaximizable(true);
         setResizable(true);
         setTitle("Consultar Clientes");
-        setMinimumSize(new java.awt.Dimension(836, 400));
         setPreferredSize(new java.awt.Dimension(836, 400));
         getContentPane().setLayout(new java.awt.GridLayout(1, 0));
 
@@ -221,18 +222,22 @@ public class FrmBuscarCliente extends javax.swing.JInternalFrame implements Fram
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 11), new java.awt.Color(255, 255, 255)), "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 11), new java.awt.Color(255, 255, 255)), "Criterio de búsqueda", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 11), new java.awt.Color(255, 255, 255))); // NOI18N
         jPanel3.setForeground(new java.awt.Color(255, 255, 255));
         jPanel3.setOpaque(false);
+        jPanel3.setPreferredSize(new java.awt.Dimension(600, 85));
         jPanel3.setLayout(new java.awt.GridLayout(2, 1, 5, 5));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setOpaque(false);
         jPanel2.setLayout(new java.awt.GridLayout(1, 0));
 
-        jPanel1.setOpaque(false);
+        jPanel1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel1.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel1.setMinimumSize(new java.awt.Dimension(691, 50));
+        jPanel1.setPreferredSize(new java.awt.Dimension(691, 50));
         jPanel1.setLayout(new java.awt.GridLayout(1, 4, 5, 0));
 
         rbtnCodigo.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        rbtnCodigo.setForeground(new java.awt.Color(255, 255, 255));
         rbtnCodigo.setText("ID Cliente");
+        rbtnCodigo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
         rbtnCodigo.setOpaque(false);
         rbtnCodigo.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -242,9 +247,9 @@ public class FrmBuscarCliente extends javax.swing.JInternalFrame implements Fram
         jPanel1.add(rbtnCodigo);
 
         rbtnNombre.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        rbtnNombre.setForeground(new java.awt.Color(255, 255, 255));
         rbtnNombre.setSelected(true);
         rbtnNombre.setText("Nombre o Razón Social");
+        rbtnNombre.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
         rbtnNombre.setOpaque(false);
         rbtnNombre.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -254,14 +259,14 @@ public class FrmBuscarCliente extends javax.swing.JInternalFrame implements Fram
         jPanel1.add(rbtnNombre);
 
         rbtnRuc.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        rbtnRuc.setForeground(new java.awt.Color(255, 255, 255));
         rbtnRuc.setText("NIT");
+        rbtnRuc.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
         rbtnRuc.setOpaque(false);
         jPanel1.add(rbtnRuc);
 
         rbtnDni.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        rbtnDni.setForeground(new java.awt.Color(255, 255, 255));
         rbtnDni.setText("CI");
+        rbtnDni.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
         rbtnDni.setOpaque(false);
         rbtnDni.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
