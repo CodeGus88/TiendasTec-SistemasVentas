@@ -447,6 +447,7 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         jLabel6 = new javax.swing.JLabel();
         txtNumero = new javax.swing.JTextField();
         txtSerie = new javax.swing.JTextField();
+        jPanel7 = new javax.swing.JPanel();
         chkCambiarNumero = new javax.swing.JCheckBox();
         panelTable = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -747,45 +748,54 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
 
         panelMenu.add(jPanel5);
 
+        jPanel10.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos técnicos", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 11), new java.awt.Color(255, 255, 255))); // NOI18N
+        jPanel10.setMinimumSize(new java.awt.Dimension(250, 250));
         jPanel10.setOpaque(false);
+        jPanel10.setPreferredSize(new java.awt.Dimension(230, 250));
         jPanel10.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/bar_code_22177 (2).png"))); // NOI18N
-        jPanel10.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 20, 230, 140));
+        jPanel10.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 230, 140));
 
         jLabel5.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("Serie");
-        jPanel10.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 170, 60, 20));
+        jPanel10.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 160, 60, 20));
 
         jLabel6.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6.setText("Nº de venta");
-        jPanel10.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 170, 110, 20));
+        jPanel10.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 160, 110, 20));
 
         txtNumero.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtNumero.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jPanel10.add(txtNumero, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 190, 110, -1));
+        jPanel10.add(txtNumero, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 180, 110, -1));
 
         txtSerie.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtSerie.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtSerie.setText("001");
-        jPanel10.add(txtSerie, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 190, 59, -1));
+        jPanel10.add(txtSerie, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 180, 59, -1));
+
+        jPanel7.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 255), 1, true));
+        jPanel7.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel7.setLayout(new java.awt.GridLayout());
 
         chkCambiarNumero.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        chkCambiarNumero.setForeground(new java.awt.Color(255, 255, 255));
-        chkCambiarNumero.setText("Cambiar Número");
+        chkCambiarNumero.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        chkCambiarNumero.setContentAreaFilled(false);
         chkCambiarNumero.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        chkCambiarNumero.setOpaque(false);
+        chkCambiarNumero.setLabel("Cambiar número");
         chkCambiarNumero.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 chkCambiarNumeroStateChanged(evt);
             }
         });
-        jPanel10.add(chkCambiarNumero, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 220, 210, -1));
+        jPanel7.add(chkCambiarNumero);
+
+        jPanel10.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 210, 180, 30));
 
         panelMenu.add(jPanel10);
 
@@ -1497,6 +1507,7 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanelMenu;
     private javax.swing.JScrollPane jScrollPane3;
     public static javax.swing.JLabel lblIdCliente;

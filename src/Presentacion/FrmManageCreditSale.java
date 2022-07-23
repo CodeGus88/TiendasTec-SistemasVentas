@@ -207,7 +207,8 @@ public class FrmManageCreditSale extends javax.swing.JInternalFrame {
         setMaximizable(true);
         setResizable(true);
         setTitle("Crédito");
-        setPreferredSize(new java.awt.Dimension(650, 478));
+        setMinimumSize(new java.awt.Dimension(125, 150));
+        setPreferredSize(new java.awt.Dimension(720, 478));
         setVisible(true);
         getContentPane().setLayout(new java.awt.GridLayout(1, 0));
 
@@ -230,6 +231,7 @@ public class FrmManageCreditSale extends javax.swing.JInternalFrame {
         jPanelHead.setMinimumSize(new java.awt.Dimension(50, 155));
         jPanelHead.setOpaque(false);
         jPanelHead.setPreferredSize(new java.awt.Dimension(989, 150));
+        jPanelHead.setLayout(null);
 
         jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -237,6 +239,8 @@ public class FrmManageCreditSale extends javax.swing.JInternalFrame {
         jLabel1.setText("ID:");
         jLabel1.setMaximumSize(new java.awt.Dimension(1000000, 1000000));
         jLabel1.setMinimumSize(new java.awt.Dimension(0, 0));
+        jPanelHead.add(jLabel1);
+        jLabel1.setBounds(17, 17, 204, 17);
 
         jLabel4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
@@ -244,11 +248,15 @@ public class FrmManageCreditSale extends javax.swing.JInternalFrame {
         jLabel4.setText("NOMBRE O RAZÓN SOCIAL:");
         jLabel4.setMaximumSize(new java.awt.Dimension(1000000, 1000000));
         jLabel4.setMinimumSize(new java.awt.Dimension(0, 0));
+        jPanelHead.add(jLabel4);
+        jLabel4.setBounds(17, 40, 204, 17);
 
         jLabel5.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel5.setText("DNI / NIT:");
+        jPanelHead.add(jLabel5);
+        jLabel5.setBounds(326, 17, 83, 17);
 
         jLabel6.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
@@ -256,11 +264,15 @@ public class FrmManageCreditSale extends javax.swing.JInternalFrame {
         jLabel6.setText("TEFÉFONO:");
         jLabel6.setMaximumSize(new java.awt.Dimension(1000000, 1000000));
         jLabel6.setMinimumSize(new java.awt.Dimension(0, 0));
+        jPanelHead.add(jLabel6);
+        jLabel6.setBounds(17, 63, 204, 17);
 
         jLabel7.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel7.setText("DIRECCIÓN:");
+        jPanelHead.add(jLabel7);
+        jLabel7.setBounds(316, 63, 95, 17);
 
         jLabel8.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
@@ -268,6 +280,8 @@ public class FrmManageCreditSale extends javax.swing.JInternalFrame {
         jLabel8.setText("OBSERVACIONES:");
         jLabel8.setMaximumSize(new java.awt.Dimension(1000000, 1000000));
         jLabel8.setMinimumSize(new java.awt.Dimension(0, 0));
+        jPanelHead.add(jLabel8);
+        jLabel8.setBounds(17, 86, 204, 17);
 
         jScrollPane2.setMinimumSize(new java.awt.Dimension(0, 0));
 
@@ -278,95 +292,48 @@ public class FrmManageCreditSale extends javax.swing.JInternalFrame {
         jTextAreaObservation.setMinimumSize(new java.awt.Dimension(0, 0));
         jScrollPane2.setViewportView(jTextAreaObservation);
 
+        jPanelHead.add(jScrollPane2);
+        jScrollPane2.setBounds(233, 86, 384, 57);
+
         jLabelClientId.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabelClientId.setForeground(new java.awt.Color(255, 255, 255));
         jLabelClientId.setText("0");
         jLabelClientId.setMaximumSize(new java.awt.Dimension(1000000, 1000000));
         jLabelClientId.setMinimumSize(new java.awt.Dimension(0, 0));
+        jPanelHead.add(jLabelClientId);
+        jLabelClientId.setBounds(233, 17, 87, 17);
 
         jLabelName.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabelName.setForeground(new java.awt.Color(255, 255, 255));
         jLabelName.setText("name");
         jLabelName.setMaximumSize(new java.awt.Dimension(1000000, 1000000));
         jLabelName.setMinimumSize(new java.awt.Dimension(0, 0));
+        jPanelHead.add(jLabelName);
+        jLabelName.setBounds(233, 40, 370, 17);
 
         jLabelNit.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabelNit.setForeground(new java.awt.Color(255, 255, 255));
         jLabelNit.setText("CI-NIT");
         jLabelNit.setMinimumSize(new java.awt.Dimension(39, 0));
+        jPanelHead.add(jLabelNit);
+        jLabelNit.setBounds(413, 17, 210, 17);
 
         jLabelPhone.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabelPhone.setForeground(new java.awt.Color(255, 255, 255));
-        jLabelPhone.setText("0000000");
-        jLabelPhone.setMaximumSize(new java.awt.Dimension(1000000, 1000000));
+        jLabelPhone.setText("79382914");
+        jLabelPhone.setMaximumSize(new java.awt.Dimension(500, 1000000));
         jLabelPhone.setMinimumSize(new java.awt.Dimension(0, 0));
+        jPanelHead.add(jLabelPhone);
+        jLabelPhone.setBounds(233, 63, 90, 17);
 
         jLabelAddress.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabelAddress.setForeground(new java.awt.Color(255, 255, 255));
         jLabelAddress.setText("Address");
-        jLabelAddress.setMinimumSize(new java.awt.Dimension(52, 0));
-
-        javax.swing.GroupLayout jPanelHeadLayout = new javax.swing.GroupLayout(jPanelHead);
-        jPanelHead.setLayout(jPanelHeadLayout);
-        jPanelHeadLayout.setHorizontalGroup(
-            jPanelHeadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelHeadLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanelHeadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanelHeadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabelName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelHeadLayout.createSequentialGroup()
-                        .addGroup(jPanelHeadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanelHeadLayout.createSequentialGroup()
-                                .addComponent(jLabelPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(jPanelHeadLayout.createSequentialGroup()
-                                .addComponent(jLabelClientId, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanelHeadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jLabelNit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabelAddress, javax.swing.GroupLayout.DEFAULT_SIZE, 158, Short.MAX_VALUE))))
-                .addContainerGap())
-        );
-        jPanelHeadLayout.setVerticalGroup(
-            jPanelHeadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelHeadLayout.createSequentialGroup()
-                .addGroup(jPanelHeadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelHeadLayout.createSequentialGroup()
-                        .addGroup(jPanelHeadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabelClientId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanelHeadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabelName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanelHeadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabelPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanelHeadLayout.createSequentialGroup()
-                        .addGroup(jPanelHeadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabelNit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(29, 29, 29)
-                        .addGroup(jPanelHeadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabelAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel7))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanelHeadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(7, Short.MAX_VALUE))
-        );
+        jLabelAddress.setMaximumSize(new java.awt.Dimension(20000, 17));
+        jLabelAddress.setMinimumSize(new java.awt.Dimension(20000, 17));
+        jLabelAddress.setPreferredSize(new java.awt.Dimension(20000, 17));
+        jPanelHead.add(jLabelAddress);
+        jLabelAddress.setBounds(417, 63, 700, 17);
 
         jPanelBackground.add(jPanelHead, java.awt.BorderLayout.PAGE_START);
 
@@ -395,7 +362,7 @@ public class FrmManageCreditSale extends javax.swing.JInternalFrame {
         jPanel2.setLayout(new java.awt.BorderLayout());
 
         btnPay.setForeground(new java.awt.Color(255, 255, 255));
-        btnPay.setText("PAGAR");
+        btnPay.setText("PAGAR AHORA");
         btnPay.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         btnPay.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnPay.setSelected(true);

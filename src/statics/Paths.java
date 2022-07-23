@@ -21,4 +21,5 @@ public class Paths {
     public static final String MAIN_RECTANGLE_NAME = "main.app";
     public static final String QUOTATION_RECTANGLE_NAME = "quotation.app";
     public static final String RECEIVABLE_CREDITS = "receivablecredits.app";
+    public static final String CASH_REGISTER = "cashregister.app";
 }

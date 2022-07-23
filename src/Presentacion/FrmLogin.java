@@ -35,11 +35,11 @@ public class FrmLogin extends javax.swing.JFrame {
     static int intContador;
     int intentos=0;
     public String codigo;
-    String usu,pass;
-    static Connection conn=null;
+//    String usu,pass;
+//    static Connection conn=null;
     static ResultSet rs=null;
-    static ResultSet rs1=null;
-    DefaultTableModel dtm=new DefaultTableModel();
+//    static ResultSet rs1=null;
+//    DefaultTableModel dtm=new DefaultTableModel();
         
     public FrmLogin() {
         initComponents();
@@ -48,7 +48,7 @@ public class FrmLogin extends javax.swing.JFrame {
         lblIntentos.setVisible(false);
         setVisible(true);
         setExtendedState(this.MAXIMIZED_BOTH);
-        getContentPane().setBackground(Design.COLOR_PRIMARY_DARK);
+        getContentPane().setBackground(Design.COLOR_PRIMARY_DARK_OPAQUE);
         design();
     }
     
@@ -636,24 +636,6 @@ public class FrmLogin extends javax.swing.JFrame {
 //        }
 //        //</editor-fold>
 //
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//         Presentacion.FrmLogin f = new Presentacion.FrmLogin();
-//         try {
-//            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-//
-//            SwingUtilities.updateComponentTreeUI(f);
-//            f.setVisible(true);
-//            //new FrmLogin().setVisible(true);
-//        } catch (UnsupportedLookAndFeelException ex) {}
-//          catch (ClassNotFoundException ex) {}
-//          catch (InstantiationException ex) {}
-//          catch (IllegalAccessException ex) {}
-//            }
-//        });
-//        
-//    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnD0;

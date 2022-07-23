@@ -67,9 +67,9 @@ public class FrmPrincipal extends javax.swing.JFrame implements FrameState {
     }
     
     private void design(){
-        this.setBackground(Design.COLOR_PRIMARY_DARK); // no funciona con themas
+//        this.setBackground(Design.COLOR_PRIMARY_DARK); // no funciona con themas
         TBPrincipal.setBackground(Design.COLOR_PRIMARY);
-        Escritorio.setBackground(Design.COLOR_SECONDARY);
+//        Escritorio.setBackground(Design.COLOR_SECONDARY);
     }
 
     void BuscarPermisos() {
@@ -115,7 +115,6 @@ public class FrmPrincipal extends javax.swing.JFrame implements FrameState {
             }
             if (sen == 1) {
                 JOptionPane.showMessageDialog(this, "¡Código de Asistente no Registrado!");
-
             } else {
 
             }
@@ -342,8 +341,6 @@ public class FrmPrincipal extends javax.swing.JFrame implements FrameState {
             }
         });
         TBPrincipal.add(mbtnEstado);
-
-        Escritorio.setBackground(new java.awt.Color(204, 255, 153));
 
         jMenuBar1.setBackground(new java.awt.Color(204, 255, 0));
         jMenuBar1.setOpaque(false);
@@ -965,9 +962,9 @@ public class FrmPrincipal extends javax.swing.JFrame implements FrameState {
     }//GEN-LAST:event_mbtnEstadoActionPerformed
 
     private void mbtnCajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mbtnCajaActionPerformed
-        Presentacion.FrmCaja Caja = new Presentacion.FrmCaja();
-        Escritorio.add(Caja);
-        Caja.show();
+        Presentacion.FrmCashRegister cash = new Presentacion.FrmCashRegister();
+        Escritorio.add(cash);
+        cash.show();
     }//GEN-LAST:event_mbtnCajaActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed

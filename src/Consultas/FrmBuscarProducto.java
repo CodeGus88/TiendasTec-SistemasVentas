@@ -119,13 +119,13 @@ public class FrmBuscarProducto extends javax.swing.JInternalFrame implements Fra
    }
     void CrearTablaProducto(){
         //Agregar Render
+        Hashtable<Integer, Integer> hash = new Hashtable<>();
+        hash.put(0, SwingConstants.CENTER);
+        hash.put(1, SwingConstants.CENTER);
+        hash.put(4, SwingConstants.CENTER);
+        hash.put(5, SwingConstants.CENTER);
+        hash.put(6, SwingConstants.CENTER);
         for (int i=0;i<tblProducto.getColumnCount();i++){
-            Hashtable<Integer, Integer> hash = new Hashtable<>();
-            hash.put(0, SwingConstants.CENTER);
-            hash.put(1, SwingConstants.CENTER);
-            hash.put(4, SwingConstants.CENTER);
-            hash.put(5, SwingConstants.CENTER);
-            hash.put(6, SwingConstants.CENTER);
             TableCellRenderer render = TableConfigurator.configureTableItem(hash);
             tblProducto.getColumnModel().getColumn(i).setCellRenderer(render);
         }
