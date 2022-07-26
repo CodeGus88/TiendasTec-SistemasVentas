@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 22, 2022 at 03:32 PM
+-- Generation Time: Jul 26, 2022 at 08:24 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.5
 
@@ -56,12 +56,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `000_SP_S_CreditoMensual` (IN `pcrit
 
 	END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `000_SP_S_CreditoPagable` ()  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `000_SP_S_CreditoPagable` (IN `pporcobrar` BOOLEAN)  BEGIN
 SELECT vc.IdCredito, c.Nombre AS nombreCliente, c.Dni AS dnicliente, c.Ruc AS ruccliente, CONCAT(e.Nombre," ",e.Apellido) AS nombreEmpleado, vc.Igv, vc.SubTotal, 
 		vc.TotalCredito, vc.Descuento, vc.TotalPagar, vc.Fecha
 FROM cliente c, credito vc, empleado e
 WHERE c.IdCliente = vc.IdCliente AND vc.IdEmpleado =  e.IdEmpleado AND
-	vc.PorCobrar = TRUE
+	vc.PorCobrar = pporcobrar
 ORDER BY vc.IdCredito;
 END$$
 
@@ -100,7 +100,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `000_SP_S_CreditoPorFecha` (IN `pcri
 			INNER JOIN detallecredito AS dv ON v.IdCredito=dv.IdCredito
 			INNER JOIN producto AS p ON dv.IdProducto=p.IdProducto
 			INNER JOIN categoria AS c ON p.IdCategoria=c.IdCategoria
-			WHERE v.Fecha=pfechaini AND v.Estado="EMITIDO" GROUP BY p.IdProducto
+			WHERE v.Fecha=pfechaini AND v.Estado="EMITIDO" AND v.PorCobrar=false GROUP BY p.IdProducto
 			ORDER BY v.IdCredito DESC;
 		END IF;
 
@@ -197,6 +197,28 @@ END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `003_SP_S_EmpleadoPorId` (IN `pidempleado` INT)  BEGIN
 	SELECT * FROM empleado e WHERE e.IdEmpleado = pidempleado;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `099_SP_S_CreditoVentaCajaPorFecha` (IN `pnombretabla` CHAR(50), IN `pfecha` DATE)  BEGIN
+	IF pnombretabla = "venta" THEN
+	 SELECT SUM(dv.Cantidad) AS Cantidad, p.Nombre AS producto, dv.Precio,
+			SUM(dv.Total) AS Total, SUM(TRUNCATE((Total-(dv.Costo*dv.Cantidad)),2)) AS Ganancia,v.Fecha FechaCobro
+			FROM venta AS v
+			INNER JOIN detalleVenta AS dv ON v.IdVenta=dv.IdVenta
+			INNER JOIN producto AS p ON dv.IdProducto=p.IdProducto
+			INNER JOIN categoria AS c ON p.IdCategoria=c.IdCategoria
+			WHERE v.Fecha=pfecha AND v.Estado="EMITIDO" GROUP BY p.IdProducto
+			ORDER BY Cantidad DESC;
+	ELSEIF pnombretabla = "credito" THEN
+		SELECT SUM(dv.Cantidad) AS Cantidad, p.Nombre AS producto, dv.Precio,
+			SUM(dv.Total) AS Total, SUM(TRUNCATE((Total-(dv.Costo*dv.Cantidad)),2)) AS Ganancia,v.FechaCobro 
+			FROM credito AS v
+			INNER JOIN detallecredito AS dv ON v.IdCredito=dv.IdCredito
+			INNER JOIN producto AS p ON dv.IdProducto=p.IdProducto
+			INNER JOIN categoria AS c ON p.IdCategoria=c.IdCategoria
+			WHERE v.FechaCobro=pfecha AND v.Estado="EMITIDO" AND v.PorCobrar=false GROUP BY p.IdProducto
+			ORDER BY Cantidad Desc;
+	END IF;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_I_Categoria` (IN `pdescripcion` VARCHAR(100) CHARSET utf8)  BEGIN		
@@ -965,22 +987,10 @@ CREATE TABLE `credito` (
 --
 
 INSERT INTO `credito` (`IdCredito`, `IdTipoDocumento`, `IdCliente`, `IdEmpleado`, `Serie`, `Numero`, `TotalCredito`, `Descuento`, `SubTotal`, `Igv`, `TotalPagar`, `Estado`, `PorCobrar`, `Fecha`, `FechaCobro`) VALUES
-(7, 1, 1, 1, '001', 'C00007', '10.00', '0.00', '8.47', '1.52', '10.00', 'EMITIDO', 0, '2022-06-22', '2022-07-21'),
-(8, 1, 1, 1, '001', 'C00008', '20.00', '0.00', '16.95', '3.05', '20.00', 'EMITIDO', 0, '2022-06-22', '2022-07-21'),
-(9, 1, 2, 1, '001', 'C00009', '20.00', '0.00', '16.95', '3.05', '20.00', 'EMITIDO', 0, '2022-06-22', '2022-07-21'),
-(10, 1, 2, 1, '001', 'C00010', '10.00', '0.00', '8.47', '1.52', '10.00', 'ANULADO', 1, '2022-06-23', NULL),
-(11, 1, 3, 1, '001', 'C00011', '10.00', '0.00', '8.47', '1.52', '10.00', 'EMITIDO', 1, '2022-06-23', NULL),
-(12, 1, 1, 1, '001', 'C00012', '50.00', '0.00', '42.37', '7.63', '50.00', 'EMITIDO', 0, '2022-06-23', '2022-07-21'),
-(13, 1, 1, 1, '001', 'C00013', '30.00', '0.00', '25.42', '4.58', '30.00', 'ANULADO', 1, '2022-06-23', NULL),
-(14, 1, 2, 1, '001', 'C00014', '20.00', '0.00', '16.95', '3.05', '20.00', 'ANULADO', 1, '2022-06-23', NULL),
-(15, 1, 29, 1, '001', 'C00015', '70.00', '0.00', '59.32', '10.68', '70.00', 'EMITIDO', 1, '2022-06-23', NULL),
-(16, 1, 31, 1, '001', 'C00016', '70.00', '0.00', '59.32', '10.68', '70.00', 'EMITIDO', 1, '2022-06-23', NULL),
-(17, 1, 1, 1, '001', 'C00017', '20.00', '0.00', '16.95', '3.05', '20.00', 'EMITIDO', 1, '2022-06-25', NULL),
-(18, 2, 2, 1, '001', 'C00018', '40.00', '0.00', '33.90', '6.10', '40.00', 'EMITIDO', 0, '2022-06-25', NULL),
-(19, 2, 3, 1, '001', 'C00019', '20.00', '0.00', '16.95', '3.05', '20.00', 'EMITIDO', 1, '2022-06-25', NULL),
-(20, 1, 34, 1, '001', 'C00020', '10.00', '0.00', '8.47', '1.52', '10.00', 'EMITIDO', 0, '2022-06-25', '2022-07-21'),
-(21, 2, 3, 1, '001', 'C00021', '10.00', '0.00', '8.47', '1.52', '10.00', 'EMITIDO', 0, '2022-06-25', '2022-07-21'),
-(22, 3, 28, 1, '001', 'C00022', '29.00', '0.00', '24.58', '4.42', '29.00', 'EMITIDO', 0, '2022-06-25', '2022-01-21');
+(25, 1, 11, 1, '001', 'C00001', '140.00', '0.00', '118.64', '21.36', '140.00', 'EMITIDO', 0, '2022-07-22', '2022-07-22'),
+(26, 1, 33, 1, '001', 'C00026', '190.00', '0.00', '161.02', '28.98', '190.00', 'EMITIDO', 0, '2022-07-22', '2022-07-22'),
+(27, 1, 2, 1, '001', 'C00027', '80.00', '0.00', '67.80', '12.20', '80.00', 'EMITIDO', 0, '2022-07-23', '2022-07-23'),
+(28, 1, 28, 1, '001', 'C00028', '127.00', '0.00', '107.63', '19.37', '127.00', 'EMITIDO', 1, '2022-07-23', NULL);
 
 -- --------------------------------------------------------
 
@@ -1025,23 +1035,15 @@ CREATE TABLE `detallecredito` (
 --
 
 INSERT INTO `detallecredito` (`id`, `IdCredito`, `IdProducto`, `Cantidad`, `Costo`, `Precio`, `Total`) VALUES
-(1, 7, 1, '1.00', '6.00', '10.00', '10.00'),
-(2, 8, 1, '2.00', '6.00', '10.00', '20.00'),
-(3, 9, 1, '2.00', '6.00', '10.00', '20.00'),
-(4, 10, 3, '1.00', '6.00', '10.00', '10.00'),
-(5, 11, 2, '1.00', '6.00', '10.00', '10.00'),
-(6, 12, 2, '5.00', '6.00', '10.00', '50.00'),
-(7, 13, 3, '3.00', '6.00', '10.00', '30.00'),
-(8, 14, 3, '2.00', '6.00', '10.00', '20.00'),
-(9, 15, 3, '7.00', '6.00', '10.00', '70.00'),
-(10, 16, 2, '3.00', '6.00', '10.00', '30.00'),
-(11, 16, 1, '4.00', '6.00', '10.00', '40.00'),
-(12, 17, 1, '2.00', '6.00', '10.00', '20.00'),
-(13, 18, 3, '4.00', '6.00', '10.00', '40.00'),
-(14, 19, 2, '2.00', '6.00', '10.00', '20.00'),
-(15, 20, 3, '1.00', '6.00', '10.00', '10.00'),
-(16, 21, 3, '1.00', '6.00', '10.00', '10.00'),
-(17, 22, 5, '1.00', '5.00', '9.00', '9.00');
+(22, 25, 5, '10.00', '5.00', '9.00', '90.00'),
+(23, 25, 26, '5.00', '6.00', '10.00', '50.00'),
+(24, 26, 23, '5.00', '6.00', '10.00', '50.00'),
+(25, 26, 26, '7.00', '6.00', '10.00', '70.00'),
+(26, 26, 2, '7.00', '6.00', '10.00', '70.00'),
+(27, 27, 1, '5.00', '6.00', '10.00', '50.00'),
+(28, 27, 23, '3.00', '6.00', '10.00', '30.00'),
+(29, 28, 5, '7.00', '5.00', '9.00', '63.00'),
+(30, 28, 4, '8.00', '5.00', '8.00', '64.00');
 
 -- --------------------------------------------------------
 
@@ -1092,7 +1094,10 @@ INSERT INTO `detalleventa` (`id`, `IdVenta`, `IdProducto`, `Cantidad`, `Costo`, 
 (27, 26, 1, '7.00', '6.00', '10.00', '70.00'),
 (28, 27, 4, '4.00', '5.00', '8.00', '32.00'),
 (29, 27, 3, '7.00', '6.00', '10.00', '70.00'),
-(30, 27, 1, '7.00', '6.00', '10.00', '70.00');
+(30, 27, 1, '7.00', '6.00', '10.00', '70.00'),
+(31, 28, 2, '8.00', '6.00', '10.00', '80.00'),
+(32, 28, 5, '5.00', '5.00', '9.00', '45.00'),
+(33, 28, 1, '4.00', '6.00', '10.00', '40.00');
 
 -- --------------------------------------------------------
 
@@ -1155,14 +1160,14 @@ CREATE TABLE `producto` (
 --
 
 INSERT INTO `producto` (`IdProducto`, `Codigo`, `Nombre`, `Descripcion`, `Stock`, `StockMin`, `PrecioCosto`, `PrecioVenta`, `Utilidad`, `Estado`, `IdCategoria`, `Imagen`, `FechaVencimiento`) VALUES
-(1, '0001', 'Coca - cola 2 litros no retornable', 'Cocacola 2 litros no retornable', '4958.00', '10.00', '6.00', '10.00', '4.00', 'ACTIVO', 5, 'imagen.png', NULL),
-(2, '0002', 'Sprite 2 litros no retornable', 'sprite 2 litros no retornable', '4972.00', '10.00', '6.00', '10.00', '4.00', 'ACTIVO', 5, 'sprite_1.jpg', NULL),
+(1, '0001', 'Coca - cola 2 litros no retornable', 'Cocacola 2 litros no retornable', '4949.00', '10.00', '6.00', '10.00', '4.00', 'ACTIVO', 5, 'imagen.png', NULL),
+(2, '0002', 'Sprite 2 litros no retornable', 'sprite 2 litros no retornable', '4957.00', '10.00', '6.00', '10.00', '4.00', 'ACTIVO', 5, 'sprite_1.jpg', NULL),
 (3, '0003', 'fanta 2 litros no retornable', 'fanta 2 litros no retornable, económico', '4911.00', '10.00', '6.00', '10.00', '4.00', 'ACTIVO', 5, 'imagen.png', NULL),
-(4, '0004', 'lechuga hidroponica', 'lechuga hidroponica', '4986.00', '10.00', '5.00', '8.00', '3.00', 'ACTIVO', 9, 'imagen.png', NULL),
-(5, '0005', 'cerveza en lata pace?a peque?a', 'cerveza pace?a en lata peque?a', '4998.00', '10.00', '5.00', '9.00', '4.00', 'ACTIVO', 6, 'imagen.png', '2025-06-01'),
-(23, '315417', 'fanta 2 litros no retornable', 'fanta 2 litros no retornable, económico', '4911.00', '10.00', '6.00', '10.00', '4.00', 'ACTIVO', 5, 'imagen.png', NULL),
+(4, '0004', 'lechuga hidroponica', 'lechuga hidroponica', '4978.00', '10.00', '5.00', '8.00', '3.00', 'ACTIVO', 9, 'imagen.png', NULL),
+(5, '0005', 'cerveza en lata pace?a peque?a', 'cerveza pace?a en lata peque?a', '4976.00', '10.00', '5.00', '9.00', '4.00', 'ACTIVO', 6, 'imagen.png', '2025-06-01'),
+(23, '315417', 'fanta 2 litros no retornable', 'fanta 2 litros no retornable, económico', '4903.00', '10.00', '6.00', '10.00', '4.00', 'ACTIVO', 5, 'imagen.png', NULL),
 (25, '441016', 'Coca - cola 2 litros no retornable', 'Cocacola 2 litros no retornable', '4958.00', '10.00', '6.00', '10.00', '4.00', 'INACTIVO', 5, 'imagen.png', NULL),
-(26, '445540', 'Coca - cola 2 litros no retornable', 'Cocacola 2 litros no retornable', '4958.00', '10.00', '6.00', '10.00', '4.00', 'ACTIVO', 5, 'imagen.png', NULL),
+(26, '445540', 'Coca - cola 2 litros no retornable', 'Cocacola 2 litros no retornable', '4946.00', '10.00', '6.00', '10.00', '4.00', 'ACTIVO', 5, 'imagen.png', NULL),
 (27, '323499', 'Coca - cola 2 litros no retornable', 'Cocacola 2 litros no retornable', '4958.00', '10.00', '6.00', '10.00', '4.00', 'INACTIVO', 5, 'imagen.png', '2023-06-11');
 
 -- --------------------------------------------------------
@@ -1307,7 +1312,8 @@ INSERT INTO `venta` (`IdVenta`, `IdTipoDocumento`, `IdCliente`, `IdEmpleado`, `S
 (24, 1, 1, 1, '001', 'C00024', '2022-06-26', '20.00', '0.00', '16.95', '3.05', '20.00', 'EMITIDO'),
 (25, 1, 2, 1, '001', 'C00025', '2022-06-27', '70.00', '0.00', '59.32', '10.68', '70.00', 'EMITIDO'),
 (26, 1, 35, 1, '001', 'C00026', '2022-06-28', '70.00', '0.00', '59.32', '10.68', '70.00', 'EMITIDO'),
-(27, 1, 32, 1, '001', 'C00027', '2022-06-29', '172.00', '0.00', '145.76', '26.24', '172.00', 'EMITIDO');
+(27, 1, 32, 1, '001', 'C00027', '2022-06-29', '172.00', '0.00', '145.76', '26.24', '172.00', 'EMITIDO'),
+(28, 1, 13, 1, '001', 'C00028', '2022-07-22', '165.00', '0.00', '139.83', '25.17', '165.00', 'EMITIDO');
 
 --
 -- Indexes for dumped tables
@@ -1433,19 +1439,19 @@ ALTER TABLE `compra`
 -- AUTO_INCREMENT for table `credito`
 --
 ALTER TABLE `credito`
-  MODIFY `IdCredito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `IdCredito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `detallecredito`
 --
 ALTER TABLE `detallecredito`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `detalleventa`
 --
 ALTER TABLE `detalleventa`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `empleado`
@@ -1481,7 +1487,7 @@ ALTER TABLE `tipousuario`
 -- AUTO_INCREMENT for table `venta`
 --
 ALTER TABLE `venta`
-  MODIFY `IdVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `IdVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- Constraints for dumped tables
@@ -1514,15 +1520,15 @@ ALTER TABLE `detallecompra`
 -- Constraints for table `detallecredito`
 --
 ALTER TABLE `detallecredito`
-  ADD CONSTRAINT `detallecredito_ibfk_1` FOREIGN KEY (`IdCredito`) REFERENCES `credito` (`IdCredito`),
-  ADD CONSTRAINT `detallecredito_ibfk_2` FOREIGN KEY (`IdProducto`) REFERENCES `producto` (`IdProducto`);
+  ADD CONSTRAINT `detallecredito_ibfk_1` FOREIGN KEY (`IdCredito`) REFERENCES `credito` (`IdCredito`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `detallecredito_ibfk_2` FOREIGN KEY (`IdProducto`) REFERENCES `producto` (`IdProducto`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `detalleventa`
 --
 ALTER TABLE `detalleventa`
-  ADD CONSTRAINT `fk_DetalleVenta_Producto1` FOREIGN KEY (`IdProducto`) REFERENCES `producto` (`IdProducto`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_DetalleVenta_Venta1` FOREIGN KEY (`IdVenta`) REFERENCES `venta` (`IdVenta`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_DetalleVenta_Producto1` FOREIGN KEY (`IdProducto`) REFERENCES `producto` (`IdProducto`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_DetalleVenta_Venta1` FOREIGN KEY (`IdVenta`) REFERENCES `venta` (`IdVenta`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `empleado`
