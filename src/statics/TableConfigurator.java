@@ -123,7 +123,6 @@ public class TableConfigurator {
         tableHeader.setDefaultRenderer(new TableHeaderConfigurator());
     }
     
-    
 }
 
 class TableHeaderConfigurator implements TableCellRenderer {
@@ -138,14 +137,14 @@ class TableHeaderConfigurator implements TableCellRenderer {
             ((JLabel) jcomponent).setHorizontalAlignment(SwingConstants.CENTER);
             ((JLabel) jcomponent).setSize(30, jcomponent.getWidth());
             ((JLabel) jcomponent).setPreferredSize(new Dimension(6, jcomponent.getWidth()));
-            ((JLabel) jcomponent).setFont(new Font("Arial", Font.BOLD, 14));
+            ((JLabel) jcomponent).setFont(new Font("Arial", Font.PLAIN, 14));
         }
 
-        jcomponent.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 1, new java.awt.Color(255, 255, 255)));
+        jcomponent.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 1, new java.awt.Color(100, 100, 100)));
         jcomponent.setOpaque(true);
-        jcomponent.setBackground(Design.COLOR_TABLE_HEADER);
+//        jcomponent.setBackground(Design.COLOR_TABLE_HEADER);
         jcomponent.setToolTipText("Tabla Seguimiento");
-        jcomponent.setForeground(Color.white);
+//        jcomponent.setForeground(Color.white);
 
         return jcomponent;
     }

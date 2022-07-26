@@ -200,6 +200,7 @@ public class FrmBuscarProducto extends javax.swing.JInternalFrame implements Fra
         jPanel2 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
         rbtnCodigo = new javax.swing.JRadioButton();
         rbtnNombre = new javax.swing.JRadioButton();
         rbtnDescripcion = new javax.swing.JRadioButton();
@@ -231,7 +232,9 @@ public class FrmBuscarProducto extends javax.swing.JInternalFrame implements Fra
 
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Criterio de búsqueda", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 11), new java.awt.Color(255, 255, 255))); // NOI18N
         jPanel5.setOpaque(false);
-        jPanel5.setLayout(null);
+        jPanel5.setLayout(new java.awt.GridLayout(2, 1, 5, 5));
+
+        jPanel6.setOpaque(false);
 
         rbtnCodigo.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         rbtnCodigo.setForeground(new java.awt.Color(255, 255, 255));
@@ -242,8 +245,7 @@ public class FrmBuscarProducto extends javax.swing.JInternalFrame implements Fra
                 rbtnCodigoStateChanged(evt);
             }
         });
-        jPanel5.add(rbtnCodigo);
-        rbtnCodigo.setBounds(20, 20, 150, 25);
+        jPanel6.add(rbtnCodigo);
 
         rbtnNombre.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         rbtnNombre.setForeground(new java.awt.Color(255, 255, 255));
@@ -255,15 +257,15 @@ public class FrmBuscarProducto extends javax.swing.JInternalFrame implements Fra
                 rbtnNombreStateChanged(evt);
             }
         });
-        jPanel5.add(rbtnNombre);
-        rbtnNombre.setBounds(170, 20, 120, 25);
+        jPanel6.add(rbtnNombre);
 
         rbtnDescripcion.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         rbtnDescripcion.setForeground(new java.awt.Color(255, 255, 255));
         rbtnDescripcion.setText("Descripción");
         rbtnDescripcion.setOpaque(false);
-        jPanel5.add(rbtnDescripcion);
-        rbtnDescripcion.setBounds(290, 20, 170, 25);
+        jPanel6.add(rbtnDescripcion);
+
+        jPanel5.add(jPanel6);
 
         txtBusqueda.setMinimumSize(new java.awt.Dimension(5, 30));
         txtBusqueda.setPreferredSize(new java.awt.Dimension(5, 30));
@@ -278,7 +280,6 @@ public class FrmBuscarProducto extends javax.swing.JInternalFrame implements Fra
             }
         });
         jPanel5.add(txtBusqueda);
-        txtBusqueda.setBounds(20, 50, 450, 30);
 
         jPanel1.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 490, 90));
 
@@ -432,6 +433,7 @@ public class FrmBuscarProducto extends javax.swing.JInternalFrame implements Fra
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblEstado;
     private javax.swing.JRadioButton rbtnCodigo;

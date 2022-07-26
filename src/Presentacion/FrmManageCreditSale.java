@@ -66,7 +66,6 @@ public class FrmManageCreditSale extends javax.swing.JInternalFrame {
                     )
             );
             ClsEmpleado employee = new ClsEmpleado();
-            
             fillEmployeeData(
                     employee.findById(Integer.parseInt(credito.getStrIdEmpleado()))
             );
@@ -111,7 +110,7 @@ public class FrmManageCreditSale extends javax.swing.JInternalFrame {
         for (int i = 0; i < jTableDetails.getColumnCount(); i++) {
             jTableDetails.getColumnModel().getColumn(i).setPreferredWidth(widths[i]);
         }
-        TableConfigurator.getTableHeaderConfigurator(jTableDetails);
+//        TableConfigurator.getTableHeaderConfigurator(jTableDetails);
     }
     
     private void design(){

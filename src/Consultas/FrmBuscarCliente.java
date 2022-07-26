@@ -229,13 +229,13 @@ public final class FrmBuscarCliente extends javax.swing.JInternalFrame implement
         jPanel2.setOpaque(false);
         jPanel2.setLayout(new java.awt.GridLayout(1, 0));
 
-        jPanel1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jPanel1.setForeground(new java.awt.Color(255, 255, 255));
         jPanel1.setMinimumSize(new java.awt.Dimension(691, 50));
+        jPanel1.setOpaque(false);
         jPanel1.setPreferredSize(new java.awt.Dimension(691, 50));
-        jPanel1.setLayout(new java.awt.GridLayout(1, 4, 5, 0));
 
         rbtnCodigo.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        rbtnCodigo.setForeground(new java.awt.Color(255, 255, 255));
         rbtnCodigo.setText("ID Cliente");
         rbtnCodigo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
         rbtnCodigo.setOpaque(false);
@@ -247,6 +247,7 @@ public final class FrmBuscarCliente extends javax.swing.JInternalFrame implement
         jPanel1.add(rbtnCodigo);
 
         rbtnNombre.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        rbtnNombre.setForeground(new java.awt.Color(255, 255, 255));
         rbtnNombre.setSelected(true);
         rbtnNombre.setText("Nombre o Razón Social");
         rbtnNombre.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
@@ -259,12 +260,14 @@ public final class FrmBuscarCliente extends javax.swing.JInternalFrame implement
         jPanel1.add(rbtnNombre);
 
         rbtnRuc.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        rbtnRuc.setForeground(new java.awt.Color(255, 255, 255));
         rbtnRuc.setText("NIT");
         rbtnRuc.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
         rbtnRuc.setOpaque(false);
         jPanel1.add(rbtnRuc);
 
         rbtnDni.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        rbtnDni.setForeground(new java.awt.Color(255, 255, 255));
         rbtnDni.setText("CI");
         rbtnDni.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 2));
         rbtnDni.setOpaque(false);

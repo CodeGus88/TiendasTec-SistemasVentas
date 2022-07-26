@@ -127,14 +127,9 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
     }
     
     private void design() {
-        this.getContentPane().setBackground(Design.COLOR_PRIMARY_DARK);
-        this.getContentPane().removeAll();
-        this.getContentPane().add(center, BorderLayout.CENTER);
-        this.getContentPane().add(footer, BorderLayout.SOUTH);
-        this.getContentPane().add(menuButton, BorderLayout.EAST);
-        footer.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        menuButton.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        
+        jPanelBackground.setBackground(Design.COLOR_PRIMARY_DARK);
+        jPanelBackground.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+
         btnGuardar.setBackground(Design.COLOR_ACCENT);
         btnGuardar.setBackground(Design.COLOR_ACCENT);
         btnAgregarProducto.setBackground(Design.COLOR_ACCENT);
@@ -168,7 +163,6 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
     }
 
     public String generaNumVenta() {
-
         ClsVenta oVenta = new ClsVenta();
         try {
 
@@ -346,8 +340,9 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        center = new javax.swing.JPanel();
-        jPanel5 = new javax.swing.JPanel();
+        jPanelBackground = new javax.swing.JPanel();
+        JPanelCenter = new javax.swing.JPanel();
+        jPanelHead = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel22 = new javax.swing.JLabel();
@@ -381,7 +376,7 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
         tablePanel = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tblDetalleProducto = new javax.swing.JTable();
-        footer = new javax.swing.JPanel();
+        JPanelFooter = new javax.swing.JPanel();
         labelImporte = new javax.swing.JLabel();
         txtImporte = new javax.swing.JTextField();
         labelTotalVenta = new javax.swing.JLabel();
@@ -398,7 +393,7 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
         txtIGV = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
         btnGuardar = new javax.swing.JButton();
-        menuButton = new javax.swing.JPanel();
+        JPanelRight = new javax.swing.JPanel();
         btnNuevo = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
@@ -415,20 +410,23 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
                 formComponentShown(evt);
             }
         });
-        getContentPane().setLayout(new java.awt.BorderLayout(5, 5));
+        getContentPane().setLayout(new java.awt.GridLayout());
 
-        center.setOpaque(false);
-        center.setLayout(new java.awt.BorderLayout());
+        jPanelBackground.setLayout(new java.awt.BorderLayout(10, 10));
 
-        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        jPanel5.setMinimumSize(new java.awt.Dimension(700, 150));
-        jPanel5.setOpaque(false);
-        jPanel5.setPreferredSize(new java.awt.Dimension(100, 205));
+        JPanelCenter.setOpaque(false);
+        JPanelCenter.setLayout(new java.awt.BorderLayout(5, 5));
 
+        jPanelHead.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        jPanelHead.setMinimumSize(new java.awt.Dimension(700, 150));
+        jPanelHead.setOpaque(false);
+        jPanelHead.setPreferredSize(new java.awt.Dimension(100, 205));
+
+        jPanel7.setMinimumSize(new java.awt.Dimension(560, 190));
         jPanel7.setOpaque(false);
         jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos del Producto", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 11), new java.awt.Color(255, 255, 255))); // NOI18N
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos del producto", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 10), new java.awt.Color(255, 255, 255))); // NOI18N
         jPanel2.setForeground(new java.awt.Color(255, 255, 255));
         jPanel2.setOpaque(false);
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -465,7 +463,7 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
         jLabel17.setText("Nombre del producto: ");
         jPanel2.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 60, 170, 30));
 
-        txtNombreProducto.setEnabled(false);
+        txtNombreProducto.setEditable(false);
         jPanel2.add(txtNombreProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 60, 230, 30));
 
         jLabel19.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -493,7 +491,7 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
 
         jPanel7.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 560, 110));
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Pre transacción", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 11), new java.awt.Color(255, 255, 255))); // NOI18N
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Pre transacción", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 10), new java.awt.Color(255, 255, 255))); // NOI18N
         jPanel3.setOpaque(false);
         jPanel3.setPreferredSize(new java.awt.Dimension(540, 70));
         jPanel3.setLayout(null);
@@ -582,9 +580,12 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
 
         jPanel7.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 120, 560, -1));
 
-        jPanel5.add(jPanel7);
+        jPanelHead.add(jPanel7);
 
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Códigos", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 10), new java.awt.Color(255, 255, 255))); // NOI18N
+        jPanel4.setMinimumSize(new java.awt.Dimension(240, 190));
         jPanel4.setOpaque(false);
+        jPanel4.setPreferredSize(new java.awt.Dimension(240, 190));
         jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -622,11 +623,11 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
                 chkCambiarNumeroStateChanged(evt);
             }
         });
-        jPanel4.add(chkCambiarNumero, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 170, 180, -1));
+        jPanel4.add(chkCambiarNumero, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 160, 180, -1));
 
-        jPanel5.add(jPanel4);
+        jPanelHead.add(jPanel4);
 
-        center.add(jPanel5, java.awt.BorderLayout.PAGE_START);
+        JPanelCenter.add(jPanelHead, java.awt.BorderLayout.NORTH);
 
         tablePanel.setLayout(new java.awt.GridLayout(1, 0));
 
@@ -649,56 +650,55 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
 
         tablePanel.add(jScrollPane3);
 
-        center.add(tablePanel, java.awt.BorderLayout.CENTER);
+        JPanelCenter.add(tablePanel, java.awt.BorderLayout.CENTER);
 
-        getContentPane().add(center, java.awt.BorderLayout.CENTER);
+        jPanelBackground.add(JPanelCenter, java.awt.BorderLayout.CENTER);
 
-        footer.setBackground(new java.awt.Color(247, 254, 255));
-        footer.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        footer.setOpaque(false);
-        footer.setLayout(new java.awt.GridLayout(2, 8, 5, 5));
+        JPanelFooter.setBackground(new java.awt.Color(247, 254, 255));
+        JPanelFooter.setOpaque(false);
+        JPanelFooter.setLayout(new java.awt.GridLayout(2, 8, 5, 5));
 
         labelImporte.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         labelImporte.setForeground(new java.awt.Color(255, 255, 255));
         labelImporte.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         labelImporte.setText("Importe:");
-        footer.add(labelImporte);
+        JPanelFooter.add(labelImporte);
 
         txtImporte.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         txtImporte.setForeground(new java.awt.Color(255, 255, 255));
         txtImporte.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtImporte.setDisabledTextColor(new java.awt.Color(255, 255, 255));
         txtImporte.setEnabled(false);
-        footer.add(txtImporte);
+        JPanelFooter.add(txtImporte);
 
         labelTotalVenta.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         labelTotalVenta.setForeground(new java.awt.Color(255, 255, 255));
         labelTotalVenta.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         labelTotalVenta.setText("Valor venta:");
-        footer.add(labelTotalVenta);
+        JPanelFooter.add(labelTotalVenta);
 
         txtTotalVenta.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         txtTotalVenta.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtTotalVenta.setEnabled(false);
-        footer.add(txtTotalVenta);
+        JPanelFooter.add(txtTotalVenta);
 
         jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText("Subtotal:");
-        footer.add(jLabel1);
+        JPanelFooter.add(jLabel1);
 
         txtSubTotal.setEditable(false);
         txtSubTotal.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         txtSubTotal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        footer.add(txtSubTotal);
+        JPanelFooter.add(txtSubTotal);
 
         labelTotalAPagar.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         labelTotalAPagar.setForeground(new java.awt.Color(255, 255, 255));
         labelTotalAPagar.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         labelTotalAPagar.setText("Total:");
         labelTotalAPagar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        footer.add(labelTotalAPagar);
+        JPanelFooter.add(labelTotalAPagar);
 
         txtTotalPagar.setBackground(java.awt.Color.darkGray);
         txtTotalPagar.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
@@ -711,26 +711,26 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
                 txtTotalPagarActionPerformed(evt);
             }
         });
-        footer.add(txtTotalPagar);
+        JPanelFooter.add(txtTotalPagar);
 
         labelCambio.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         labelCambio.setForeground(new java.awt.Color(255, 255, 255));
         labelCambio.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         labelCambio.setText("Cambio:");
-        footer.add(labelCambio);
+        JPanelFooter.add(labelCambio);
 
         txtCambio.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         txtCambio.setForeground(new java.awt.Color(255, 255, 0));
         txtCambio.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtCambio.setDisabledTextColor(new java.awt.Color(255, 255, 0));
         txtCambio.setEnabled(false);
-        footer.add(txtCambio);
+        JPanelFooter.add(txtCambio);
 
         labelDescuento.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         labelDescuento.setForeground(new java.awt.Color(255, 255, 255));
         labelDescuento.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         labelDescuento.setText("Descuento:");
-        footer.add(labelDescuento);
+        JPanelFooter.add(labelDescuento);
 
         txtDescuento.setBackground(new java.awt.Color(255, 255, 204));
         txtDescuento.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -740,13 +740,13 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
                 txtDescuentoKeyReleased(evt);
             }
         });
-        footer.add(txtDescuento);
+        JPanelFooter.add(txtDescuento);
 
         jLabel2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setText("I.G.V.:");
-        footer.add(jLabel2);
+        JPanelFooter.add(jLabel2);
 
         txtIGV.setEditable(false);
         txtIGV.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -756,10 +756,10 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
                 txtIGVActionPerformed(evt);
             }
         });
-        footer.add(txtIGV);
+        JPanelFooter.add(txtIGV);
 
         jPanel1.setOpaque(false);
-        footer.add(jPanel1);
+        JPanelFooter.add(jPanel1);
 
         btnGuardar.setForeground(new java.awt.Color(255, 255, 255));
         btnGuardar.setText("GENERAR");
@@ -772,14 +772,13 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
                 btnGuardarActionPerformed(evt);
             }
         });
-        footer.add(btnGuardar);
+        JPanelFooter.add(btnGuardar);
 
-        getContentPane().add(footer, java.awt.BorderLayout.PAGE_END);
+        jPanelBackground.add(JPanelFooter, java.awt.BorderLayout.SOUTH);
 
-        menuButton.setBackground(new java.awt.Color(255, 255, 255));
-        menuButton.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        menuButton.setOpaque(false);
-        menuButton.setLayout(new java.awt.GridLayout(3, 1, 5, 5));
+        JPanelRight.setBackground(new java.awt.Color(255, 255, 255));
+        JPanelRight.setOpaque(false);
+        JPanelRight.setLayout(new java.awt.GridLayout(3, 1, 5, 5));
 
         btnNuevo.setForeground(new java.awt.Color(255, 255, 255));
         btnNuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/money_22144 (1).png"))); // NOI18N
@@ -794,7 +793,7 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
                 btnNuevoActionPerformed(evt);
             }
         });
-        menuButton.add(btnNuevo);
+        JPanelRight.add(btnNuevo);
 
         btnCancel.setForeground(new java.awt.Color(255, 255, 255));
         btnCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/anular-proceso.png"))); // NOI18N
@@ -811,7 +810,7 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
                 btnCancelActionPerformed(evt);
             }
         });
-        menuButton.add(btnCancel);
+        JPanelRight.add(btnCancel);
 
         btnSalir.setForeground(new java.awt.Color(255, 255, 255));
         btnSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/principal.png"))); // NOI18N
@@ -825,9 +824,11 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
                 btnSalirActionPerformed(evt);
             }
         });
-        menuButton.add(btnSalir);
+        JPanelRight.add(btnSalir);
 
-        getContentPane().add(menuButton, java.awt.BorderLayout.PAGE_START);
+        jPanelBackground.add(JPanelRight, java.awt.BorderLayout.EAST);
+
+        getContentPane().add(jPanelBackground);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -1203,6 +1204,9 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
         }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel JPanelCenter;
+    private javax.swing.JPanel JPanelFooter;
+    private javax.swing.JPanel JPanelRight;
     private javax.swing.JButton btnAgregarProducto;
     private javax.swing.JButton btnBuscarProducto;
     private javax.swing.JButton btnCancel;
@@ -1211,9 +1215,7 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
     private javax.swing.JButton btnLimpiarTabla;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JButton btnSalir;
-    private javax.swing.JPanel center;
     private javax.swing.JCheckBox chkCambiarNumero;
-    private javax.swing.JPanel footer;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel19;
@@ -1229,9 +1231,10 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanelBackground;
+    private javax.swing.JPanel jPanelHead;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel labelCambio;
     private javax.swing.JLabel labelDescuento;
@@ -1239,7 +1242,6 @@ public class FrmCotizacion extends javax.swing.JInternalFrame implements Product
     private javax.swing.JLabel labelTotalAPagar;
     private javax.swing.JLabel labelTotalVenta;
     public static javax.swing.JLabel lblIdProducto;
-    private javax.swing.JPanel menuButton;
     private javax.swing.JPanel tablePanel;
     private javax.swing.JTable tblDetalleProducto;
     private javax.swing.JTextField txtCambio;

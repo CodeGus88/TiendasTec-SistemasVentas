@@ -67,7 +67,6 @@ public class FrmAccountsReceivable extends javax.swing.JInternalFrame implements
         jTablePayable.setModel(defaultTableModel);
         for(int i= 0; i < jTablePayable.getColumnCount(); i++)
             jTablePayable.getColumnModel().getColumn(i).setPreferredWidth(widths[i]);
-        TableConfigurator.getTableHeaderConfigurator(jTablePayable);
     }
     
     private void loadList(ArrayList<AccountsReceivableItem> list){
@@ -208,10 +207,14 @@ public class FrmAccountsReceivable extends javax.swing.JInternalFrame implements
 
         jPanelBackground.add(jPanelHead, java.awt.BorderLayout.NORTH);
 
+        jLabelFooter.setBackground(jPanelBackground.getBackground());
         jLabelFooter.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabelFooter.setForeground(new java.awt.Color(255, 255, 255));
         jLabelFooter.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabelFooter.setText("Total registros: ");
+        jLabelFooter.setMaximumSize(new java.awt.Dimension(99, 30));
+        jLabelFooter.setMinimumSize(new java.awt.Dimension(99, 30));
+        jLabelFooter.setPreferredSize(new java.awt.Dimension(99, 30));
         jPanelBackground.add(jLabelFooter, java.awt.BorderLayout.SOUTH);
 
         jPanel2.setLayout(new java.awt.GridLayout(1, 0));
@@ -240,6 +243,7 @@ public class FrmAccountsReceivable extends javax.swing.JInternalFrame implements
 
     private void jTextFieldSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldSearchKeyReleased
         searchItem();
+//        this.repaint(); // soluciona problema de deformación de componentes por transparencia en el background
     }//GEN-LAST:event_jTextFieldSearchKeyReleased
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed

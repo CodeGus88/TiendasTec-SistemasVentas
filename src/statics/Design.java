@@ -2,6 +2,7 @@
 package statics;
 
 import java.awt.Color;
+import javax.swing.JPanel;
 import javax.swing.border.Border;
 import tools.RoundedBorder;
 
@@ -12,8 +13,7 @@ import tools.RoundedBorder;
 public class Design {
     
     // Theme
-    public static final Color COLOR_PRIMARY_DARK_OPAQUE = new Color(229, 67, 4);
-    public static final Color COLOR_PRIMARY_DARK = new Color(190, 50, 4, 150);
+    public static final Color COLOR_PRIMARY_DARK = new Color(190, 50, 4);
     public static final Color COLOR_PRIMARY = new Color(238, 96, 2);
     public static final Color COLOR_ACCENT = new Color(244, 113, 0);
     public static final Color COLOR_SECONDARY = new Color(244, 255, 129);
@@ -25,5 +25,5 @@ public class Design {
     
     // Buttons 
     public static final Border BORDER_BUTTON = new RoundedBorder(12);
-    
+
 }

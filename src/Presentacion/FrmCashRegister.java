@@ -15,11 +15,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.logging.Level;
+import javax.swing.BorderFactory;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import statics.Design;
 import statics.Message;
 import statics.Paths;
 import statics.ScreenUses;
@@ -32,12 +34,14 @@ import tools.ObjectSerializer;
  * @author Edgar
  */
 public class FrmCashRegister extends javax.swing.JInternalFrame implements FrameState {
+    
     static ResultSet rs=null;
     DefaultTableModel dtmVentas, dtmCreditos;
     private Date fecha_ini;
     private final String titulos[] = {"CANTIDAD", "PRODUCTO", "PRECIO", "IMPORTE", "GANACIA", "FECHA"};
     private final int[] anchos = {40, 200, 40, 40, 40, 60};
     private ArrayList<CashRegisterItem> salesList, creditsList;
+    
     public FrmCashRegister() {
         initComponents();
         readFrameRectanble();
@@ -60,6 +64,14 @@ public class FrmCashRegister extends javax.swing.JInternalFrame implements Frame
         BuscarIngresosVentasYCreditos();
         CrearTablas(); 
         loadForm();
+        
+        design();
+    }
+    
+    
+    private void design(){
+        jPanelBackground.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        jPanelBackground.setBackground(Design.COLOR_PRIMARY_DARK);
     }
     
     private void CrearTablas(){
@@ -183,8 +195,8 @@ public class FrmCashRegister extends javax.swing.JInternalFrame implements Frame
         setIconifiable(true);
         setResizable(true);
         setTitle("Resumen de caja");
-        setMinimumSize(new java.awt.Dimension(220, 590));
-        setPreferredSize(new java.awt.Dimension(220, 590));
+        setMinimumSize(new java.awt.Dimension(225, 590));
+        setPreferredSize(new java.awt.Dimension(225, 590));
         getContentPane().setLayout(new java.awt.GridLayout(1, 0));
 
         jPanelBackground.setLayout(new java.awt.BorderLayout(5, 5));
@@ -194,39 +206,43 @@ public class FrmCashRegister extends javax.swing.JInternalFrame implements Frame
         jPanelLeft.setLayout(new java.awt.GridLayout(2, 1, 0, 5));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Ingresos por ventas", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 10))); // NOI18N
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Detalle ventas", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 10), new java.awt.Color(255, 255, 255))); // NOI18N
+        jPanel1.setForeground(new java.awt.Color(255, 255, 255));
         jPanel1.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
-        jPanel1.setMinimumSize(new java.awt.Dimension(150, 190));
+        jPanel1.setMinimumSize(new java.awt.Dimension(160, 190));
         jPanel1.setOpaque(false);
-        jPanel1.setPreferredSize(new java.awt.Dimension(150, 190));
+        jPanel1.setPreferredSize(new java.awt.Dimension(160, 190));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Ingreso por ventas:");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 120, 20));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 180, 20));
 
         txtIngresoVenta.setEditable(false);
-        txtIngresoVenta.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        txtIngresoVenta.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         txtIngresoVenta.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtIngresoVenta.setText("0.0");
         jPanel1.add(txtIngresoVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 180, 30));
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Cant. de Productos:");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 120, -1));
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 180, -1));
 
         txtCantidadProductoVenta.setEditable(false);
-        txtCantidadProductoVenta.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        txtCantidadProductoVenta.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         txtCantidadProductoVenta.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtCantidadProductoVenta.setText("0");
         jPanel1.add(txtCantidadProductoVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, 180, 30));
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Utilidad bruta:");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 130, 150, 30));
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 140, 150, 20));
 
         txtGananciaVenta.setEditable(false);
-        txtGananciaVenta.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        txtGananciaVenta.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         txtGananciaVenta.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtGananciaVenta.setText("0.0");
         jPanel1.add(txtGananciaVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 160, 180, 30));
@@ -235,39 +251,43 @@ public class FrmCashRegister extends javax.swing.JInternalFrame implements Frame
         jPanel1.getAccessibleContext().setAccessibleName("Estadísticas de ventas del día");
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Ingresos por cobros de créditos", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 10))); // NOI18N
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Detalle créditos", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 10), new java.awt.Color(255, 255, 255))); // NOI18N
+        jPanel2.setForeground(new java.awt.Color(255, 255, 255));
         jPanel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jPanel2.setMinimumSize(new java.awt.Dimension(150, 190));
+        jPanel2.setMinimumSize(new java.awt.Dimension(160, 190));
         jPanel2.setOpaque(false);
-        jPanel2.setPreferredSize(new java.awt.Dimension(150, 190));
+        jPanel2.setPreferredSize(new java.awt.Dimension(160, 190));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Ingreso por ventas a crédito:");
         jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 180, 20));
 
         txtIngresoCredito.setEditable(false);
-        txtIngresoCredito.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        txtIngresoCredito.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         txtIngresoCredito.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtIngresoCredito.setText("0.0");
         jPanel2.add(txtIngresoCredito, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 180, 30));
 
-        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("Cant. de Productos:");
-        jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 120, -1));
+        jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 180, -1));
 
         txtCantidadProductoCredito.setEditable(false);
-        txtCantidadProductoCredito.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        txtCantidadProductoCredito.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         txtCantidadProductoCredito.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtCantidadProductoCredito.setText("0");
         jPanel2.add(txtCantidadProductoCredito, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, 180, 30));
 
-        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Utilidad bruta:");
-        jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 130, 150, 30));
+        jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 140, 180, 20));
 
         txtGananciaCredito.setEditable(false);
-        txtGananciaCredito.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        txtGananciaCredito.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         txtGananciaCredito.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtGananciaCredito.setText("0.0");
         jPanel2.add(txtGananciaCredito, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 160, 180, 30));
@@ -276,24 +296,31 @@ public class FrmCashRegister extends javax.swing.JInternalFrame implements Frame
 
         jPanelBackground.add(jPanelLeft, java.awt.BorderLayout.WEST);
 
+        jPanelCenter.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Detalle de ingresos por productos", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 10), new java.awt.Color(255, 255, 255))); // NOI18N
+        jPanelCenter.setForeground(new java.awt.Color(255, 255, 255));
+        jPanelCenter.setOpaque(false);
         jPanelCenter.setLayout(new java.awt.BorderLayout());
 
+        jPanel4.setOpaque(false);
         jPanel4.setLayout(new java.awt.GridLayout(1, 2, 5, 5));
 
         jLabel9.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel9.setText("Lista de ventas");
         jLabel9.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        jLabel9.setOpaque(true);
         jPanel4.add(jLabel9);
 
         jLabel10.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel10.setText("Lista de cobros por ventas a créditos");
+        jLabel10.setText("Lista de créditos");
         jLabel10.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        jLabel10.setOpaque(true);
         jPanel4.add(jLabel10);
 
         jPanelCenter.add(jPanel4, java.awt.BorderLayout.PAGE_START);
 
+        jPanelTables.setOpaque(false);
         jPanelTables.setLayout(new java.awt.GridLayout(1, 2, 5, 0));
 
         jScrollPane5.setBackground(new java.awt.Color(255, 255, 255));
@@ -326,8 +353,9 @@ public class FrmCashRegister extends javax.swing.JInternalFrame implements Frame
 
         jPanelHeader.setOpaque(false);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel1.setText("FECHA:");
+        jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("Fecha:");
         jPanelHeader.add(jLabel1);
 
         dcFecha.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -350,7 +378,7 @@ public class FrmCashRegister extends javax.swing.JInternalFrame implements Frame
         jPanel3.setMinimumSize(new java.awt.Dimension(100, 100));
         jPanel3.setLayout(new java.awt.GridLayout(2, 1));
 
-        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("TOTAL EN CAJA");
         jLabel5.setPreferredSize(new java.awt.Dimension(98, 30));
@@ -358,7 +386,7 @@ public class FrmCashRegister extends javax.swing.JInternalFrame implements Frame
 
         txtTotal.setEditable(false);
         txtTotal.setBackground(new java.awt.Color(255, 255, 237));
-        txtTotal.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        txtTotal.setFont(new java.awt.Font("Arial", 1, 16)); // NOI18N
         txtTotal.setForeground(new java.awt.Color(0, 102, 204));
         txtTotal.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtTotal.setText("0.0");

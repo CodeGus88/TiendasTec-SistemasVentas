@@ -82,10 +82,7 @@
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
                         <TitledBorder title="Pre transacci&#xf3;n">
-                          <Border PropertyName="innerBorder" info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                            <TitledBorder/>
-                          </Border>
-                          <Font PropertyName="font" name="Dialog" size="12" style="0"/>
+                          <Font PropertyName="font" name="Arial" size="10" style="0"/>
                           <Color PropertyName="color" blue="ff" green="ff" red="ff" type="rgb"/>
                         </TitledBorder>
                       </Border>
@@ -289,7 +286,7 @@
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
                         <TitledBorder title="Datos del producto">
-                          <Font PropertyName="font" name="Dialog" size="12" style="0"/>
+                          <Font PropertyName="font" name="Arial" size="10" style="0"/>
                           <Color PropertyName="color" blue="ff" green="ff" red="ff" type="rgb"/>
                         </TitledBorder>
                       </Border>
@@ -393,10 +390,10 @@
                     </Component>
                     <Component class="javax.swing.JTextField" name="txtNombreProducto">
                       <Properties>
+                        <Property name="editable" type="boolean" value="false"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Arial" size="14" style="0"/>
                         </Property>
-                        <Property name="enabled" type="boolean" value="false"/>
                       </Properties>
                       <AuxValues>
                         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="9"/>
@@ -513,7 +510,7 @@
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
                         <TitledBorder title="Datos de la venta">
-                          <Font PropertyName="font" name="Dialog" size="12" style="0"/>
+                          <Font PropertyName="font" name="Arial" size="10" style="0"/>
                           <Color PropertyName="color" blue="ff" green="ff" red="ff" type="rgb"/>
                         </TitledBorder>
                       </Border>
@@ -581,12 +578,9 @@
                     </Component>
                     <Component class="javax.swing.JTextField" name="txtNombreCliente">
                       <Properties>
+                        <Property name="editable" type="boolean" value="false"/>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Arial" size="14" style="0"/>
-                        </Property>
-                        <Property name="enabled" type="boolean" value="false"/>
-                        <Property name="selectionColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                          <Color blue="ff" green="0" red="ff" type="rgb"/>
                         </Property>
                       </Properties>
                       <AuxValues>
@@ -715,7 +709,8 @@
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Datos t&#xe9;cnicos">
+                    <TitledBorder title="C&#xf3;digos">
+                      <Font PropertyName="font" name="Arial" size="10" style="0"/>
                       <Color PropertyName="color" blue="ff" green="ff" red="ff" type="rgb"/>
                     </TitledBorder>
                   </Border>
@@ -807,50 +802,32 @@
                     </Constraint>
                   </Constraints>
                 </Component>
-                <Container class="javax.swing.JPanel" name="jPanel7">
+                <Component class="javax.swing.JCheckBox" name="chkCambiarNumero">
                   <Properties>
-                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                      <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
-                        <LineBorder roundedCorners="true">
-                          <Color PropertyName="color" blue="ff" green="ff" red="ff" type="rgb"/>
-                        </LineBorder>
-                      </Border>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Arial" size="14" style="0"/>
                     </Property>
                     <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="ff" green="ff" red="ff" type="rgb"/>
                     </Property>
+                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                      <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
+                        <BevelBorder/>
+                      </Border>
+                    </Property>
+                    <Property name="contentAreaFilled" type="boolean" value="false"/>
+                    <Property name="horizontalAlignment" type="int" value="0"/>
+                    <Property name="label" type="java.lang.String" value="Cambiar n&#xfa;mero"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="chkCambiarNumeroStateChanged"/>
+                  </Events>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
                       <AbsoluteConstraints x="20" y="210" width="180" height="30"/>
                     </Constraint>
                   </Constraints>
-
-                  <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridLayout">
-                    <Property name="columns" type="int" value="0"/>
-                    <Property name="rows" type="int" value="1"/>
-                  </Layout>
-                  <SubComponents>
-                    <Component class="javax.swing.JCheckBox" name="chkCambiarNumero">
-                      <Properties>
-                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                          <Font name="Arial" size="14" style="0"/>
-                        </Property>
-                        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                          <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
-                            <BevelBorder/>
-                          </Border>
-                        </Property>
-                        <Property name="contentAreaFilled" type="boolean" value="false"/>
-                        <Property name="horizontalAlignment" type="int" value="0"/>
-                        <Property name="label" type="java.lang.String" value="Cambiar n&#xfa;mero"/>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="chkCambiarNumeroStateChanged"/>
-                      </Events>
-                    </Component>
-                  </SubComponents>
-                </Container>
+                </Component>
               </SubComponents>
             </Container>
           </SubComponents>

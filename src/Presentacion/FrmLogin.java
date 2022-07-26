@@ -48,7 +48,7 @@ public class FrmLogin extends javax.swing.JFrame {
         lblIntentos.setVisible(false);
         setVisible(true);
         setExtendedState(this.MAXIMIZED_BOTH);
-        getContentPane().setBackground(Design.COLOR_PRIMARY_DARK_OPAQUE);
+        getContentPane().setBackground(Design.COLOR_PRIMARY_DARK);
         design();
     }
     

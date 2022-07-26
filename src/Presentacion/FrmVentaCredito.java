@@ -174,7 +174,7 @@ public class FrmVentaCredito extends javax.swing.JInternalFrame implements Clien
         panelMenuAndTable.add(panelTable, BorderLayout.CENTER);
         panelTable.addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent evt) {
-                Component c = (Component) evt.getSource(); //........ }
+                Component c = (Component) evt.getSource();
                 float[] columnSize = {0F, 8.333F, 28.667F, 39.668F, 7.778F, 0, 7.778F, 7.778F};
                 for (int i = 0; i < tblDetalleProducto.getColumnCount(); i++) {
                     tblDetalleProducto.getColumnModel().getColumn(i).setPreferredWidth(ScreenUses.getPinTotal(c.getWidth(), columnSize[i]));
@@ -502,12 +502,11 @@ public class FrmVentaCredito extends javax.swing.JInternalFrame implements Clien
         panelMenu.setMinimumSize(new java.awt.Dimension(800, 250));
         panelMenu.setOpaque(false);
 
-        jPanel5.setBackground(new java.awt.Color(34, 81, 249));
         jPanel5.setOpaque(false);
         jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel3.setBackground(new java.awt.Color(208, 218, 247));
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(""), "Pre transacción", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(255, 255, 255))); // NOI18N
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(""), "Pre transacción", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 10), new java.awt.Color(255, 255, 255))); // NOI18N
         jPanel3.setForeground(new java.awt.Color(255, 255, 255));
         jPanel3.setName(""); // NOI18N
         jPanel3.setOpaque(false);
@@ -607,7 +606,7 @@ public class FrmVentaCredito extends javax.swing.JInternalFrame implements Clien
         jPanel3.getAccessibleContext().setAccessibleName("Proceso");
 
         jPanel2.setBackground(new java.awt.Color(208, 218, 247));
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos del producto", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(255, 255, 255))); // NOI18N
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos del producto", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 10), new java.awt.Color(255, 255, 255))); // NOI18N
         jPanel2.setForeground(new java.awt.Color(255, 255, 255));
         jPanel2.setOpaque(false);
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -647,8 +646,8 @@ public class FrmVentaCredito extends javax.swing.JInternalFrame implements Clien
         jLabel17.setText("Nombre: ");
         jPanel2.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 60, 170, 30));
 
+        txtNombreProducto.setEditable(false);
         txtNombreProducto.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        txtNombreProducto.setEnabled(false);
         jPanel2.add(txtNombreProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 60, 230, 30));
 
         jLabel19.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -677,7 +676,7 @@ public class FrmVentaCredito extends javax.swing.JInternalFrame implements Clien
         jPanel5.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 80, 530, 100));
 
         jPanel1.setBackground(new java.awt.Color(208, 218, 247));
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos de la venta a crédito", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(255, 255, 255))); // NOI18N
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos de la venta a crédito", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 10), new java.awt.Color(255, 255, 255))); // NOI18N
         jPanel1.setForeground(new java.awt.Color(255, 255, 255));
         jPanel1.setOpaque(false);
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -700,8 +699,8 @@ public class FrmVentaCredito extends javax.swing.JInternalFrame implements Clien
         });
         jPanel1.add(btnBuscarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 40, 25, 30));
 
+        txtNombreCliente.setEditable(false);
         txtNombreCliente.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        txtNombreCliente.setEnabled(false);
         txtNombreCliente.setSelectionColor(new java.awt.Color(255, 0, 255));
         jPanel1.add(txtNombreCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 200, 30));
 
@@ -751,7 +750,10 @@ public class FrmVentaCredito extends javax.swing.JInternalFrame implements Clien
 
         panelMenu.add(jPanel5);
 
+        jPanel10.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Códigos", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 10), new java.awt.Color(255, 255, 255))); // NOI18N
+        jPanel10.setMinimumSize(new java.awt.Dimension(230, 250));
         jPanel10.setOpaque(false);
+        jPanel10.setPreferredSize(new java.awt.Dimension(230, 250));
         jPanel10.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -789,7 +791,7 @@ public class FrmVentaCredito extends javax.swing.JInternalFrame implements Clien
                 chkCambiarNumeroStateChanged(evt);
             }
         });
-        jPanel10.add(chkCambiarNumero, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 220, 210, -1));
+        jPanel10.add(chkCambiarNumero, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 215, 180, 30));
 
         panelMenu.add(jPanel10);
 
