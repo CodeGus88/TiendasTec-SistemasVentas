@@ -14,7 +14,7 @@ public class ClsConexion {
             MysqlConnectionPoolDataSource ds=new MysqlConnectionPoolDataSource();
             ds.setServerName("localhost");
             ds.setPort(3306);
-            ds.setDatabaseName("bd_tiendastec_base");
+            ds.setDatabaseName("db_store_app_base");
             conection=ds.getConnection("root","");
         }catch(Exception ex){
            ex.printStackTrace();

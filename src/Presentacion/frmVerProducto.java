@@ -5,10 +5,7 @@
  */
 package Presentacion;
 
-/**
- *
- * @author JCarlos ArcilaD
- */
+
 public class FrmVerProducto extends javax.swing.JInternalFrame {
 
     /**

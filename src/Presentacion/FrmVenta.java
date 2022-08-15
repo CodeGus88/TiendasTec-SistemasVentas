@@ -1415,7 +1415,6 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
     }
 
     void guardarDetalle() {
-
         obtenerUltimoIdVenta();
         ClsDetalleVenta detalleventas = new ClsDetalleVenta();
         ClsEntidadDetalleVenta detalleventa = new ClsEntidadDetalleVenta();

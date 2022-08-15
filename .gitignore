@@ -4,3 +4,4 @@ src/serialdata/
 build/
 # Jasper Report
 *.jasper
+/dist/
