@@ -7,6 +7,7 @@ import java.sql.Connection;
 import com.mysql.jdbc.jdbc2.optional.*;
 import java.sql.SQLException;
 import java.util.logging.Level;
+import javax.swing.JOptionPane;
 import statics.Message;
 
 public class ClsConexion {
@@ -21,6 +22,7 @@ public class ClsConexion {
             conection=ds.getConnection("root","");
         }catch(SQLException e){
             Message.LOGGER.log(Level.SEVERE, e.getMessage());
+            JOptionPane.showMessageDialog(null, e, "DATA BASE CONNECTION ERROR", JOptionPane.ERROR_MESSAGE);
         }
         return conection;
     }
