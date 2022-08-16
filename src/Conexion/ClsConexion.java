@@ -5,6 +5,9 @@
 package Conexion;
 import java.sql.Connection;
 import com.mysql.jdbc.jdbc2.optional.*;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import statics.Message;
 
 public class ClsConexion {
     
@@ -14,11 +17,10 @@ public class ClsConexion {
             MysqlConnectionPoolDataSource ds=new MysqlConnectionPoolDataSource();
             ds.setServerName("localhost");
             ds.setPort(3306);
-//            ds.setDatabaseName("db_store_app_base");
-            ds.setDatabaseName("bd_tiendastec_base");
+            ds.setDatabaseName("db_store_desktop_app");
             conection=ds.getConnection("root","");
-        }catch(Exception ex){
-           ex.printStackTrace();
+        }catch(SQLException e){
+            Message.LOGGER.log(Level.SEVERE, e.getMessage());
         }
         return conection;
     }

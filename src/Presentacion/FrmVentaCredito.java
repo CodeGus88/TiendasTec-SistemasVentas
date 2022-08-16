@@ -1046,14 +1046,20 @@ public class FrmVentaCredito extends javax.swing.JInternalFrame implements Clien
     }//GEN-LAST:event_btnBuscarClienteActionPerformed
 
     void CalcularTotal() {
-        DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
-        simbolos.setDecimalSeparator('.');
-        DecimalFormat formateador = new DecimalFormat("####.##", simbolos);
-        double precio_prod = 0, cant_prod = 0, total_prod = 0;
-        precio_prod = Double.parseDouble(txtPrecioProducto.getText());
-        cant_prod = Double.parseDouble(txtCantidadProducto.getText());
-        total_prod = precio_prod * cant_prod;
-        txtTotalProducto.setText(String.valueOf(formateador.format(total_prod)));
+        if (!txtPrecioProducto.getText().isEmpty()) {
+            try {
+                DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
+                simbolos.setDecimalSeparator('.');
+                DecimalFormat formateador = new DecimalFormat("####.##", simbolos);
+                double precio_prod = 0, cant_prod = 0, total_prod = 0;
+                precio_prod = Double.parseDouble(txtPrecioProducto.getText());
+                cant_prod = Double.parseDouble(txtCantidadProducto.getText());
+                total_prod = precio_prod * cant_prod;
+                txtTotalProducto.setText(String.valueOf(formateador.format(total_prod)));
+            } catch (Exception e) {
+                Message.LOGGER.log(Level.WARNING, e.getMessage());
+            }
+        }
     }
 
     public int recorrer(int id) {
@@ -1075,17 +1081,14 @@ public class FrmVentaCredito extends javax.swing.JInternalFrame implements Clien
     }
 
     void agregardatos(int item, String cod, String nom, String descrip, double cant, double cost, double pre, double tot) {
-
         int p = recorrer(item);
         double n_cant, n_total;
         if (p > -1) {
-
             n_cant = Double.parseDouble(String.valueOf(tblDetalleProducto.getModel().getValueAt(p, 4))) + cant;
             tblDetalleProducto.setValueAt(n_cant, p, 4);
-
-            n_total = Double.parseDouble(String.valueOf(tblDetalleProducto.getModel().getValueAt(p, 4))) * Double.parseDouble(String.valueOf(tblDetalleProducto.getModel().getValueAt(p, 5)));
+//            {"ID", "CÓDIGO", "PRODUCTO", "DESCRIPCIÓN", "CANTIDAD", "COSTO", "PRECIO", "TOTAL"}
+            n_total = Double.parseDouble(String.valueOf(tblDetalleProducto.getModel().getValueAt(p, 4))) * Double.parseDouble(String.valueOf(tblDetalleProducto.getModel().getValueAt(p, 6)));
             tblDetalleProducto.setValueAt(n_total, p, 7);
-
         } else {
             String Datos[] = {String.valueOf(item), cod, nom, descrip, String.valueOf(cant), String.valueOf(cost), String.valueOf(pre), String.valueOf(tot)};
             dtmDetalle.addRow(Datos);
@@ -1143,7 +1146,6 @@ public class FrmVentaCredito extends javax.swing.JInternalFrame implements Clien
 
     private void btnAgregarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarProductoActionPerformed
         double stock, cant;
-
         if (!txtCantidadProducto.getText().equals("")) {
             if (txtCantidadProducto.getText().equals("")) {
                 txtCantidadProducto.setText("0");
@@ -1151,7 +1153,6 @@ public class FrmVentaCredito extends javax.swing.JInternalFrame implements Clien
             } else {
                 cant = Double.parseDouble(txtCantidadProducto.getText());
             }
-
             if (cant > 0) {
                 stock = Double.parseDouble(txtStockProducto.getText());
                 cant = Double.parseDouble(txtCantidadProducto.getText());
@@ -1193,7 +1194,6 @@ public class FrmVentaCredito extends javax.swing.JInternalFrame implements Clien
             JOptionPane.showMessageDialog(null, "Ingrese cantidad");
             txtCantidadProducto.requestFocus();
         }
-
     }//GEN-LAST:event_btnAgregarProductoActionPerformed
 
     private void txtCantidadProductoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCantidadProductoKeyReleased
@@ -1566,7 +1566,10 @@ public class FrmVentaCredito extends javax.swing.JInternalFrame implements Clien
             txtStockProducto.setText(product.getStrStockProducto());
             txtCostoProducto.setText(product.getStrPrecioCostoProducto());  // producto.preciocosto 
             txtPrecioProducto.setText(product.getStrPrecioVentaProducto()); // producto.precioVenta
+            if(!txtCantidadProducto.getText().isEmpty())
+                CalcularTotal();
             Toast.makeText(Toast.SUCCESS, "Se agregó el producto", Toast.LENGTH_MICRO).show();
+            
         }else{
             Toast.makeText(Toast.UNSUCCESS, "Fornulario inactivo, no se agregó el producto", Toast.LENGTH_MICRO).show();
         }

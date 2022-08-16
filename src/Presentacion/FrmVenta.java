@@ -83,7 +83,6 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         txtDescripcionProducto.setVisible(false);
         txtCostoProducto.setVisible(false);
         mirar();
-        //--------------------JTABLE - DETALLEPRODUCTO--------------------
 
         String titulos[] = {"ID", "CÓDIGO", "PRODUCTO", "DESCRIPCIÓN", "CANTIDAD", "COSTO", "PRECIO", "TOTAL"};
         dtmDetalle = new DefaultTableModel(null, titulos){
@@ -1042,27 +1041,29 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
     }//GEN-LAST:event_btnBuscarClienteActionPerformed
 
     void CalcularTotal() {
-        DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
-        simbolos.setDecimalSeparator('.');
-        DecimalFormat formateador = new DecimalFormat("####.##", simbolos);
-        double precio_prod = 0, cant_prod = 0, total_prod = 0;
-        precio_prod = Double.parseDouble(txtPrecioProducto.getText());
-        cant_prod = Double.parseDouble(txtCantidadProducto.getText());
-        total_prod = precio_prod * cant_prod;
-        txtTotalProducto.setText(String.valueOf(formateador.format(total_prod)));
+        if(!txtPrecioProducto.getText().isEmpty()){
+            try {
+                DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
+                simbolos.setDecimalSeparator('.');
+                DecimalFormat formateador = new DecimalFormat("####.##", simbolos);
+                double precio_prod = 0, cant_prod = 0, total_prod = 0;
+                precio_prod = Double.parseDouble(txtPrecioProducto.getText());
+                cant_prod = Double.parseDouble(txtCantidadProducto.getText());
+                total_prod = precio_prod * cant_prod;
+                txtTotalProducto.setText(String.valueOf(formateador.format(total_prod)));
+            } catch (Exception e) {
+                Message.LOGGER.log(Level.WARNING, e.getMessage());
+            }
+        }
     }
 
     public int recorrer(int id) {
         int fila = 0, valor = -1;
-
         fila = tblDetalleProducto.getRowCount();
-
         for (int f = 0; f < fila; f++) {
             if (Integer.parseInt(String.valueOf(dtmDetalle.getValueAt(f, 0))) == id) {
-
                 valor = f;
                 break;
-
             } else {
                 valor = -1;
             }
@@ -1071,15 +1072,14 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
     }
 
     void agregardatos(int item, String cod, String nom, String descrip, double cant, double cost, double pre, double tot) {
-
         int p = recorrer(item);
         double n_cant, n_total;
         if (p > -1) {
-
             n_cant = Double.parseDouble(String.valueOf(tblDetalleProducto.getModel().getValueAt(p, 4))) + cant;
             tblDetalleProducto.setValueAt(n_cant, p, 4);
-
-            n_total = Double.parseDouble(String.valueOf(tblDetalleProducto.getModel().getValueAt(p, 4))) * Double.parseDouble(String.valueOf(tblDetalleProducto.getModel().getValueAt(p, 5)));
+            //                  {"ID", "CÓDIGO", "PRODUCTO", "DESCRIPCIÓN", "CANTIDAD", "COSTO", "PRECIO", "TOTAL"};
+//            n_total = Double.parseDouble(String.valueOf(tblDetalleProducto.getModel().getValueAt(p, 4))) * Double.parseDouble(String.valueOf(tblDetalleProducto.getModel().getValueAt(p, 5)));
+            n_total = Double.parseDouble(String.valueOf(tblDetalleProducto.getModel().getValueAt(p, 4))) * Double.parseDouble(String.valueOf(tblDetalleProducto.getModel().getValueAt(p, 6)));
             tblDetalleProducto.setValueAt(n_total, p, 7);
 
         } else {
@@ -1139,7 +1139,6 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
 
     private void btnAgregarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarProductoActionPerformed
         double stock, cant;
-
         if (!txtCantidadProducto.getText().equals("")) {
             if (txtCantidadProducto.getText().equals("")) {
                 txtCantidadProducto.setText("0");
@@ -1147,7 +1146,6 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
             } else {
                 cant = Double.parseDouble(txtCantidadProducto.getText());
             }
-
             if (cant > 0) {
                 stock = Double.parseDouble(txtStockProducto.getText());
                 cant = Double.parseDouble(txtCantidadProducto.getText());
@@ -1166,10 +1164,8 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
                     CalcularTotal_Pagar();
                     CalcularSubTotal();
                     CalcularIGV();
-
                     txtCantidadProducto.setText("");
                     txtTotalProducto.setText("");
-
                     txtCodigoProducto.setText("");
                     txtNombreProducto.setText("");
                     txtStockProducto.setText("");
@@ -1179,12 +1175,10 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
                     JOptionPane.showMessageDialog(null, "Stock Insuficiente");
                     txtCantidadProducto.requestFocus();
                 }
-
             } else {
                 JOptionPane.showMessageDialog(null, "Ingrese Cantidad mayor a 0");
                 txtCantidadProducto.requestFocus();
             }
-
         } else {
             JOptionPane.showMessageDialog(null, "Ingrese cantidad");
             txtCantidadProducto.requestFocus();
@@ -1209,7 +1203,6 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
             CalcularIGV();
         } else if (fila == 0) {
             dtmDetalle.removeRow(fila);
-
             txtTotalVenta.setText("0.0");
             txtDescuento.setText("0.0");
             txtSubTotal.setText("0.0");
@@ -1433,18 +1426,14 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
             detalleventa.setStrPrecioDet(String.valueOf(tblDetalleProducto.getModel().getValueAt(f, 6)));
             detalleventa.setStrTotalDet(String.valueOf(tblDetalleProducto.getModel().getValueAt(f, 7)));
             detalleventas.agregarDetalleVenta(detalleventa);
-
             try {
                 ClsProducto oProducto = new ClsProducto();
-
                 rs = oProducto.listarProductoActivoPorParametro("id", ((String) tblDetalleProducto.getValueAt(f, 0)));
                 while (rs.next()) {
                     cant = Double.parseDouble(rs.getString(5));
                 }
-
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage());
-                System.out.println(ex.getMessage());
             }
 
             strId = ((String) tblDetalleProducto.getValueAt(f, 0));
@@ -1567,6 +1556,8 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
             txtStockProducto.setText(product.getStrStockProducto());
             txtCostoProducto.setText(product.getStrPrecioCostoProducto());  // producto.preciocosto 
             txtPrecioProducto.setText(product.getStrPrecioVentaProducto()); // producto.precioVenta
+            if (!txtCantidadProducto.getText().isEmpty())
+                CalcularTotal();
             Toast.makeText(Toast.SUCCESS, "Se agregó el producto", Toast.LENGTH_MICRO).show();
         }else{
             Toast.makeText(Toast.UNSUCCESS, "Fornulario inactivo, no se agregó el producto", Toast.LENGTH_MICRO).show();

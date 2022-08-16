@@ -1,5 +1,5 @@
 # serial data
-src/serialdata/
+/src/serialdata/
 # build
 build/
 # Jasper Report
